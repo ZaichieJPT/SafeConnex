@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "353415964817",
+    "firebase_url": "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "safeconnex-92054",
+    "storage_bucket": "safeconnex-92054.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:353415964817:android:88d0c100f2b0065000b730",
+        "android_client_info": {
+          "package_name": "com.safeconnex.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzGRqNi6r6y0zLSjQ97qYwiYgOEaMavFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
