@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:safeconnex/front_end_code/components/button_component.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
+import 'package:safeconnex/front_end_code/components/nav_button_component.dart';
+import 'package:safeconnex/front_end_code/pages/circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import 'package:safeconnex/front_end_code/provider/map_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +29,10 @@ class _HomePageState extends State<HomePage> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset('assets/images/add_circle.png', scale: 8),
+                  NavButtonComponent(
+                    imageLocation: 'assets/images/add_circle.png', scale: 8,
+                    route: CirclePage(),
+                  ),
                   SizedBox(width: 12),
                   ClipRect(
                     child: Align(
@@ -49,8 +56,17 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ButtonComponent(imageLocation: 'assets/images/settings_icon.png', scale: 9,),
-                ButtonComponent(imageLocation: 'assets/images/geofencing_icon.png', scale: 9),
+                InkWell(
+                  onTap: (){
+                    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+                    authHandler.signOutAccount();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    child: Image.asset('assets/images/settings_icon.png', scale: 9,),
+                  ),
+                ),
+                NavButtonComponent(imageLocation: 'assets/images/geofencing_icon.png', scale: 9,route: SignupPage(),),
               ],
             ),
           ],
@@ -60,7 +76,7 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment(0, 0.86),
           children: [
             MapProvider(),
-            ButtonComponent(imageLocation: 'assets/images/emergency_button.png', scale: 8,)
+            NavButtonComponent(imageLocation: 'assets/images/emergency_button.png', scale: 8, route: HomePage(),),
           ],
         ),
       extendBodyBehindAppBar: true,
@@ -70,9 +86,9 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ButtonComponent(imageLocation: 'assets/images/circle_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10),),
-            ButtonComponent(imageLocation: 'assets/images/home_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10)),
-            ButtonComponent(imageLocation: 'assets/images/feed_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10)),
+            NavButtonComponent(imageLocation: 'assets/images/circle_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10),route: CirclePage(),),
+            NavButtonComponent(imageLocation: 'assets/images/home_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10),route: SignupPage(),),
+            NavButtonComponent(imageLocation: 'assets/images/feed_icon.png', width: 125, margin: EdgeInsets.only(bottom: 10), route: SignupPage(),),
           ],
         ),
         color: Colors.white,

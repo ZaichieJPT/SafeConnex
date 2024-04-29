@@ -7,9 +7,12 @@ class FirebaseAuthHandler
 {
   FirebaseAuth authHandler = FirebaseAuth.instance; // Universal Authentication Handler
   UserDatabaseHandler databaseHandler = UserDatabaseHandler();
+
+  FirebaseAuthException? firebaseAuthException;
+
   /// Registers an account to the Firebase Auth API
   /// using the [email] and [password] parameters
-  Future<void> registerEmailAccount(String email, String password, String firstName, String lastName, int phoneNumber, String date, String picture) async 
+  Future<void> registerEmailAccount(String email, String password, String firstName, String lastName, int phoneNumber, String date) async
   {
     try
     {
@@ -18,7 +21,6 @@ class FirebaseAuthHandler
       sendEmailVerification();
       FirebaseUserCredentials.userCredential.user?.updateDisplayName("$firstName $lastName");
       //FirebaseUserCredentials.userCredential.user?.updatePhoneNumber(phoneNumber as PhoneAuthCredential);
-      FirebaseUserCredentials.userCredential.user?.updatePhotoURL(picture);
       databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, date, "user");
       //<code>
       // Sets the users info and adds it to the FirebaseDatabaseHandler
@@ -59,7 +61,7 @@ class FirebaseAuthHandler
       if(FirebaseUserCredentials.userCredential.user?.emailVerified == true){
         // Adds the output to the FirebaseUserCrendentials 
         print("Login Successful");
-        databaseHandler.getRegularUser();
+        //databaseHandler.getRegularUser();
         //<code>
         // Gets the users info and adds it to the FirebaseUserCredentials
       }else
@@ -69,6 +71,7 @@ class FirebaseAuthHandler
       }
     }
     on FirebaseAuthException catch(exception){
+      firebaseAuthException = exception;
       if(exception.code == "wrong-password" || exception.code == "invalid-email")
       {
         //Replace this with something else

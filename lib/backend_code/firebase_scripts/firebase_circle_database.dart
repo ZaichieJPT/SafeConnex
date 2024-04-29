@@ -10,21 +10,21 @@ class CircleDatabaseHandler{
 
   final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
+  static String? generatedCode;
 
-  Future<void> createCircle(String? uid, String name, String circleName, String safetyStatus, String currentLocation, String email, String phone) async
+  Future<void> createCircle(String? uid, String? name, String? circleName, String? email, String? phone) async
   {
-    await dbUserReference.child(codeGenerator(6)).child('members').child(uid!).set
+    generatedCode = codeGenerator(6);
+    await dbUserReference.child(generatedCode!).child('members').child(uid!).set
       ({
       "circle_name": circleName,
       "name": name,
       "role": 'Circle Creator',
-      "safety_status": safetyStatus,
-      "current_location": currentLocation,
       "email": email,
       "phone": phone
     });
 
-    print('Data Added');
+    print(generatedCode);
   }
 
   Future<void> addCircleMember(String circleCode, String? uid, String name, String circleName, String safetyStatus, String currentLocation, String email, String phone) async
@@ -33,7 +33,7 @@ class CircleDatabaseHandler{
       ({
       "circle_name": circleName,
       "name": name,
-      "role": 'Circle Creator',
+      "role": 'Member',
       "safety_status": safetyStatus,
       "current_location": currentLocation,
       "email": email,
