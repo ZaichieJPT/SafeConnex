@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-import "package:firebase_auth/firebase_auth.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
@@ -10,6 +9,7 @@ import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key});
@@ -28,12 +28,13 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     Future.delayed(const Duration(milliseconds: 5), () {
-      FirebaseAuthHandler authHandler = FirebaseAuthHandler();
       if(authHandler.authHandler.currentUser != null){
         Navigator.pushNamed(context, "/home");
       }
     });
+    SettingsProvider provider = SettingsProvider();
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -170,8 +171,13 @@ class _LoginPageState extends State<LoginPage> {
                                     } else if (!EmailValidator.validate(
                                         email)) {
                                       return "Enter a valid email";
+                                    }else if(authHandler.firebaseLoginException != null)
+                                    {
+                                      print("Firebase Error: ${authHandler.firebaseLoginException}");
+                                      return authHandler.firebaseLoginException;
+                                    }else{
+                                      return null;
                                     }
-                                    return null;
                                   },
                                   height: 60,
                                   verticalPadding: 0,
@@ -194,13 +200,19 @@ class _LoginPageState extends State<LoginPage> {
                                   //height: 55,
                                   verticalPadding: 0,
                                   validator: (value) {
-                                    if (value.toString().isEmpty) {
-                                      setState(() {
-                                        isPasswordValidated = true;
-                                      });
-                                      return "Please enter your password";
-                                    }
-                                    return null;
+                                      if (value.toString().isEmpty)
+                                      {
+                                        setState(() {
+                                          isPasswordValidated = true;
+                                        });
+                                        return "Please enter your password";
+                                      }else if(authHandler.firebaseLoginException != null)
+                                      {
+                                        print("Firebase Error: ${authHandler.firebaseLoginException}");
+                                        return authHandler.firebaseLoginException;
+                                      }else{
+                                        return null;
+                                      }
                                   },
                                   isValidated: isPasswordValidated,
                                 ),
@@ -242,16 +254,16 @@ class _LoginPageState extends State<LoginPage> {
                                 rightMargin: 120,
                                 fontSize: 15,
                                 formKey: _loginFormKey,
-                                continueClicked: () {
-                                  if (_loginFormKey.currentState!.validate()) {
-                                    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-                                    authHandler.loginEmailAccount(_emailController.text, _passController.text);
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => HomePage())
-                                    );
-                                  } else {}
-                                },
+                                continueClicked: (){
+                                  authHandler.loginEmailAccount(_emailController.text, _passController.text);
+                                  Future.delayed(Duration(seconds: 1), (){
+                                    if (_loginFormKey.currentState!.validate()) {
+                                      if (authHandler.firebaseLoginException == null) {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                                      }
+                                    }
+                                  });
+                                }
                               ),
                               SizedBox(
                                 height: 35,

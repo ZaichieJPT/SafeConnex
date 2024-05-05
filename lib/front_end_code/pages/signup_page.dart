@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/front_end_code/components/signup_emailcard.dart";
 import "package:safeconnex/front_end_code/components/signup_namecard.dart";
 import "package:safeconnex/front_end_code/components/signup_passcard.dart";
@@ -97,6 +98,7 @@ class _SignupPageState extends State<SignupPage> {
     //final height = MediaQuery.of(context).size.height;
     //final width = MediaQuery.of(context).size.width;
     final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
+    FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),

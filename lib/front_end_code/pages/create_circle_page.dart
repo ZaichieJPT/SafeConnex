@@ -17,6 +17,10 @@ class CreateCirclePage extends StatefulWidget {
 class _CreateCirclePageState extends State<CreateCirclePage> {
   Widget build(BuildContext context) {
     TextEditingController _circleNameController = TextEditingController();
+    final _circleKey = GlobalKey<FormState>();
+    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+    UserDatabaseHandler userDatabase = UserDatabaseHandler();
 
     return Container(
       decoration: BoxDecoration(
@@ -64,7 +68,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                   ),
                 ),
                 Positioned(
-                    top: 240,
+                    top: 237,
                     left: 65,
                     child: Container(
                       height: 50,
@@ -77,16 +81,85 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                 ),
                Positioned(
                  top: 235,
-                 left: 40,
-                 width: 320,
+                 left: 60 ,
+                 width: 270,
                  height: 60,
-                 child: LoginFormField(
-                   hintText: "Circle Name",
-                   controller: _circleNameController,
-                   textMargin: 10,
-                   verticalPadding: 0,
-                   borderRadius: 30,
-                  ),
+                 child: Form(
+                   key: _circleKey,
+                   child: TextFormField(
+                     onTapOutside: (event){
+                       FocusManager.instance.primaryFocus?.unfocus();
+                     },
+                     validator: (value){
+                       print(value);
+                       if(value!.isEmpty){
+                         return "Please enter a Circle Name";
+                       }
+                       else{
+                         return null;
+                       }
+                     } ,
+                     controller: _circleNameController,
+                     textAlignVertical: TextAlignVertical.center,
+                     cursorColor: Color.fromARGB(255, 175, 173, 173),
+                     maxLength: 55,
+                     style: TextStyle(
+                       fontSize: 12,
+                       fontFamily: "OpunMai",
+                     ),
+                     decoration: InputDecoration(
+                       //isDense: true,
+                       contentPadding: EdgeInsets.symmetric(
+                           vertical: 11, horizontal: 10),
+                       fillColor: Colors.white,
+                       filled: true,
+                       hintText: "Circle Name",
+                       hintStyle: TextStyle(
+                         color: Color.fromARGB(255, 175, 173, 173),
+                         fontSize: 12,
+                         height: 0.5,
+                       ),
+                       helperText: "",
+                       helperStyle: TextStyle(
+                         fontSize: 11,
+                         height: 0.05,
+                       ),
+                       errorStyle: TextStyle(
+                         fontSize: 11,
+                         height: 0.05,
+                       ),
+                       counterText: '',
+                       //floatingLabelStyle: TextStyle(color: Colors.black),
+                       errorBorder: OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(25),
+                         borderSide: BorderSide(
+                           color: Colors.red,
+                           width: 1.5,
+                         ),
+                       ),
+                       focusedErrorBorder: true
+                           ? OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(25),
+                         borderSide: BorderSide(
+                           color: Colors.red,
+                           width: 1.5,
+                         ),
+                       )
+                           : null,
+                       enabledBorder: OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(25),
+                         borderSide: BorderSide(
+                           color: Color.fromARGB(255, 175, 173, 173),
+                           width: 0.0,
+                         ),
+                       ),
+                       focusedBorder: OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(25),
+                         borderSide: BorderSide(color: Colors.black),
+                       ),
+                     ),
+                   ),
+                 )
                 ),
                 Positioned(
                     top: 320,
@@ -102,13 +175,19 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                         ),
                       ),
                       onPressed: () {
-                        FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-                        CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-                        UserDatabaseHandler userDatabase = UserDatabaseHandler();
-                        userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
-                        circleDatabase.createCircle(authHandler.authHandler.currentUser?.uid, authHandler.authHandler.currentUser?.displayName!, _circleNameController.text, authHandler.authHandler.currentUser?.email, "0");
-                        userDatabase.addUserCircle(authHandler.authHandler.currentUser?.uid, CircleDatabaseHandler.generatedCode);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => CircleResultsPage()));
+                        print("outsite");
+                        if(_circleKey.currentState!.validate()){
+                          if(_circleNameController.text.length <= 25){
+                            print("inside");
+                            userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
+                            circleDatabase.createCircle(authHandler.authHandler.currentUser?.uid, authHandler.authHandler.currentUser?.displayName!, _circleNameController.text, authHandler.authHandler.currentUser?.email, "0");
+                            userDatabase.addUserCircle(authHandler.authHandler.currentUser?.uid, CircleDatabaseHandler.generatedCode, _circleNameController.text);
+                            print("pass");
+                            Future.delayed(Duration(milliseconds: 1500), (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CircleResultsPage()));
+                            });
+                          }
+                        }
                       },
                     )
                 )

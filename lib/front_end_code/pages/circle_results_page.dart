@@ -73,7 +73,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                       fontWeight: FontWeight.w700,
                       color: Color.fromARGB(255, 62, 73, 101),
                     ),
-                    textAlign: TextAlign.center ,
+                    textAlign: TextAlign.center,
                   ),
                   onPressed: (){
                     Navigator.of(context).popUntil((route) => route.settings.name == "/home");

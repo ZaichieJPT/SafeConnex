@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SettingsProvider extends ChangeNotifier {
+
   passValidator(String value, int strengthCount) {
     if (value.isEmpty) {
       return "Password is a required field.";

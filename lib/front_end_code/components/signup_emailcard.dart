@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:email_validator/email_validator.dart';
+import "package:firebase_auth/firebase_auth.dart";
+import "package:firebase_core/firebase_core.dart";
+import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
 import "package:safeconnex/front_end_code/components/signup_textformfield.dart";
 import "package:flutter/cupertino.dart";
@@ -104,18 +107,28 @@ class _EmailCardState extends State<EmailCard> {
                         height: 15,
                       ),
                       Form(
+                        autovalidateMode: AutovalidateMode.always,
                         key: _emailCardFormKey,
                         child: SignupFormField(
                           hintText: "Email Address",
                           controller: widget.emailController,
                           textMargin: 0,
                           validator: (email) {
-                            if (email.toString().isEmpty) {
-                              return "Email is required";
-                            } else if (!EmailValidator.validate(email)) {
-                              return "Enter a valid email";
-                            }
-                            return null;
+                            Future.delayed(Duration(seconds: 1), (){
+                              print("validator");
+                              print(FirebaseAuthHandler.firebaseSignUpException);
+                              if (email.toString().isEmpty) {
+                                return "Email is required";
+                              }
+                              else if(FirebaseAuthHandler.firebaseSignUpException != null){
+                                return FirebaseAuthHandler.firebaseSignUpException;
+                              }
+                              // Still Errors Here
+                              //else if (!EmailValidator.validate(email)) {
+                              //return "Enter a valid email";
+                              //}
+                              return null;
+                            });
                           },
                         ),
                       ),

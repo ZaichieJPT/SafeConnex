@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/components/nav_button_component.dart';
 import 'package:safeconnex/front_end_code/pages/create_circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/join_circle.dart';
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 
 class CirclePage extends StatefulWidget {
@@ -24,7 +25,7 @@ class _CirclePageState extends State<CirclePage> {
             Positioned(
               child: NavButtonComponent(
                 imageLocation: "assets/images/join_button.png", scale: 9,
-                route: SignupPage(),
+                route: JoinCirclePage(),
               ),
               top: 90,
               right: 40,

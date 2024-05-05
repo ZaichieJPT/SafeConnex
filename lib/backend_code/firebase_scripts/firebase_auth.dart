@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_user.dart';
 import 'firebase_users_database.dart';
+import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 /// Handles all the Functionalities of User Authentications
 class FirebaseAuthHandler
@@ -8,7 +9,8 @@ class FirebaseAuthHandler
   FirebaseAuth authHandler = FirebaseAuth.instance; // Universal Authentication Handler
   UserDatabaseHandler databaseHandler = UserDatabaseHandler();
 
-  FirebaseAuthException? firebaseAuthException;
+  String? firebaseLoginException;
+  static String? firebaseSignUpException;
 
   /// Registers an account to the Firebase Auth API
   /// using the [email] and [password] parameters
@@ -32,21 +34,25 @@ class FirebaseAuthHandler
       if(exception.code == "weak-password")
       {
         //Replace with something else
+        firebaseSignUpException = "Password too weak";
         print("The Password Provided was too weak");
       }
       else if(exception.code == "email-already-in-use")
       {
         //Replace with something else
+        firebaseSignUpException = "Email already in use";
         print("Email Already in use");
       }
       else if(exception.code == "invalid-email")
       {
         //Replace with something else
+        firebaseSignUpException = "Invalid email";
         print("Email is Invalid");
       }
       else if(exception.code == "operation-not-allowed")
       {
         //Replace with something else
+        firebaseSignUpException = "Email is banned";
         print("The account has been disabled");  
       }
     }
@@ -67,25 +73,33 @@ class FirebaseAuthHandler
       }else
       {
         print("Email is not verified");
+        throw FirebaseAuthException(code: "email-not-verified");
         signOutAccount();
       }
     }
     on FirebaseAuthException catch(exception){
-      firebaseAuthException = exception;
-      if(exception.code == "wrong-password" || exception.code == "invalid-email")
+      print(exception.code);
+      if(exception.code == "invalid-credential")
       {
         //Replace this with something else
-        print("Invalid username or password");
+        firebaseLoginException = "Invalid email or password";
+        signOutAccount();
       }
       else if(exception.code == "user-disabled")
       {
         //Replace this with something else
-        print("User has been disabled");
+        firebaseLoginException = "User has been banned";
+        signOutAccount();
       }
-      else if(exception.code == "user-not-found")
+      else if(exception.code == "too-many-requests")
       {
         //Replace this with something else
-        print("User not found");
+        firebaseLoginException = "Too many attempts";
+        signOutAccount();
+      }
+      else if(exception.code == "email-not-verified"){
+        firebaseLoginException = "Email not yet verified";
+        signOutAccount();
       }
     }
   }

@@ -10,6 +10,7 @@ class LoginFormField extends StatefulWidget {
   final double? height;
   final double? verticalPadding;
   final double borderRadius;
+  final String? errorText;
 
   const LoginFormField({
     super.key,
@@ -20,6 +21,7 @@ class LoginFormField extends StatefulWidget {
     this.height,
     this.verticalPadding,
     required this.borderRadius,
+    this.errorText,
   });
 
   @override

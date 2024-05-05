@@ -10,7 +10,7 @@ class UserDatabaseHandler {
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");
   late bool circleExists = false;
-
+  Map<String, String> circleData = <String, String>{};
 
   /// Adds a user data to the database using the [uid] as the Identication
   /// [birthday] and [role] are the contents of the Collection
@@ -26,14 +26,20 @@ class UserDatabaseHandler {
     print("Data Added");
   }
 
-  Future<void> addUserCircle(String? uid, String? circleCode) async {
+  Future<void> addUserCircle(String? uid, String? circleCode, String? circleName) async {
     // Gets the Collection using the uid parameter
-    await dbUserReference.child(uid!).set
+    await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).set
       ({
-        "circleCode": circleCode
+        "circleName": circleName
     });
     // Delete this in Production
     print("Data Added");
+  }
+
+  Future<void> getCurrentCircle(String? uid, String? circleCode) async {
+    DataSnapshot snapshot = await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).get();
+    circleData["circle_name"] = snapshot.child('circleName').value.toString();
+    circleData["circle_code"] = snapshot.ref.parent!.key.toString();
   }
 
   /// Gets the User from the database and 

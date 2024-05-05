@@ -3,6 +3,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 
 class CircleCreator{
   void createCircle(BuildContext context){
+  final _circleKey = GlobalKey<FormState>();
     showDialog(
         context: context,
         builder: (context)
@@ -14,14 +15,39 @@ class CircleCreator{
             content: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Form(
+                key: _circleKey,
                 child: Column(
                   children: [
                     TextFormField(
                       controller: textController,
                       decoration: InputDecoration(
                         labelText: 'Circle Name',
-                        icon: Icon(Icons.groups),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                            width: 1,
+                          ),
+                        ),
+                        focusedErrorBorder: true
+                            ? OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(9),
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                            width: 1,
+                          ),
+                        )
+                            : null,
                       ),
+                      validator: (value) {
+                        print(value);
+                        if(value == null){
+                          return "Please enter a Circle Name";
+                        }
+                        else{
+                          return null;
+                        }
+                      },
                     ),
                   ],
                 ),
@@ -30,10 +56,12 @@ class CircleCreator{
             actions: [
               ElevatedButton(
                   onPressed: (){
-                    CircleDatabaseHandler circleCreator = CircleDatabaseHandler();
-                    circleCreator.createCircle("xsfes", "name", textController.text, "email", "phone");
-                    Navigator.pop(context);
-                    print("Data Added");
+                    if(_circleKey.currentState!.validate()){
+                      CircleDatabaseHandler circleCreator = CircleDatabaseHandler();
+                      circleCreator.createCircle("xsfes", "name", textController.text, "email", "phone");
+                      Navigator.pop(context);
+                      print("Data Added");
+                    }
                   },
                   child: Text("Add Circle")
               )

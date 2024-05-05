@@ -4,6 +4,8 @@ import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_page.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/front_end_code//pages/signup_page.dart';
+import 'package:safeconnex/front_end_code/pages/join_circle.dart';
+import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),
         "/home": (context) => HomePage(),
+        "/create_circle": (context) => CirclePage(),
+        "/join_circle": (context) => JoinCirclePage()
       },
       //home: LoginPage(),
     );
