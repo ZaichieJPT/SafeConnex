@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 
 class ConfirmJoinCircle extends StatefulWidget {
   const ConfirmJoinCircle({super.key});
@@ -13,6 +14,9 @@ class ConfirmJoinCircle extends StatefulWidget {
 }
 
 class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
+  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+  UserDatabaseHandler userDatabase = UserDatabaseHandler();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -164,9 +168,8 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                 ),
                 child: TextButton(
                   onPressed: (){
-                    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-                    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
                     circleDatabase.addCircleMember(CircleDatabaseHandler.circleData["circle_code"].toString(), authHandler.authHandler.currentUser!.uid, authHandler.authHandler.currentUser!.displayName.toString(), CircleDatabaseHandler.circleData["circle_name"].toString(), authHandler.authHandler.currentUser!.email.toString(), "1");
+                    userDatabase.addUserCircle(authHandler.authHandler.currentUser!.uid, CircleDatabaseHandler.circleData["circle_code"].toString(), CircleDatabaseHandler.circleData["circle_name"].toString());
                     Navigator.of(context).popUntil((route) => route.settings.name == "/home");
                   },
                   child: Text(

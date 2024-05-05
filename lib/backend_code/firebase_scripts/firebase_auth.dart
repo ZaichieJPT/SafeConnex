@@ -26,7 +26,7 @@ class FirebaseAuthHandler
       databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, date, "user");
       //<code>
       // Sets the users info and adds it to the FirebaseDatabaseHandler
-
+      await authHandler.signOut();
       print("Account Created");
     } 
     on FirebaseAuthException catch(exception) 

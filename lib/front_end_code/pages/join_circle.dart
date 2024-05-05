@@ -119,7 +119,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                       return "Invalid Code";
                     }
                     else{
-                      if(CircleDatabaseHandler.circleData.isEmpty){
+                      if(CircleDatabaseHandler.circleData['circle_code'] == null || CircleDatabaseHandler.circleData['circle_name'] == null){
                         return "Circle does not exist";
                       }
                       return null;
@@ -199,7 +199,6 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
               ),
               child: TextButton(
                 onPressed: () {
-                 
                   circleDatabase.getCircle(authHandler.authHandler.currentUser!.uid, _joinCircleController.text);
                   Future.delayed(Duration(milliseconds: 1500), (){
                     if(_joinCircleKey.currentState!.validate()) {

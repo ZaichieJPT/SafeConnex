@@ -115,7 +115,7 @@ class _SignupFormFieldState extends State<SignupFormField> {
             ),
             counterText: '',
             //floatingLabelStyle: TextStyle(color: Colors.black),
-            suffixIcon: _getClearButton(),
+            //suffixIcon: _getClearButton(),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide(
