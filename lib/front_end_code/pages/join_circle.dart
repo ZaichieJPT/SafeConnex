@@ -20,6 +20,8 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
 
   @override
   Widget build(BuildContext context) {
+    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Scaffold(
       body: Stack(
         children: [
@@ -197,8 +199,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
               ),
               child: TextButton(
                 onPressed: () {
-                  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-                  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+                 
                   circleDatabase.getCircle(authHandler.authHandler.currentUser!.uid, _joinCircleController.text);
                   Future.delayed(Duration(milliseconds: 1500), (){
                     if(_joinCircleKey.currentState!.validate()) {

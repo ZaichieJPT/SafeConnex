@@ -43,20 +43,20 @@ class UserDatabaseHandler {
   }
 
   /// Gets the User from the database and 
-  Future<void> getRegularUser(String? uid) async
-  {
+  //Future<void> getRegularUser(String? uid) async
+  //{
     // Gets the data from the database using the uid identifier
-    final snapshot = await dbUserReference.child(uid!).get();
-    if (snapshot.exists) {
+    //final snapshot = await dbUserReference.child(uid!).get();
+    //if (snapshot.exists) {
       // Format snapshot.child("<database collection>").value
       // Map the data to the UI
-      if(snapshot.child("circleCode").value != null){
-        circleExists = true;
-      }
-    }
-    else {
+      //if(snapshot.child("circleCode").value != null){
+        //circleExists = true;
+      //}
+    //}
+    //else {
       // Run Error to the UI the account data does not exist
-      print("No Data");
-    }
-  }
+      //print("No Data");
+    //}
+  //}
 }

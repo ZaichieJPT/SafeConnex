@@ -107,7 +107,6 @@ class _EmailCardState extends State<EmailCard> {
                         height: 15,
                       ),
                       Form(
-                        autovalidateMode: AutovalidateMode.always,
                         key: _emailCardFormKey,
                         child: SignupFormField(
                           hintText: "Email Address",
@@ -124,9 +123,9 @@ class _EmailCardState extends State<EmailCard> {
                                 return FirebaseAuthHandler.firebaseSignUpException;
                               }
                               // Still Errors Here
-                              //else if (!EmailValidator.validate(email)) {
-                              //return "Enter a valid email";
-                              //}
+                              else if (!EmailValidator.validate(email)) {
+                              	return "Enter a valid email";
+                              }
                               return null;
                             });
                           },

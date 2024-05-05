@@ -179,7 +179,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                         if(_circleKey.currentState!.validate()){
                           if(_circleNameController.text.length <= 25){
                             print("inside");
-                            userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
+                            //userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
                             circleDatabase.createCircle(authHandler.authHandler.currentUser?.uid, authHandler.authHandler.currentUser?.displayName!, _circleNameController.text, authHandler.authHandler.currentUser?.email, "0");
                             userDatabase.addUserCircle(authHandler.authHandler.currentUser?.uid, CircleDatabaseHandler.generatedCode, _circleNameController.text);
                             print("pass");

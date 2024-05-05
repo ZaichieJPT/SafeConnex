@@ -150,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                     onPressed: (){
                       FirebaseAuthHandler authHandler = FirebaseAuthHandler();
                       authHandler.signOutAccount();
+                      Navigator.pop(context);
                     },
                   ),
                 ),
