@@ -8,6 +8,7 @@ import 'package:safeconnex/front_end_code/pages/join_circle.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
+import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'backend_code/firebase_scripts/firebase_options.dart';
 import 'front_end_code/pages/create_circle_page.dart';
@@ -16,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseInit.rootFirebase;
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -35,13 +35,14 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login",
+      initialRoute: "/temp",
       routes: {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),
         "/home": (context) => HomePage(),
         "/create_circle": (context) => CirclePage(),
-        "/join_circle": (context) => JoinCirclePage()
+        "/join_circle": (context) => JoinCirclePage(),
+        "/temp": (context) => NewMapProvider()
       },
       //home: LoginPage(),
     );

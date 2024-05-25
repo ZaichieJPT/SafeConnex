@@ -98,7 +98,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                        else{
                          return null;
                        }
-                     } ,
+                     },
                      controller: _circleNameController,
                      textAlignVertical: TextAlignVertical.center,
                      cursorColor: Color.fromARGB(255, 175, 173, 173),

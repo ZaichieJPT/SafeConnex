@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/front_end_code/components/nav_button_component.dart';
 import 'package:safeconnex/front_end_code/pages/circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import 'package:safeconnex/front_end_code/provider/map_provider.dart';
+import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,6 +15,246 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  void showCircleCards(BuildContext context){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return Stack(
+          children: [
+            Positioned(
+                height: 380,
+                width: 270,
+                left: 73,
+                top: 230,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.lightGreenAccent.shade700,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                )
+            ),
+            Positioned(
+              height: 363,
+              width: 250,
+              top: 238,
+              left: 83,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 140,
+              left: 118,
+              width: 180,
+              height: 180,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey,
+                      blurRadius: 60,
+                      offset: Offset(0, 9)
+                    )
+                  ]
+                ),
+              ),
+            ),
+            Positioned(
+              top:340,
+              left: 90,
+              width: 230,
+              child: Column(
+                children: [
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      "Charles",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.blueGrey.shade800,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Text(
+                      "Circle Creator",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey.shade800,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              top:410,
+              left: 87,
+              width: 230,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  "Safety Status:",
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade800,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top:430,
+              left: 87,
+              width: 230,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  "Current Location:",
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade800,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 450,
+              left: 90,
+              child: Container(
+                height: 22,
+                width: 232,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blueGrey.shade800,
+                    width: 2
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Material(
+                  child: Text(
+                    "Hello Worlds",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.blueGrey.shade800,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600
+                    ),
+                  )),
+              ),
+            ),
+            Positioned(
+              top:475,
+              left: 87,
+              width: 230,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  "Email Account:",
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade800,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 495,
+              left: 90,
+              child: Container(
+                height: 22,
+                width: 232,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.blueGrey.shade800,
+                      width: 2
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Material(
+                    child: Text(
+                      "Hello Worlds",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey.shade800,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600
+                      ),
+                    )),
+              ),
+            ),
+            Positioned(
+              top:520,
+              left: 87,
+              width: 230,
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  "Phone Number:",
+                  style: TextStyle(
+                    color: Colors.blueGrey.shade800,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              top: 540,
+              left: 90,
+              child: Container(
+                height: 22,
+                width: 232,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Colors.blueGrey.shade800,
+                      width: 2
+                  ),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Material(
+                    child: Text(
+                      "Hello Worlds",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.blueGrey.shade800,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600
+                      ),
+                    )
+                ),
+              ),
+            ),
+            Positioned(
+              top: 560,
+              left: 90,
+              width: 230,
+              child: TextButton(
+                onPressed: (){},
+                child: Text(
+                  "View Location History",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blueGrey.shade800
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,8 +420,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     icon: Image.asset("assets/images/geofencing_icon.png"),
                     onPressed: (){
-                      FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-                      print(authHandler.authHandler.currentUser!.uid);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => GeofencingPage()));
                     },
                   ),
                 ),
@@ -191,7 +432,7 @@ class _HomePageState extends State<HomePage> {
       body: Stack(
         alignment: Alignment(0, 0.86),
           children: [
-            MapProvider(),
+            //NewMapProvider(),
             NavButtonComponent(imageLocation: 'assets/images/emergency_button.png', scale: 8, route: HomePage(),),
           ],
         ),
@@ -206,7 +447,9 @@ class _HomePageState extends State<HomePage> {
               style: IconButton.styleFrom(
                 shape: RoundedRectangleBorder(),
               ),
-              onPressed: (){},
+              onPressed: (){
+                showCircleCards(context);
+              },
               icon: Container(
                 height: 65,
                 width: 85,
