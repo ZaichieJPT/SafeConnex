@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
+import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
+import "package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
-import "package:safeconnex/front_end_code/pages/home_page.dart";
+import "package:safeconnex/front_end_code/temp/provider/home_page.dart";
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -26,9 +28,14 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isPasswordValidated = false;
 
+
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+    double topPadding = MediaQuery.of(context).padding.top;
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+    FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
     Future.delayed(const Duration(milliseconds: 5), () {
       if(authHandler.authHandler.currentUser != null){
         Navigator.pushNamed(context, "/home");
@@ -259,14 +266,58 @@ class _LoginPageState extends State<LoginPage> {
                                   Future.delayed(Duration(seconds: 1), (){
                                     if (_loginFormKey.currentState!.validate()) {
                                       if (authHandler.firebaseLoginException == null) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(height: height, width: width,)));
                                       }
                                     }
                                   });
                                 }
                               ),
                               SizedBox(
-                                height: 35,
+                                height: 15,
+                              ),
+                              Container(
+                                height: 34,
+                                padding: EdgeInsets.only(bottom: 10),
+                                alignment: Alignment.topCenter,
+                                //color: Colors.blueGrey,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      color: Colors.grey.shade300,
+                                      width: 70,
+                                      height: 1,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "or login with",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: const Color.fromARGB(
+                                            255, 120, 120, 120),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    InkWell(
+                                      child: Image.asset("assets/images/google_signin_icon.png"),
+                                      onTap: (){
+                                        authHandler.signInWithGoogle();
+                                      } ,
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Container(
+                                      color: Colors.grey.shade300,
+                                      width: 70,
+                                      height: 1,
+                                    ),
+                                  ],
+                                ),
                               ),
                               //DONT HAVE AN ACCOUNT
                               Container(

@@ -116,6 +116,7 @@ class _EmailCardState extends State<EmailCard> {
                             Future.delayed(Duration(seconds: 1), (){
                               print("validator");
                               print(FirebaseAuthHandler.firebaseSignUpException);
+
                               if (email.toString().isEmpty) {
                                 return "Email is required";
                               }
@@ -123,9 +124,9 @@ class _EmailCardState extends State<EmailCard> {
                                 return FirebaseAuthHandler.firebaseSignUpException;
                               }
                               // Still Errors Here
-                              else if (!EmailValidator.validate(email)) {
-                              	return "Enter a valid email";
-                              }
+                              //else if (!EmailValidator.validate(email)) {
+                               // return "Enter a valid email";
+                              //}
                               return null;
                             });
                           },
@@ -159,9 +160,12 @@ class _EmailCardState extends State<EmailCard> {
           btnName: "Continue",
           formKey: _emailCardFormKey,
           continueClicked: () {
+            print("clicked");
             if (_emailCardFormKey.currentState!.validate()) {
               widget.continueClicked();
-            } else {}
+            } else {
+
+            }
           },
         ),
         Padding(

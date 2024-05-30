@@ -28,23 +28,10 @@ class _NewMapProviderState extends State<NewMapProvider> {
   };
   MapController? _mapController;
   FlutterFireCoordinates flutterFireMap = FlutterFireCoordinates();
-  FlutterFireGeofence flutterFireGeofence = FlutterFireGeofence();
+  GeofenceDatabase flutterFireGeofence = GeofenceDatabase();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
   List<Marker> geolocationMarkers = [];
   int index = 0;
-
-  //print(position.longitude);
-  /// try{
-  //         List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-  //         Placemark place = placemarks[0];
-  //         setState(() {
-  //           currentPosition = position;
-  //           currentAddress = "${place.locality}, ${place.postalCode}, ${place.country}";
-  //         });
-  //       }
-  //       catch(e){
-  //         print(e);
-  //       }///
 
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
@@ -93,7 +80,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
   }
 
   void _onLocationChanged(geofence.Location location){
-    Future.delayed(Duration(seconds: 1), (){
+    Future.delayed(Duration(milliseconds: 400), (){
       setState(() {
         _location = location.toJson();
       });
@@ -164,22 +151,42 @@ class _NewMapProviderState extends State<NewMapProvider> {
   }
 
   addGeolocationMarker(int index){
-    print(flutterFireMap.coordinatesData[index]['latitude']);
     geolocationMarkers.add(Marker(
+        height: 50,
+        width: 50,
+        rotate: true,
+        alignment: Alignment.topCenter,
         point: LatLng(flutterFireMap.coordinatesData[index]['latitude'], flutterFireMap.coordinatesData[index]['longitude']),
-        child: IconButton(
-          color: Colors.green,
-          iconSize: 65,
-          icon: CircleAvatar(
-            child: Icon(Icons.location_pin),
-          ),
-          onPressed: (){},
+        child: Stack(
+          children: [
+            Positioned(
+                child: Icon(Icons.location_pin, size: 55)
+            ),
+            Positioned(
+              top: 10,
+              left: 16,
+              child: Container(
+                width: 23,
+                height: 23,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.green
+                ),
+              ),
+            )
+          ],
         )
     ));
     setState(() {});
   }
 
   Widget _buildMonitor() {
+    geolocationMarkers.clear();
+    index = 0;
+    Future.delayed(Duration(milliseconds: 400), (){
+      flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], "Garry");
+    });
+
     _mapController = MapController();
     for(index; index < flutterFireMap.coordinatesData.length; index++){
       addGeolocationMarker(index);
@@ -224,6 +231,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
                           setState(() {
                             _mapController!.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
                             print("InClass" + flutterFireMap.coordinatesData[1]['userId']);
+                            print(flutterFireMap.coordinatesData[1]["location"]);
                             //flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], "Andrea");
                             //flutterFireGeofence.addGeofence("test", 37.9991, -122.0021, "100m", 100, "Great");
                           });

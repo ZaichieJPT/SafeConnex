@@ -42,7 +42,6 @@ dependencies:
   firebase_performance: ^0.9.4+3
   firebase_database: ^10.5.3
   cloud_firestore: ^4.17.1
-  flutter_osm_plugin: ^1.0.3
 
   #Front-end
   cupertino_icons: ^1.0.6
@@ -59,6 +58,15 @@ dependencies:
   latlong2: ^0.9.1
   geocoding: ^3.0.0
   geofence_service: ^5.0.0
+  location_picker_flutter_map: ^3.0.1
+  font_awesome_flutter: ^10.7.0
+  google_sign_in: ^6.2.1
+  firebase_storage: ^11.7.7
+  path_provider: ^2.1.3
+  carousel_slider: ^4.2.1
+  flutter_styled_toast: ^2.2.1
+  animated_toggle_switch: ^0.8.2
+  image_picker: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -99,9 +107,10 @@ flutter:
   assets:
     - assets/images/
     - assets/fonts/
-    - assets/images/
     - assets/images/signup_page/
     - assets/images/onboarding/
+    - assets/images/side_menu/
+    - assets/images/side_menu/circle_settings/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

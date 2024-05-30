@@ -13,7 +13,20 @@
           "package_name": "com.safeconnex.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "353415964817-5qngk62l8hajpr59o0hcjsgikvltrcv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.safeconnex.app",
+            "certificate_hash": "8604cda42740177ceac3555a2cb713b54dc1837a"
+          }
+        },
+        {
+          "client_id": "353415964817-td6fn8funq5bk67g4ui8oo69ebcglhb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDzGRqNi6r6y0zLSjQ97qYwiYgOEaMavFs"
@@ -21,7 +34,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "353415964817-td6fn8funq5bk67g4ui8oo69ebcglhb9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "353415964817-ll2g9bhqkjlhpptf543jvrdfgieunqh6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.safeconnex.app.safeconnex"
+              }
+            }
+          ]
         }
       }
     }

@@ -199,7 +199,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
               ),
               child: TextButton(
                 onPressed: () {
-                  circleDatabase.getCircle(authHandler.authHandler.currentUser!.uid, _joinCircleController.text);
+                  circleDatabase.getCircle(_joinCircleController.text);
                   Future.delayed(Duration(milliseconds: 1500), (){
                     if(_joinCircleKey.currentState!.validate()) {
                       if (CircleDatabaseHandler.circleData.isEmpty) {

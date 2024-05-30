@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SignupFormField extends StatefulWidget {
@@ -26,6 +27,51 @@ class SignupFormField extends StatefulWidget {
 class _SignupFormFieldState extends State<SignupFormField> {
   bool showClearButton = false;
   bool isValid = true;
+  bool isEmail = true;
+
+  _initializeListener(){
+    setState(() {
+      showClearButton = widget.controller.text.isNotEmpty;
+    });
+  }
+
+  _clearButton(){
+    if (showClearButton) {
+      return SizedBox(
+        width: 0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 25,
+              height: 25,
+              child: widget.controller.text.isNotEmpty
+                  ? Container(
+                alignment: AlignmentDirectional.center,
+                decoration: BoxDecoration(
+                  //color: Colors.amber,
+                  shape: BoxShape.circle,
+                  //color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                child: FittedBox(
+                  child: IconButton(
+                    icon: Icon(Icons.cancel),
+                    iconSize: 70,
+                    alignment: AlignmentDirectional.center,
+                    onPressed: () {
+                      widget.controller.clear();
+                    },
+                  ),
+                ),
+              )
+                  : null,
+            ),
+          ],
+        ),
+      );
+    }
+    return null;
+  }
 
   _getClearButton() {
     widget.controller.addListener(() {
@@ -33,6 +79,7 @@ class _SignupFormFieldState extends State<SignupFormField> {
         showClearButton = widget.controller.text.isNotEmpty;
       });
     });
+
     if (showClearButton) {
       return SizedBox(
         width: 0,
@@ -68,6 +115,22 @@ class _SignupFormFieldState extends State<SignupFormField> {
       );
     }
     return null;
+  }
+
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      widget.controller.addListener(_initializeListener);
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    widget.controller.removeListener(_initializeListener);
   }
 
   @override
@@ -115,7 +178,7 @@ class _SignupFormFieldState extends State<SignupFormField> {
             ),
             counterText: '',
             //floatingLabelStyle: TextStyle(color: Colors.black),
-            //suffixIcon: _getClearButton(),
+            suffixIcon: isEmail == true ? _clearButton() : _getClearButton(),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide(

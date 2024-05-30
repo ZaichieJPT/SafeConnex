@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'firebase_user.dart';
 import 'firebase_users_database.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
@@ -22,6 +23,7 @@ class FirebaseAuthHandler
       FirebaseUserCredentials.userCredential = await authHandler.createUserWithEmailAndPassword(email: email, password: password);
       sendEmailVerification();
       FirebaseUserCredentials.userCredential.user?.updateDisplayName("$firstName $lastName");
+      //FirebaseUserCredentials.userCredential.user?.updatePhotoURL();
       //FirebaseUserCredentials.userCredential.user?.updatePhoneNumber(phoneNumber as PhoneAuthCredential);
       databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, date, "user");
       //<code>
@@ -155,5 +157,21 @@ class FirebaseAuthHandler
   Future<void> signOutAccount() async 
   {
     await authHandler.signOut();
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    FirebaseUserCredentials.userCredential.user?.updateDisplayName(googleUser!.displayName.toString());
+    //FirebaseUserCredentials.userCredential.user?.updatePhoneNumber(phoneNumber as PhoneAuthCredential);
+    databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, "01-01-1999", "user");
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken
+    );
+
+    return await authHandler.signInWithCredential(credential);
   }
 }

@@ -203,8 +203,8 @@ class _PassCardState extends State<PassCard> {
                                     isPassValidated = true;
                                   });
                                 }
-                                return provider.passValidator(
-                                    value, strengthCount);
+                                //return provider.passValidator(
+                                    //value, strengthCount.round().toDouble());
                               },
                               isValidated: isPassValidated,
                             ),
@@ -220,8 +220,8 @@ class _PassCardState extends State<PassCard> {
                                   setState(() {
                                     isConfirmPassValidated = true;
                                   });
-                                  return provider.confirmPassMismatch(
-                                      confirmPass, widget.passController.text);
+                                  //return provider.confirmPassMismatch(
+                                      //confirmPass, widget.passController.text);
                                 }
                                 return null;
                               },

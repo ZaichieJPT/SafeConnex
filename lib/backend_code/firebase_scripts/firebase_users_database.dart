@@ -11,6 +11,7 @@ class UserDatabaseHandler {
       .ref("users");
   late bool circleExists = false;
   Map<String, String> circleData = <String, String>{};
+  Map<String, dynamic> userData = <String, String>{};
 
   /// Adds a user data to the database using the [uid] as the Identication
   /// [birthday] and [role] are the contents of the Collection
@@ -30,7 +31,8 @@ class UserDatabaseHandler {
     // Gets the Collection using the uid parameter
     await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).set
       ({
-        "circleName": circleName
+        "circleName": circleName,
+        "circleCode": circleCode
     });
     // Delete this in Production
     print("Data Added");
@@ -40,6 +42,21 @@ class UserDatabaseHandler {
     DataSnapshot snapshot = await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).get();
     circleData["circle_name"] = snapshot.child('circleName').value.toString();
     circleData["circle_code"] = snapshot.ref.parent!.key.toString();
+  }
+
+  Future<void> getAllCircle(String? uid, String? circleCode) async {
+    DataSnapshot snapshot = await dbUserReference.child(uid!).child("circle_list").get();
+    print(snapshot.value);
+  }
+
+  Future<void> getRegularUser(String? uid) async {
+    final snapshot = await dbUserReference.child(uid!).get();
+    if(snapshot.exists){
+      userData = {
+        "birthday": snapshot.child("birthday").value,
+        "role": snapshot.child("role").value
+      };
+    }
   }
 
   /// Gets the User from the database and 
