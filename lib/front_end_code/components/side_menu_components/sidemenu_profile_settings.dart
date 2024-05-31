@@ -141,7 +141,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   Widget build(BuildContext context) {
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     UserDatabaseHandler userDatabase = UserDatabaseHandler();
-    //userDatabase.getRegularUser(authHandler.authHandler.currentUser!.uid);
+    userDatabase.getRegularUser(authHandler.authHandler.currentUser!.uid);
+    Future.delayed(Duration(milliseconds: 500), (){
+      _phoneNumber = userDatabase.userData["phoneNumber"];
+      _birthDate = userDatabase.userData["birthday"];
+    });
     return Column(
       children: [
         //PROFILE CARD AREA
@@ -242,7 +246,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           horizontal: innerHeight * 0.05,
                                         ),
                                         child: Text(
-                                          '${authHandler.authHandler.currentUser?.displayName}',
+                                          '${authHandler.authHandler.currentUser!.displayName}',
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: innerHeight * 0.11,
@@ -255,7 +259,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: FittedBox(
                                       child: Text(
-                                        'Email: ${authHandler.authHandler.currentUser?.email}',
+                                        'Email: ${authHandler.authHandler.currentUser!.email}',
                                         style: TextStyle(
                                           fontFamily: 'OpunMai',
                                           fontSize: widget.height * 0.018,
@@ -353,7 +357,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                                 width: widget.width * 0.24,
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  '$_phoneNumber',
+                                                  '${_phoneNumber}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     fontFamily: 'OpunMai',
@@ -374,7 +378,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Text(
-                                          'Birthdate:',
+                                          'Birthdate: ',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
@@ -481,7 +485,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                                 width: widget.width * 0.32,
                                                 alignment: Alignment.center,
                                                 child: Text(
-                                                  '$_birthDate',
+                                                  '${_birthDate}',
                                                   textAlign: TextAlign.left,
                                                   style: TextStyle(
                                                     fontFamily: 'OpunMai',

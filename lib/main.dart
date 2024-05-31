@@ -4,7 +4,6 @@ import 'package:safeconnex/front_end_code/pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
-import 'package:safeconnex/front_end_code/temp/provider/home_page.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/front_end_code//pages/signup_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle.dart';

@@ -48,21 +48,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        Container(
-          color: Colors.blue[700],
-          child: SingleChildScrollView(
-            child: Center(
-              child: Text(
-                'Hello Word!' * 1000,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'OpunMai',
-                ),
-              ),
-            ),
-          ),
-        ),
-        //NewMapProvider(),
+        NewMapProvider(),
 
         //APP BAR
         HomeAppBar(

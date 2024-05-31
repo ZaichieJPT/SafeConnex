@@ -6,7 +6,7 @@ import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
-import "package:safeconnex/front_end_code/temp/provider/home_page.dart";
+import "package:safeconnex/front_end_code/pages/home_mainscreen.dart";
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
@@ -31,13 +31,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
-    double width = MediaQuery.sizeOf(context).width;
-    double topPadding = MediaQuery.of(context).padding.top;
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-    FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
     Future.delayed(const Duration(milliseconds: 5), () {
       if(authHandler.authHandler.currentUser != null){
+        FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
         Navigator.pushNamed(context, "/home");
       }
     });
@@ -263,10 +260,11 @@ class _LoginPageState extends State<LoginPage> {
                                 formKey: _loginFormKey,
                                 continueClicked: (){
                                   authHandler.loginEmailAccount(_emailController.text, _passController.text);
+                                  FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
                                   Future.delayed(Duration(seconds: 1), (){
                                     if (_loginFormKey.currentState!.validate()) {
                                       if (authHandler.firebaseLoginException == null) {
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(height: height, width: width,)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                                       }
                                     }
                                   });

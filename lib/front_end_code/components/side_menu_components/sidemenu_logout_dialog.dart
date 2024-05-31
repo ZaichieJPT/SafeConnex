@@ -180,7 +180,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
                                   );
                                   // Logout Function
                                   authHandler.signOutAccount();
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context).popUntil(ModalRoute.withName("/login"));
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(
