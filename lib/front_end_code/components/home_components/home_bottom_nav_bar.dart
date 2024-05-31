@@ -39,7 +39,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
-    circleDatabaseHandler.getCircle("EZ5TzZ");
+    circleDatabaseHandler.getCircle("JaQeVx");
     return Stack(
       children: [
         SizedBox(
