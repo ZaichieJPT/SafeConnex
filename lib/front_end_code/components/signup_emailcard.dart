@@ -117,7 +117,7 @@ class _EmailCardState extends State<EmailCard> {
                               print("validator");
                               print(FirebaseAuthHandler.firebaseSignUpException);
 
-                              if (email.toString().isEmpty) {
+                              if (widget.emailController.text.isEmpty) {
                                 return "Email is required";
                               }
                               else if(FirebaseAuthHandler.firebaseSignUpException != null){

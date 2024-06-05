@@ -1,3 +1,4 @@
+import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
@@ -20,14 +21,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
 
-  final List _circleList = [
-    'Circle Name Random Test Name',
-    'Office',
-    'CSITS',
-    'Special Someones',
-    'Family',
-    'Capstone Group 3'
-  ];
+  //List<String> _circleList = [];
+  int currentCircleIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +226,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           collapsedIconColor:
                               const Color.fromARGB(255, 62, 73, 101),
                           title: Text(
-                            'Circle Nasasasdasasme',
+                            CircleDatabaseHandler.circleList.isEmpty ? "No Circle" : CircleDatabaseHandler.circleList[currentCircleIndex]["circle_name"],
                             textScaler: TextScaler.linear(0.9),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -259,11 +254,20 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: _circleList.length - 1,
-                                        itemBuilder: (context, index) =>
-                                            CircleListTile(
-                                          title: _circleList[index + 1],
-                                        ),
+                                        itemCount: CircleDatabaseHandler.circleList.length ,//_circleList.length,
+                                        itemBuilder: (context, index){
+                                          return CircleListTile(
+                                            title: CircleDatabaseHandler.circleList[index]["circle_name"] ,//_circleList[index],
+                                            onTap: (){
+                                              setState(() {
+                                                currentCircleIndex = index;
+                                                circleDatabaseHandler.getCircleData(CircleDatabaseHandler.circleList[index]["circle_code"]);
+                                                CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[index]["circle_code"];
+                                                print(index);
+                                              });
+                                            },
+                                          );
+                                        }
                                       ),
                                     );
                                   },

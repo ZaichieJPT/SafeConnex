@@ -163,14 +163,12 @@ class FirebaseAuthHandler
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    FirebaseUserCredentials.userCredential.user?.updateDisplayName(googleUser!.displayName.toString());
-    //FirebaseUserCredentials.userCredential.user?.updatePhoneNumber(phoneNumber as PhoneAuthCredential);
-    databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, "01-01-1999", "user");
-
     final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken
     );
+
+    databaseHandler.addRegularUser(credential.idToken, "01-01-1999", "user");
 
     return await authHandler.signInWithCredential(credential);
   }

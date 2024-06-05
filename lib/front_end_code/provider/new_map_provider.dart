@@ -137,7 +137,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
       notificationTitle: "Geofence Service is running",
       notificationText: 'Tap to return to the app',
       child: Scaffold(
-        body: _buildMonitor()
+          body: _buildMonitor()
       ),
     );
   }
@@ -156,7 +156,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
         width: 50,
         rotate: true,
         alignment: Alignment.topCenter,
-        point: LatLng(flutterFireMap.coordinatesData[index]['latitude'], flutterFireMap.coordinatesData[index]['longitude']),
+        point: LatLng(FlutterFireCoordinates.coordinatesData[index]['latitude'], FlutterFireCoordinates.coordinatesData[index]['longitude']),
         child: Stack(
           children: [
             Positioned(
@@ -188,7 +188,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
     });
 
     _mapController = MapController();
-    for(index; index < flutterFireMap.coordinatesData.length; index++){
+    for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
       addGeolocationMarker(index);
     }
 
@@ -219,7 +219,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
                           userAgentPackageName: 'com.safeconnex.app',
                         ),
                         MarkerLayer(
-                          markers: geolocationMarkers
+                            markers: geolocationMarkers
                         ),
                       ],
                     ),
@@ -230,8 +230,8 @@ class _NewMapProviderState extends State<NewMapProvider> {
                         onPressed: (){
                           setState(() {
                             _mapController!.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
-                            print("InClass" + flutterFireMap.coordinatesData[1]['userId']);
-                            print(flutterFireMap.coordinatesData[1]["location"]);
+                            print("InClass" + FlutterFireCoordinates.coordinatesData[1]['userId']);
+                            print(FlutterFireCoordinates.coordinatesData[1]["location"]);
                             //flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], "Andrea");
                             //flutterFireGeofence.addGeofence("test", 37.9991, -122.0021, "100m", 100, "Great");
                           });

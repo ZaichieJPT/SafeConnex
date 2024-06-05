@@ -10,16 +10,16 @@ class FirebaseProfileStorage{
   final profileRefs = FirebaseStorage.instance.ref().child("profile_pics");
   static String? imageUrl;
 
-  FirebaseProfileStorage(String username){
-    getProfilePic(username);
+  FirebaseProfileStorage(String userId){
+    getProfilePic(userId);
   }
 
-  getProfilePic(String username) async {
+  getProfilePic(String userId) async {
       final alternative_pic_male = profileRefs.child("male_profile.png");
       final networkImageAlternate = await alternative_pic_male.getDownloadURL();
 
       try{
-        final profile_pic = profileRefs.child("${username}.png");
+        final profile_pic = profileRefs.child("${userId}.png");
         final networkImage = await profile_pic.getDownloadURL();
         imageUrl = networkImage;
       } on FirebaseException catch(e){
@@ -27,12 +27,10 @@ class FirebaseProfileStorage{
           imageUrl = networkImageAlternate;
         }
       }
-
-
   }
 
-  uploadProfilePic(String username, String path) async {
-    final profile_pic = profileRefs.child("${username}.png");
+  uploadProfilePic(String userId, String path) async {
+    final profile_pic = profileRefs.child("${userId}.png");
     final file = File(path);
     await profile_pic.putFile(file);
     print("File Uploaded");

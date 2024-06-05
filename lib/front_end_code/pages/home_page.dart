@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        NewMapProvider(),
+        //NewMapProvider(),
 
         //APP BAR
         HomeAppBar(

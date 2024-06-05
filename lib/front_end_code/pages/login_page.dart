@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
+import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
@@ -32,9 +33,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+    CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
     Future.delayed(const Duration(milliseconds: 5), () {
       if(authHandler.authHandler.currentUser != null){
         FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+        circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
         Navigator.pushNamed(context, "/home");
       }
     });
@@ -260,10 +263,11 @@ class _LoginPageState extends State<LoginPage> {
                                 formKey: _loginFormKey,
                                 continueClicked: (){
                                   authHandler.loginEmailAccount(_emailController.text, _passController.text);
-                                  FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
                                   Future.delayed(Duration(seconds: 1), (){
                                     if (_loginFormKey.currentState!.validate()) {
                                       if (authHandler.firebaseLoginException == null) {
+                                        FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+                                        circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                                       }
                                     }
@@ -304,6 +308,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: Image.asset("assets/images/google_signin_icon.png"),
                                       onTap: (){
                                         authHandler.signInWithGoogle();
+
                                       } ,
                                     ),
                                     SizedBox(

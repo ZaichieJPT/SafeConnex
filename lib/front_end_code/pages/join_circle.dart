@@ -119,8 +119,10 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                       return "Invalid Code";
                     }
                     else{
-                      if(CircleDatabaseHandler.circleData['circle_code'] == null || CircleDatabaseHandler.circleData['circle_name'] == null){
+                      if(CircleDatabaseHandler.circleToJoin['circle_code'] == null || CircleDatabaseHandler.circleToJoin['circle_name'] == null){
                         return "Circle does not exist";
+                      }else if(CircleDatabaseHandler.circleToJoin['id'] != null){
+                        return "Already in the Circle";
                       }
                       return null;
                     }
@@ -199,16 +201,11 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
               ),
               child: TextButton(
                 onPressed: () {
-                  circleDatabase.getCircle(_joinCircleController.text);
+                  circleDatabase.getCircleToJoin(_joinCircleController.text, authHandler.authHandler.currentUser!.uid);
+                  circleDatabase.getCircleData(_joinCircleController.text);
                   Future.delayed(Duration(milliseconds: 1500), (){
                     if(_joinCircleKey.currentState!.validate()) {
-                      if (CircleDatabaseHandler.circleData.isEmpty) {
-                        _joinCircleKey.currentState!.validate();
-                      }
-                      else {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => ConfirmJoinCircle()));
-                      }
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmJoinCircle()));
                     }
                   });
                 },

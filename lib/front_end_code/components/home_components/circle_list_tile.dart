@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class CircleListTile extends StatefulWidget {
   final String title;
+  final Function() onTap;
 
   const CircleListTile({
     super.key,
     required this.title,
+    required this.onTap,
   });
 
   @override
@@ -17,9 +19,7 @@ class _CircleListTileState extends State<CircleListTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        print(widget.title);
-      },
+      onTap: widget.onTap,
       child: ListTile(
         title: Container(
           padding: EdgeInsets.symmetric(

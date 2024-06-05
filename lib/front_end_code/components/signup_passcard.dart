@@ -354,6 +354,7 @@ class _PassCardState extends State<PassCard> {
                   print("1 second");
                   print(FirebaseAuthHandler.firebaseSignUpException);
                   if (FirebaseAuthHandler.firebaseSignUpException == null) {
+                    firebaseAuth.signOutAccount();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
                     } else {

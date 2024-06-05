@@ -35,27 +35,29 @@ class _MyAppState extends State<MyApp> {
   setPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     isFirstTimeOpen = preferences.getBool("isFirstTime");
-
-    if(isFirstTimeOpen != null || isFirstTimeOpen == true){
-      preferences.setBool("isFirstTime", false);
-    }
+   if(isFirstTimeOpen == null){
+     preferences.setBool("isFirstTime", true);
+   }else if(isFirstTimeOpen == true){
+     preferences.setBool("isFirstTime", false);
+   }
   }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    setPreferences();
+    //setPreferences();
     precacheImage(AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
-    ///if(isFirstTimeOpen == null){
+    //print(isFirstTimeOpen);
+    //if(isFirstTimeOpen == null){
       //return Material(
-       // child: Container(
-         // color: Colors.white,
-          //child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,)),
-        //),
+        //child: Container(
+        //  color: Colors.white,
+        //  child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,)),
+       // ),
       //);
-   // }
+    //}
     return MaterialApp(
       title: 'Safe Connex',
       theme: ThemeData(
@@ -64,7 +66,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login" ,//isFirstTimeOpen! ? "/" :"/login",
+      initialRoute: "/login", //isFirstTimeOpen! == true ? "/" :"/login",
       routes: {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),

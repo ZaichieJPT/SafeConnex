@@ -107,7 +107,7 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
               child: Container(
                 width: 253,
                 child: Text(
-                  "${CircleDatabaseHandler.circleData['circle_name'].toString()}",
+                  "${CircleDatabaseHandler.circleToJoin['circle_name'].toString()}",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 35,
@@ -168,8 +168,8 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                 ),
                 child: TextButton(
                   onPressed: (){
-                    circleDatabase.addCircleMember(CircleDatabaseHandler.circleData["circle_code"].toString(), authHandler.authHandler.currentUser!.uid, authHandler.authHandler.currentUser!.displayName.toString(), CircleDatabaseHandler.circleData["circle_name"].toString(), authHandler.authHandler.currentUser!.email.toString(), "1");
-                    userDatabase.addUserCircle(authHandler.authHandler.currentUser!.uid, CircleDatabaseHandler.circleData["circle_code"].toString(), CircleDatabaseHandler.circleData["circle_name"].toString());
+                    circleDatabase.addCircleMember(CircleDatabaseHandler.circleToJoin["circle_code"].toString(), authHandler.authHandler.currentUser!.uid, authHandler.authHandler.currentUser!.displayName.toString(), CircleDatabaseHandler.circleToJoin["circle_name"].toString(), authHandler.authHandler.currentUser!.email.toString(), "1");
+                    userDatabase.addUserCircle(authHandler.authHandler.currentUser!.uid, CircleDatabaseHandler.circleToJoin["circle_code"].toString(), CircleDatabaseHandler.circleToJoin["circle_name"].toString());
                     Navigator.of(context).popUntil((route) => route.settings.name == "/home");
                   },
                   child: Text(
