@@ -12,14 +12,14 @@ import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
-class CreateCirclePage extends StatefulWidget {
-  const CreateCirclePage({super.key});
+class EditCircleName extends StatefulWidget {
+  const EditCircleName({super.key});
 
   @override
-  State<CreateCirclePage> createState() => _CreateCirclePageState();
+  State<EditCircleName> createState() => _EditCircleNameState();
 }
 
-class _CreateCirclePageState extends State<CreateCirclePage> {
+class _EditCircleNameState extends State<EditCircleName> {
   TextEditingController _circleNameController = TextEditingController();
   final _circleKey = GlobalKey<FormState>();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
@@ -98,7 +98,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                       child: Padding(
                         padding: EdgeInsets.only(left: width * 0.1),
                         child: Text(
-                          "Enter your circle name.",
+                          "Enter your new circle name.",
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 18,
@@ -198,9 +198,9 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                         ),
                       ),
                     ),
-                    //CREATE BUTTON
+                    //ENTER BUTTON
                     Container(
-                      height: height * 0.04,
+                      height: height * 0.045,
                       width: width * 0.3,
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -242,9 +242,9 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                         },
                         child: FittedBox(
                           child: Text(
-                            "CREATE",
+                            "ENTER",
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 14,
                               fontFamily: "OpunMai",
                               fontWeight: FontWeight.w700,
                               color: Color.fromARGB(255, 62, 73, 101),
@@ -262,183 +262,14 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
               Expanded(
                 flex: 3,
                 child: Image.asset(
-                  "assets/images/create_button.png",
+                  "assets/images/circle-newcircle-button.png",
                 ),
               ),
               Flexible(child: SizedBox()),
             ],
           ],
         ),
-
-        /*Stack(
-              children: [
-                Positioned(
-                    top: 115,
-                    left: 40,
-                    child: InkWell(
-                      child: Container(
-                          width: 45,
-                          height: 45,
-                          decoration: BoxDecoration(
-                              color: Colors.white54,
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(
-                                color: Colors.black,
-                              )),
-                          child: Icon(Icons.arrow_back_ios_sharp)
-                      ),
-                      onTap: (){
-                        Navigator.pop(context);
-                      },
-                    )
-                ),
-                Positioned(
-                  top: 190,
-                  left: 75,
-                  child: Text(
-                    'Enter your circle name.',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontFamily: "OpunMai",
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromARGB(255, 62, 73, 101),
-                    ),
-                  ),
-                ),
-                Positioned(
-                    top: 237,
-                    left: 65,
-                    child: Container(
-                      height: 50,
-                      width: 270,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade400.withRed(210),
-                          borderRadius: BorderRadius.circular(30)
-                      ),
-                    )
-                ),
-               Positioned(
-                 top: 235,
-                 left: 60 ,
-                 width: 270,
-                 height: 60,
-                 child: Form(
-                   key: _circleKey,
-                   child: TextFormField(
-                     onTapOutside: (event){
-                       FocusManager.instance.primaryFocus?.unfocus();
-                     },
-                     validator: (value){
-                       print(value);
-                       if(value!.isEmpty){
-                         return "Please enter a Circle Name";
-                       }
-                       else{
-                         return null;
-                       }
-                     },
-                     controller: _circleNameController,
-                     textAlignVertical: TextAlignVertical.center,
-                     cursorColor: Color.fromARGB(255, 175, 173, 173),
-                     maxLength: 55,
-                     style: TextStyle(
-                       fontSize: 12,
-                       fontFamily: "OpunMai",
-                     ),
-                     decoration: InputDecoration(
-                       //isDense: true,
-                       contentPadding: EdgeInsets.symmetric(
-                           vertical: 11, horizontal: 10),
-                       fillColor: Colors.white,
-                       filled: true,
-                       hintText: "Circle Name",
-                       hintStyle: TextStyle(
-                         color: Color.fromARGB(255, 175, 173, 173),
-                         fontSize: 12,
-                         height: 0.5,
-                       ),
-                       helperText: "",
-                       helperStyle: TextStyle(
-                         fontSize: 11,
-                         height: 0.05,
-                       ),
-                       errorStyle: TextStyle(
-                         fontSize: 11,
-                         height: 0.05,
-                       ),
-                       counterText: '',
-                       //floatingLabelStyle: TextStyle(color: Colors.black),
-                       errorBorder: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(25),
-                         borderSide: BorderSide(
-                           color: Colors.red,
-                           width: 1.5,
-                         ),
-                       ),
-                       focusedErrorBorder: true
-                           ? OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(25),
-                         borderSide: BorderSide(
-                           color: Colors.red,
-                           width: 1.5,
-                         ),
-                       )
-                           : null,
-                       enabledBorder: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(25),
-                         borderSide: BorderSide(
-                           color: Color.fromARGB(255, 175, 173, 173),
-                           width: 0.0,
-                         ),
-                       ),
-                       focusedBorder: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(25),
-                         borderSide: BorderSide(color: Colors.black),
-                       ),
-                     ),
-                   ),
-                 )
-                ),
-                Positioned(
-                    top: 320,
-                    left: 145,
-                    child: ElevatedButton(
-                      child: Text(
-                        "CREATE",
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontFamily: "OpunMai",
-                          fontWeight: FontWeight.w700,
-                          color: Color.fromARGB(255, 62, 73, 101),
-                        ),
-                      ),
-                      onPressed: () {
-                        print("outsite");
-                        if(_circleKey.currentState!.validate()){
-                          if(_circleNameController.text.length <= 25){
-                            print("inside");
-                            //userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
-                            circleDatabase.createCircle(authHandler.authHandler.currentUser?.uid, authHandler.authHandler.currentUser?.displayName!, _circleNameController.text, authHandler.authHandler.currentUser?.email, "0");
-                            userDatabase.addUserCircle(authHandler.authHandler.currentUser?.uid, CircleDatabaseHandler.generatedCode, _circleNameController.text);
-                            print("pass");
-                            Future.delayed(Duration(milliseconds: 1500), (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => CircleResultsPage()));
-                            });
-                          }
-                        }
-                      },
-                    )
-                )
-              ],
-            ),*/
       ),
-
-      /*
-          Positioned(
-            right: 20,
-            bottom: 60,
-            child: Image.asset("assets/images/create_button.png", scale: 9,),
-          ),*/
     );
   }
 }

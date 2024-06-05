@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/components/carouse_slider.dart';
+import 'package:safeconnex/front_end_code/pages/circle_editname_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_viewcode_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
@@ -36,9 +38,13 @@ class _MyAppState extends State<MyApp> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     isFirstTimeOpen = preferences.getBool("isFirstTime");
 
-    if(isFirstTimeOpen != null || isFirstTimeOpen == true){
+    if (isFirstTimeOpen != null && isFirstTimeOpen == true) {
       preferences.setBool("isFirstTime", false);
+      print(isFirstTimeOpen);
+    } else {
+      preferences.setBool("isFirstTime", true);
     }
+    print(isFirstTimeOpen);
   }
 
   // This widget is the root of your application.
@@ -46,16 +52,22 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     setPreferences();
-    precacheImage(AssetImage("assets/images/create_circle_background.png"), context);
+    precacheImage(
+        AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
-    ///if(isFirstTimeOpen == null){
-      //return Material(
-       // child: Container(
-         // color: Colors.white,
-          //child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,)),
-        //),
-      //);
-   // }
+
+    // if (isFirstTimeOpen == null) {
+    //   return Material(
+    //     child: Container(
+    //       color: Colors.white,
+    //       child: MaterialApp(
+    //           home: Icon(
+    //         Icons.hourglass_bottom,
+    //         size: 65,
+    //       )),
+    //     ),
+    //   );
+    // }
     return MaterialApp(
       title: 'Safe Connex',
       theme: ThemeData(
@@ -64,18 +76,18 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login" ,//isFirstTimeOpen! ? "/" :"/login",
-      routes: {
-        "/": (context) => OnBoardingScreen(),
-        "/login": (context) => LoginPage(),
-        "/home": (context) => MainScreen(),
-        "/create_circle": (context) => CirclePage(),
-        "/join_circle": (context) => JoinCirclePage(),
-        "/temp": (context) => NewMapProvider(),
-        "/temp2": (context) => GeofencingPage(),
-        "/temp3": (context) => CarouseSliderComponent(),
-      },
-      //home: LoginPage(),
+      // initialRoute: "/",
+      // routes: {
+      //   "/": (context) => OnBoardingScreen(),
+      //   "/login": (context) => LoginPage(),
+      //   "/home": (context) => MainScreen(),
+      //   "/create_circle": (context) => CirclePage(),
+      //   "/join_circle": (context) => JoinCirclePage(),
+      //   "/temp": (context) => NewMapProvider(),
+      //   "/temp2": (context) => GeofencingPage(),
+      //   "/temp3": (context) => CarouseSliderComponent(),
+      // },
+      home: EditCircleName(),
     );
   }
 }

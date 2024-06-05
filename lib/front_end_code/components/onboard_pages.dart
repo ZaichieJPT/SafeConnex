@@ -18,26 +18,31 @@ class OnBoardPage extends StatefulWidget {
 class _OnBoardPageState extends State<OnBoardPage> {
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      height: height,
+      width: width,
       decoration: BoxDecoration(
         image: DecorationImage(
           image: widget.backgroundImage,
           fit: BoxFit.cover,
         ),
       ),
-      child: Stack(
+      child: Column(
         children: [
-          Positioned(
-            top: 170,
-            left: 0,
-            right: 0,
+          SizedBox(
+            height: height * 0.2,
+          ),
+          Flexible(
+            flex: 5,
             child: SizedBox(
-              height: 280,
-              width: 280,
+              width: width * 0.8,
               child: widget.pageImage,
             ),
+          ),
+          SizedBox(
+            height: height * 0.45,
           ),
         ],
       ),

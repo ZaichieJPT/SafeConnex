@@ -6,7 +6,13 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/front_end_code/components/create_circle_component.dart';
 
 class NavButtonComponent extends StatefulWidget {
-  NavButtonComponent({super.key, required this.imageLocation, this.width, this.scale, this.margin, required this.route});
+  NavButtonComponent(
+      {super.key,
+      required this.imageLocation,
+      this.width,
+      this.scale,
+      this.margin,
+      required this.route});
   final String imageLocation;
   double? width;
   double? scale;
@@ -22,24 +28,33 @@ class _NavButtonComponentState extends State<NavButtonComponent> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     bool selected = false;
-    return InkWell(
-        onTap: (){
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
           FirebaseAuthHandler firebaseAuthHandler = FirebaseAuthHandler();
           print("user");
-          print(firebaseAuthHandler.authHandler.currentUser?.displayName!.toString());
+          print(firebaseAuthHandler.authHandler.currentUser?.displayName!
+              .toString());
           Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => widget.route)
+            context,
+            MaterialPageRoute(builder: (context) => widget.route),
           );
         },
-        borderRadius: BorderRadius.circular(10),
-        splashColor: Colors.blueGrey.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(width),
+        splashColor: Colors.white.withOpacity(0.2),
         child: Container(
-          margin: widget.margin,
+          //color: const Color.fromARGB(105, 0, 0, 0),
+
           width: widget.width,
-          child: Image.asset(widget.imageLocation, scale: widget.scale,)
-        )
+          child: Image.asset(
+            widget.imageLocation,
+          ),
+        ),
+      ),
     );
   }
 }

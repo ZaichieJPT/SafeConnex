@@ -76,6 +76,12 @@ class _LoginFormFieldState extends State<LoginFormField> {
   }
 
   @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Padding(

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import "package:firebase_core/firebase_core.dart";
+import "package:flutter/cupertino.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/front_end_code/components/signup_passfield.dart";
 import "package:safeconnex/front_end_code/components/signup_passvalidation.dart";
@@ -110,7 +111,20 @@ class _PassCardState extends State<PassCard> {
   }
 
   @override
+  void dispose() {
+    widget.firstNameController.dispose();
+    widget.lastNameController.dispose();
+    widget.dateController.dispose();
+    widget.emailController.dispose();
+    widget.passController.dispose();
+    widget.confirmPassController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     return Column(
       children: [
         Stack(
@@ -120,13 +134,13 @@ class _PassCardState extends State<PassCard> {
             Container(
               //color: Colors.amber,
               //margin: EdgeInsets.only(top: 25),
-              height: 445,
+              height: height * 0.53,
               width: double.infinity,
               child: Container(
                 margin: EdgeInsets.only(top: 30),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 237, 188),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(width * 0.07),
                   boxShadow: const [
                     BoxShadow(
                       color: Color.fromARGB(126, 255, 139, 133),
@@ -137,168 +151,212 @@ class _PassCardState extends State<PassCard> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(width * 0.02),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          //BACK ICON BUTTON
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
-                            child: IconButton(
-                              icon: Icon(Icons.arrow_back_ios_new),
-                              color: Colors.black,
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                iconSize: 12,
-                                minimumSize: Size(10, 10),
-                              ),
-                              onPressed: widget.backClicked,
-                            ),
-                          ),
-                          //TOP TEXT
-                          Text(
-                            "Setup Your Password",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'OpunMai',
-                            ),
-                          ),
-                        ],
-                      ),
-                      //CREATE YOUR PASSWORD
-                      Container(
-                        //color: Colors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 50),
-                        width: double.infinity,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Create your\nPassword",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: "OpunMai",
-                            fontWeight: FontWeight.w700,
-                            color: Color.fromARGB(255, 62, 73, 101),
-                            height: 1.5,
-                          ),
-                        ),
-                      ),
-                      //PASSWORD FIELD
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Form(
-                        key: passFormKey,
-                        child: Column(
+                      Flexible(
+                        child: Row(
                           children: [
-                            LoginPassField(
-                              hintText: "Password",
-                              passController: widget.passController,
-                              onChanged: onPasswordChanged,
-                              validator: (value) {
-                                if (value.toString().isEmpty ||
-                                    strengthCount < 5) {
-                                  setState(() {
-                                    isPassValidated = true;
-                                  });
-                                }
-                                //return provider.passValidator(
-                                    //value, strengthCount.round().toDouble());
-                              },
-                              isValidated: isPassValidated,
+                            //BACK ICON BUTTON
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(width),
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back_ios_new),
+                                color: Colors.black,
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  iconSize: 12,
+                                  minimumSize: Size(10, 10),
+                                ),
+                                onPressed: widget.backClicked,
+                              ),
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            //CONFIRM PASSWORD FIELD
-                            LoginPassField(
-                              hintText: "Confirm Password",
-                              passController: widget.confirmPassController,
-                              validator: (confirmPass) {
-                                if (confirmPass.length > 0) {
-                                  setState(() {
-                                    isConfirmPassValidated = true;
-                                  });
-                                  //return provider.confirmPassMismatch(
-                                      //confirmPass, widget.passController.text);
-                                }
-                                return null;
-                              },
-                              isValidated: isConfirmPassValidated,
+                            //TOP TEXT
+                            Text(
+                              "Let's secure your account",
+                              style: TextStyle(
+                                fontSize: width * 0.035,
+                                fontFamily: 'OpunMai',
+                                fontWeight: FontWeight.w400,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
                             ),
                           ],
                         ),
                       ),
-
-                      SizedBox(
-                        height: 15,
+                      //CREATE YOUR PASSWORD
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: width * 0.05,
+                          right: width * 0.4,
+                          top: 0,
+                          bottom: height * 0.01,
+                        ),
+                        child: Container(
+                          //color: Colors.white,
+                          width: width,
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Create your\nPassword",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: height * 0.027,
+                              fontFamily: "OpunMai",
+                              fontWeight: FontWeight.w700,
+                              color: Color.fromARGB(255, 62, 73, 101),
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
                       ),
-                      //PASSWORD VALIDATION
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        padding: EdgeInsets.only(left: 25),
+                      //PASSWORD FIELDS
+                      Flexible(
+                        flex: 4,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            //PASSWORD STRENGTH
-                            Row(
-                              children: [
-                                Text(
-                                  "Password Strength: ",
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    fontFamily: "OpunMai",
-                                    //fontWeight: FontWeight.w700,
-                                    color: Color.fromARGB(255, 62, 73, 101),
+                            Flexible(
+                              flex: 2,
+                              child: Form(
+                                key: passFormKey,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    //PASSWORD
+                                    Expanded(
+                                      flex: 1,
+                                      child: LoginPassField(
+                                        hintText: "Password",
+                                        passController: widget.passController,
+                                        onChanged: onPasswordChanged,
+                                        validator: (value) {
+                                          return provider.passValidator(
+                                              context,
+                                              height,
+                                              width,
+                                              value,
+                                              strengthCount);
+                                          //value, strengthCount.round().toDouble());
+                                        },
+                                        isValidated: isPassValidated,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.01,
+                                    ),
+
+                                    //CONFIRM PASSWORD FIELD
+                                    Expanded(
+                                      flex: 1,
+                                      child: LoginPassField(
+                                        hintText: "Confirm Password",
+                                        passController:
+                                            widget.confirmPassController,
+                                        validator: (confirmPass) {
+                                          return provider.confirmPassMismatch(
+                                            context,
+                                            height,
+                                            width,
+                                            confirmPass,
+                                            widget.passController.text,
+                                          );
+                                        },
+                                        isValidated: isConfirmPassValidated,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            //PASSWORD VALIDATION
+                            Flexible(
+                              flex: 3,
+                              child: FittedBox(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: width * 0.05,
+                                    right: width * 0.05,
+                                    top: height * 0.01,
+                                    bottom: width * 0.02,
+                                  ),
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    //color: Colors.white,
+                                    width: width,
+                                    child: Column(
+                                      children: [
+                                        //PASSWORD STRENGTH
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Password Strength: ",
+                                              style: TextStyle(
+                                                fontSize: 11.5,
+                                                fontFamily: "OpunMai",
+                                                //fontWeight: FontWeight.w700,
+                                                color: Color.fromARGB(
+                                                    255, 62, 73, 101),
+                                              ),
+                                            ),
+                                            Text(
+                                              strengthText,
+                                              style: TextStyle(
+                                                fontSize: 11.5,
+                                                fontFamily: "OpunMai",
+                                                fontWeight: FontWeight.w700,
+                                                color: strengthColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        //AT LEASt 8 CHARS
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        //FIRST CHECK
+                                        PassCheck(
+                                          checkText: "At least 8 characters",
+                                          isValid: isEightChars,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        PassCheck(
+                                          checkText: "At least 1 number",
+                                          isValid: hasNumber,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        PassCheck(
+                                          checkText:
+                                              "At least 1 uppercase letter",
+                                          isValid: hasUpperCase,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        PassCheck(
+                                          checkText:
+                                              "At least 1 lowercase letter",
+                                          isValid: hasLowerCase,
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        PassCheck(
+                                          checkText:
+                                              "At least 1 special character",
+                                          isValid: hasSpecialChars,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  strengthText,
-                                  style: TextStyle(
-                                    fontSize: 11.5,
-                                    fontFamily: "OpunMai",
-                                    fontWeight: FontWeight.w700,
-                                    color: strengthColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            //AT LEASt 8 CHARS
-                            SizedBox(
-                              height: 10,
-                            ),
-                            //FIRST CHECK
-                            PassCheck(
-                              checkText: "At least 8 characters",
-                              isValid: isEightChars,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            PassCheck(
-                              checkText: "At least 1 number",
-                              isValid: hasNumber,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            PassCheck(
-                              checkText: "At least 1 uppercase letter",
-                              isValid: hasUpperCase,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            PassCheck(
-                              checkText: "At least 1 lowercase letter",
-                              isValid: hasLowerCase,
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            PassCheck(
-                              checkText: "At least 1 special character",
-                              isValid: hasSpecialChars,
+                              ),
                             ),
                           ],
                         ),
@@ -309,10 +367,10 @@ class _PassCardState extends State<PassCard> {
               ),
             ),
             Positioned(
-              height: 175,
-              width: 175,
+              height: width * 0.45,
+              width: width * 0.4,
               top: -5,
-              right: -10,
+              right: -15,
               child: Image.asset(
                 'assets/images/signup_page/signup_page_3.1.png',
                 fit: BoxFit.contain,
@@ -323,12 +381,12 @@ class _PassCardState extends State<PassCard> {
         //SUBMIT BUTTON
         Container(
           //color: Colors.white,
-          width: double.infinity,
-          height: 40,
+          width: width,
+          height: height * 0.05,
           margin: EdgeInsets.only(
-            left: 50,
-            right: 50,
-            top: 15,
+            left: width * 0.12,
+            right: width * 0.12,
+            top: height * 0.02,
           ),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -345,22 +403,24 @@ class _PassCardState extends State<PassCard> {
               if (passFormKey.currentState!.validate()) {
                 FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
                 firebaseAuth.registerEmailAccount(
-                    widget.emailController.text, widget.passController.text,
+                    widget.emailController.text,
+                    widget.passController.text,
                     widget.firstNameController.text,
-                    widget.lastNameController.text, 0101,
+                    widget.lastNameController.text,
+                    0101,
                     widget.dateController.text);
                 print(FirebaseAuthHandler.firebaseSignUpException);
-                Future.delayed(Duration(seconds: 1), (){
+                Future.delayed(Duration(seconds: 1), () {
                   print("1 second");
                   print(FirebaseAuthHandler.firebaseSignUpException);
                   if (FirebaseAuthHandler.firebaseSignUpException == null) {
+                    firebaseAuth.signOutAccount();
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => LoginPage()));
-                    } else {
-                      widget.backClicked();
-                    }
+                  } else {
+                    widget.backClicked();
+                  }
                 });
-
               }
             },
             child: FittedBox(

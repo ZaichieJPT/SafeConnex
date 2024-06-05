@@ -1,10 +1,14 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
+import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 class JoinCirclePage extends StatefulWidget {
   const JoinCirclePage({super.key});
@@ -16,14 +20,259 @@ class JoinCirclePage extends StatefulWidget {
 class _JoinCirclePageState extends State<JoinCirclePage> {
   final _joinCircleKey = GlobalKey<FormState>();
   final _joinCircleController = TextEditingController();
+  SettingsProvider provider = SettingsProvider();
   UserDatabaseHandler userDatabase = UserDatabaseHandler();
+
+  @override
+  void dispose() {
+    _joinCircleController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
-      body: Stack(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            //SMALL CIRCLE
+            Padding(
+              padding: EdgeInsets.only(
+                left: width * 0.08,
+                top: height * 0.02,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  height: 28,
+                  width: 28,
+                  decoration: BoxDecoration(
+                    color: Colors.deepPurple[100],
+                    borderRadius: BorderRadius.circular(width),
+                  ),
+                ),
+              ),
+            ),
+            //JOIN BANNER
+            if (MediaQuery.of(context).viewInsets.bottom == 0) ...[
+              Row(
+                children: [
+                  Container(
+                    width: width * 0.9,
+                    height: height * 0.4,
+                    //color: Colors.amber,
+                    child: Image.asset(
+                      "assets/images/join_button.png",
+                    ),
+                  ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        height: 25,
+                        width: 25,
+                        decoration: BoxDecoration(
+                          color: Colors.yellow,
+                          borderRadius: BorderRadius.circular(width),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            //BACK BUTTON
+            Expanded(
+              child: Padding(
+                padding:
+                    EdgeInsets.only(bottom: height * 0.2, left: width * 0.07),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Row(
+                      children: [
+                        InkWell(
+                          child: Align(
+                            //alignment: Alignment.centerLeft,
+                            child: Container(
+                              width: width * 0.1,
+                              height: width * 0.1,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(100),
+                                border: Border.all(
+                                  color: Color.fromARGB(255, 62, 73, 101),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.arrow_back_ios_sharp,
+                                size: height * 0.025,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    //ENTER CIRCLE CODE
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: width * 0.1),
+                        child: Text(
+                          "Enter your circle code.",
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontFamily: "OpunMai",
+                            fontWeight: FontWeight.w700,
+                            color: Color.fromARGB(255, 62, 73, 101),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //CIRCLE CODE TEXT FIELD
+                    Form(
+                      key: _joinCircleKey,
+                      child: Container(
+                        height: height * 0.07,
+                        width: width * 0.6,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(width * 0.5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.brown.shade100,
+                              offset: Offset(3, 0),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          onTapOutside: (event) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          controller: _joinCircleController,
+                          validator: (value) {
+                            print(value);
+                            return provider.joinCodeValidator(context, height,
+                                width, value.toString(), circleDatabase);
+                          },
+                          textAlignVertical: TextAlignVertical.center,
+                          textAlign: TextAlign.center,
+                          cursorColor: Color.fromARGB(255, 175, 173, 173),
+                          maxLength: 6,
+                          style: TextStyle(
+                            fontSize: height * 0.015,
+                            fontFamily: "OpunMai",
+                          ),
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.amber.shade100,
+                            //isDense: true,
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 0, horizontal: 0),
+                            hintText: "Circle Code",
+                            hintStyle: TextStyle(
+                              color: Color.fromARGB(255, 175, 173, 173),
+                              fontSize: 13,
+                              height: 0.5,
+                            ),
+                            helperText: "",
+                            helperStyle: TextStyle(
+                              fontSize: 12,
+                              height: 0.05,
+                            ),
+                            errorStyle: TextStyle(
+                              fontSize: 15,
+                              height: 0.05,
+                            ),
+                            counterText: '',
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                                width: 1,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: BorderSide(
+                                color: Colors.red,
+                                width: 1.5,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: BorderSide(
+                                color: Color.fromARGB(255, 175, 173, 173),
+                                width: 0.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(25),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //ENTER BUTTON
+                    Container(
+                      height: height * 0.05,
+                      width: width * 0.3,
+                      decoration: BoxDecoration(
+                        color: Colors.lightGreen[100],
+                        borderRadius: BorderRadius.circular(width * 0.025),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          circleDatabase.getCircle(_joinCircleController.text);
+                          Future.delayed(Duration(milliseconds: 1500), () {
+                            if (_joinCircleKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ConfirmJoinCircle(),
+                                ),
+                              );
+                            }
+                          });
+                        },
+                        child: Text(
+                          "ENTER",
+                          style: TextStyle(
+                            fontSize: height * 0.02,
+                            fontFamily: "OpunMai",
+                            fontWeight: FontWeight.w700,
+                            color: Color.fromARGB(255, 62, 73, 101),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+            ),
+          ],
+        ),
+      ),
+
+      /*
+      Stack(
         children: [
           Positioned(
             right: 19,
@@ -52,7 +301,10 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
           Positioned(
             bottom: 500,
             left: 30,
-            child: Image.asset("assets/images/join_button.png", scale: 9.2,),
+            child: Image.asset(
+              "assets/images/join_button.png",
+              scale: 9.2,
+            ),
           ),
           Positioned(
               bottom: 415,
@@ -64,17 +316,12 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                     decoration: BoxDecoration(
                         color: Colors.white54,
                         borderRadius: BorderRadius.circular(100),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1
-                        )),
-                    child: Icon(Icons.arrow_back_ios_sharp)
-                ),
-                onTap: (){
+                        border: Border.all(color: Colors.black, width: 1)),
+                    child: Icon(Icons.arrow_back_ios_sharp)),
+                onTap: () {
                   Navigator.pop(context);
                 },
-              )
-          ),
+              )),
           Positioned(
             bottom: 350,
             left: 60,
@@ -97,34 +344,34 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                 height: 65,
                 width: 250,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.brown.shade100,
-                      offset: Offset(5, -1),
-                      
-                    )
-                  ]
-                ),
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.brown.shade100,
+                        offset: Offset(5, -1),
+                      )
+                    ]),
                 child: TextFormField(
-                  onTapOutside: (event){
+                  onTapOutside: (event) {
                     FocusManager.instance.primaryFocus?.unfocus();
                   },
                   controller: _joinCircleController,
-                  validator: (value){
+                  validator: (value) {
                     print(value);
-                    if(value!.isEmpty){
+                    if (value!.isEmpty) {
                       return "Please enter a Circle Code";
-                    }else if(value.length < 6 || value.length > 6){
+                    } else if (value.length < 6 || value.length > 6) {
                       return "Invalid Code";
-                    }
-                    else{
-                      if(CircleDatabaseHandler.circleData['circle_code'] == null || CircleDatabaseHandler.circleData['circle_name'] == null){
+                    } else {
+                      if (CircleDatabaseHandler.circleData['circle_code'] ==
+                              null ||
+                          CircleDatabaseHandler.circleData['circle_name'] ==
+                              null) {
                         return "Circle does not exist";
                       }
                       return null;
                     }
-                  } ,
+                  },
                   textAlignVertical: TextAlignVertical.center,
                   cursorColor: Color.fromARGB(255, 175, 173, 173),
                   maxLength: 6,
@@ -136,8 +383,8 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                     filled: true,
                     fillColor: Colors.amber.shade100,
                     //isDense: true,
-                    contentPadding: EdgeInsets.symmetric(
-                        vertical: 21, horizontal: 10),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 21, horizontal: 10),
                     hintText: "Circle Code",
                     hintStyle: TextStyle(
                       color: Color.fromARGB(255, 175, 173, 173),
@@ -164,12 +411,12 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                     ),
                     focusedErrorBorder: true
                         ? OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25),
-                      borderSide: BorderSide(
-                        color: Colors.red,
-                        width: 1.5,
-                      ),
-                    )
+                            borderRadius: BorderRadius.circular(25),
+                            borderSide: BorderSide(
+                              color: Colors.red,
+                              width: 1.5,
+                            ),
+                          )
                         : null,
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -194,20 +441,20 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
               height: 38,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(13)
-              ),
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(13)),
               child: TextButton(
                 onPressed: () {
                   circleDatabase.getCircle(_joinCircleController.text);
-                  Future.delayed(Duration(milliseconds: 1500), (){
-                    if(_joinCircleKey.currentState!.validate()) {
+                  Future.delayed(Duration(milliseconds: 1500), () {
+                    if (_joinCircleKey.currentState!.validate()) {
                       if (CircleDatabaseHandler.circleData.isEmpty) {
                         _joinCircleKey.currentState!.validate();
-                      }
-                      else {
-                        Navigator.push(context, MaterialPageRoute(
-                            builder: (context) => ConfirmJoinCircle()));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ConfirmJoinCircle()));
                       }
                     }
                   });
@@ -225,7 +472,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
             ),
           )
         ],
-      ),
+      ),*/
     );
   }
 }

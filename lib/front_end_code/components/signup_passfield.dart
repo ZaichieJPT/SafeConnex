@@ -27,54 +27,43 @@ class LoginPassField extends StatefulWidget {
 
 class _LoginPassFieldState extends State<LoginPassField> {
   bool obscureText = true;
+  double height = 0;
 
   _getVisibleButton() {
-    return SizedBox(
-      width: 0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 25,
-            height: 25,
-            child: Container(
-              alignment: AlignmentDirectional.center,
-              decoration: BoxDecoration(
-                //color: Colors.amber,
-                shape: BoxShape.circle,
-                //color: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              child: FittedBox(
-                child: IconButton(
-                  icon: obscureText
-                      ? Icon(Icons.visibility_off)
-                      : Icon(Icons.visibility),
-                  iconSize: 70,
-                  alignment: AlignmentDirectional.center,
-                  onPressed: () {
-                    setState(() {
-                      obscureText = !obscureText;
-                    });
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
+    return InkWell(
+      onTap: () {
+        setState(() {
+          obscureText = !obscureText;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.only(right: 15),
+        child: Icon(
+          obscureText ? Icons.visibility_off : Icons.visibility,
+          size: height * 0.025,
+        ),
       ),
     );
   }
 
   @override
+  void dispose() {
+    widget.passController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: EdgeInsets.symmetric(horizontal: width * 0.05),
       //child: SizedBox(
       //alignment: AlignmentDirectional.center,
       //height: 27,
       //color: Colors.black,
       child: SizedBox(
-        height: widget.height ?? 40, //widget.isValidated ? 40 :
+        height: widget.height ?? height * 0.05, //widget.isValidated ? 40 :
         child: TextFormField(
           validator: widget.validator,
           onChanged: widget.onChanged,
@@ -110,7 +99,9 @@ class _LoginPassFieldState extends State<LoginPassField> {
             ),
             counterText: '',
             //floatingLabelStyle: TextStyle(color: Colors.black),
+
             suffixIcon: _getVisibleButton(),
+            suffixIconConstraints: BoxConstraints(maxHeight: height * 0.5),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide(

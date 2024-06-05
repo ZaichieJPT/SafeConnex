@@ -28,8 +28,8 @@ class _SignupPageState extends State<SignupPage> {
   double scaleFactor_1 = 1.0;
   double scaleFactor_2 = 1.0;
 
-  double positionTop_1 = 70.0;
-  double positionTop_2 = 160.0;
+  double positionTop_1 = 0.0;
+  double positionTop_2 = 0.0;
 
   bool isEmailCardVisible = false;
   bool isPassCardVisible = false;
@@ -50,16 +50,14 @@ class _SignupPageState extends State<SignupPage> {
         } else {
           isContinueClicked_2 = true;
           isPassCardVisible = true;
-          scaleFactor_1 = 0.80;
-          positionTop_1 = 40.0;
+          scaleFactor_1 = 0.75;
           scaleFactor_2 = 0.9;
-          positionTop_2 = 135.0;
         }
       } else {
         isContinueClicked_1 = true;
         isEmailCardVisible = true;
         scaleFactor_1 = 0.85;
-        positionTop_1 = 50.0;
+        positionTop_1 = 0.0;
       }
     });
     FocusManager.instance.primaryFocus?.unfocus();
@@ -71,15 +69,12 @@ class _SignupPageState extends State<SignupPage> {
         isContinueClicked_2 = false;
         isPassCardVisible = false;
         scaleFactor_1 = 0.85;
-        positionTop_1 = 50.0;
         scaleFactor_2 = 1.0;
-        positionTop_2 = 160.0;
       } else {
         if (isContinueClicked_1) {
           isContinueClicked_1 = false;
           isEmailCardVisible = false;
           scaleFactor_1 = 1.0;
-          positionTop_1 = 70.0;
         } else {
           //GO BACK TO ONBOARDING
           Navigator.push(
@@ -94,119 +89,112 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
+  void dispose() {
+    widget._firstNameController.dispose();
+    widget._lastNameController.dispose();
+    widget._emailController.dispose();
+    widget._dateController.dispose();
+    widget._passController.dispose();
+    widget._confirmPassController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    //final height = MediaQuery.of(context).size.height;
-    //final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
     FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
+
+    positionTop_2 = height * 0.1;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
-          child: Stack(
+          child: Column(
             children: [
+              //LOGO, SAFECONNEX TEXT, AND LOGIN BUTTON CONTAINER
               Container(
-                //color: Colors.black,
+                //color: Colors.lightBlue,
+                padding: EdgeInsets.symmetric(horizontal: width * 0.05),
+                height: height * 0.12,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    //APP LOGO
+                    Row(
+                      children: [
+                        SizedBox(
+                          height: height * 0.07,
+                          child: Image.asset(
+                            'assets/images/splash-logo.png',
+                          ),
+                        ),
+                        //SAFECONNEX LOGO
+                        SizedBox(
+                          height: height * 0.03,
+                          child: Image.asset(
+                            'assets/images/SafeConnex-Logo2.png',
+                          ),
+                        ),
+                      ],
+                    ),
+                    //LOGIN BUTTON
+                    Flexible(
+                      child: SizedBox(
+                        height: height * 0.035,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 92, 225, 230),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(width * 0.03),
+                            ),
+                          ),
+                          child: FittedBox(
+                            child: Text(
+                              "Log In",
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontFamily: "OpunMai",
+                                fontWeight: FontWeight.w700,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => LoginPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              //NAME CARD CONTAINER
+              Expanded(
                 child: Stack(
                   children: [
                     Positioned(
-                      top: (isKeyboardVisible && !isContinueClicked_1)
-                          ? -10
-                          : (isKeyboardVisible && isContinueClicked_1)
-                          ? -30
-                          : 0,
-                      left: 0,
-                      right: 0,
-                      child: Column(
-                        children: [
-                          //LOGO, SAFECONNEX TEXT, AND LOGIN BUTTON CONTAINER
-                          SizedBox(
-                            height: 33,
-                          ),
-                          Container(
-                            //color: Colors.lightBlue,
-                            padding: EdgeInsets.symmetric(horizontal: 25),
-                            //height: 100,
-                            child: Row(
-                              children: [
-                                //APP LOGO
-                                Icon(
-                                  Icons.cancel,
-                                  size: 35,
-                                  color: Colors.black,
-                                ),
-                                //SAFECONNEX LOGO
-                                Container(
-                                  //color: Colors.black,
-                                  //height: 100,
-                                  width: 150,
-                                  child: Image.asset(
-                                    "assets/images/SafeConnex-Logo2.png",
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                //LOGIN BUTTON
-                                SizedBox(
-                                  width: 60,
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    //color: Colors.black,
-                                    height: 30,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor:
-                                        Color.fromARGB(255, 92, 225, 230),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(12),
-                                        ),
-                                      ),
-                                      child: FittedBox(
-                                        child: Text(
-                                          "Log In",
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            fontFamily: "OpunMai",
-                                            fontWeight: FontWeight.w700,
-                                            color: Color.fromARGB(
-                                                255, 62, 73, 101),
-                                          ),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => LoginPage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 33,
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    //NAME CARD CONTAINER
-                    Positioned(
-                      top: (isKeyboardVisible && !isContinueClicked_1)
-                          ? 50
-                          : (isKeyboardVisible && isContinueClicked_1)
-                          ? 10
-                          : positionTop_1,
+                      top: 0,
                       left: 0,
                       right: 0,
                       child: Transform.scale(
-                        scale: scaleFactor_1,
+                        scale: (isKeyboardVisible && !isContinueClicked_1)
+                            ? scaleFactor_1
+                            : (isKeyboardVisible &&
+                                    isContinueClicked_1 &&
+                                    (!isContinueClicked_2 ||
+                                        !isContinueClicked_3))
+                                ? 0
+                                : scaleFactor_1,
                         child: Column(
                           children: [
                             //NAME CARD
@@ -221,53 +209,67 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              //EMAIL CARD CONTAINER
-              Visibility(
-                visible: isEmailCardVisible,
-                child: Positioned(
-                  top: (isKeyboardVisible && !isContinueClicked_2)
-                      ? 110
-                      : (isKeyboardVisible && isContinueClicked_2)
-                      ? 60
-                      : positionTop_2,
-                  left: 0,
-                  right: 0,
-                  child: Transform.scale(
-                    scale: scaleFactor_2,
-                    child: Column(
-                      children: [
-                        //EMAIL CARD
-                        EmailCard(
-                          emailController: widget._emailController,
-                          backClicked: backClicked,
-                          continueClicked: continueClicked,
+                    //EMAIL CARD
+                    if (isEmailCardVisible) ...[
+                      Positioned(
+                        top: (isKeyboardVisible && !isContinueClicked_2)
+                            ? height * 0.01
+                            : (isKeyboardVisible && isContinueClicked_2)
+                                ? height * 0
+                                : positionTop_2,
+                        left: 0,
+                        right: 0,
+                        child: Transform.scale(
+                          scale: (isKeyboardVisible &&
+                                  isContinueClicked_2 &&
+                                  !isContinueClicked_3)
+                              ? height * 0.8
+                              : scaleFactor_2,
+                          child: Column(
+                            children: [
+                              //EMAIL CARD
+                              EmailCard(
+                                emailController: widget._emailController,
+                                backClicked: backClicked,
+                                continueClicked: continueClicked,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: isPassCardVisible,
-                child: Positioned(
-                  top: isKeyboardVisible ? -80 : 250,
-                  left: 0,
-                  right: 0,
-                  child: SingleChildScrollView(
-                    reverse: true,
-                    child: PassCard(
-                      firstNameController: widget._firstNameController,
-                      lastNameController: widget._lastNameController,
-                      emailController: widget._emailController,
-                      dateController: widget._dateController,
-                      passController: widget._passController,
-                      confirmPassController: widget._confirmPassController,
-                      backClicked: backClicked,
-                    ),
-                  ),
+                      ),
+                    ],
+                    //PASSCARD
+                    if (isPassCardVisible) ...[
+                      Positioned(
+                        bottom: (isKeyboardVisible && !isContinueClicked_2)
+                            ? 0
+                            : (isKeyboardVisible && isContinueClicked_2)
+                                ? MediaQuery.of(context).viewInsets.bottom
+                                : height * 0.05,
+                        left: 0,
+                        right: 0,
+                        child: SingleChildScrollView(
+                          reverse: true,
+                          child: PassCard(
+                            firstNameController: widget._firstNameController,
+                            lastNameController: widget._lastNameController,
+                            emailController: widget._emailController,
+                            dateController: widget._dateController,
+                            passController: widget._passController,
+                            confirmPassController:
+                                widget._confirmPassController,
+                            backClicked: backClicked,
+                          ),
+                        ),
+                      ),
+                    ]
+                  ],
                 ),
               ),
             ],

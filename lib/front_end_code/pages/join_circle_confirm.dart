@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +19,185 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
   CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
   UserDatabaseHandler userDatabase = UserDatabaseHandler();
+
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     return Scaffold(
-      body: Container(
+      body: Column(
+        children: [
+          //SMALL CIRCLE
+          Padding(
+            padding: EdgeInsets.only(
+              left: width * 0.08,
+              top: height * 0.02,
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                height: 28,
+                width: 28,
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple[100],
+                  borderRadius: BorderRadius.circular(width),
+                ),
+              ),
+            ),
+          ),
+          //JOIN BANNER
+          if (MediaQuery.of(context).viewInsets.bottom == 0) ...[
+            Row(
+              children: [
+                Container(
+                  width: width * 0.9,
+                  height: height * 0.4,
+                  //color: Colors.amber,
+                  child: Image.asset(
+                    "assets/images/join_button.png",
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 25,
+                      width: 25,
+                      decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.circular(width),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          Expanded(
+            child: Stack(
+              children: [
+                Image.asset(
+                  'assets/images/confirm-background.png',
+                  fit: BoxFit.fill,
+                  width: width,
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(),
+                      Text(
+                        "You are about to join",
+                        style: TextStyle(
+                          fontSize: height * 0.025,
+                          fontFamily: "OpunMai",
+                          fontWeight: FontWeight.w500,
+                          color: Color.fromARGB(255, 62, 73, 101),
+                        ),
+                      ),
+                      Container(
+                        width: width * 0.75,
+                        child: Text(
+                          "${CircleDatabaseHandler.circleData['circle_name'].toString()}",
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: height * 0.05,
+                              fontFamily: "OpunMai",
+                              fontWeight: FontWeight.w700,
+                              color: Color.fromARGB(255, 62, 73, 101),
+                              shadows: const [
+                                Shadow(
+                                  color: Colors.white,
+                                  offset: Offset(1.5, 2.5),
+                                ),
+                              ]),
+                        ),
+                      ),
+                      //CANCEL BUTTON
+                      Container(
+                        height: height * 0.055,
+                        width: width * 0.75,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(width: 1),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: FittedBox(
+                            child: Text(
+                              "CANCEL",
+                              style: TextStyle(
+                                fontSize: height * 0.03,
+                                fontFamily: "OpunMai",
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      //CONTINUE BUTTON
+                      Container(
+                        height: height * 0.055,
+                        width: width * 0.75,
+                        decoration: BoxDecoration(
+                          color: Colors.lightGreen[100],
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(width: 1),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            circleDatabase.addCircleMember(
+                                CircleDatabaseHandler.circleData["circle_code"]
+                                    .toString(),
+                                authHandler.authHandler.currentUser!.uid,
+                                authHandler.authHandler.currentUser!.displayName
+                                    .toString(),
+                                CircleDatabaseHandler.circleData["circle_name"]
+                                    .toString(),
+                                authHandler.authHandler.currentUser!.email
+                                    .toString(),
+                                "1");
+                            userDatabase.addUserCircle(
+                                authHandler.authHandler.currentUser!.uid,
+                                CircleDatabaseHandler.circleData["circle_code"]
+                                    .toString(),
+                                CircleDatabaseHandler.circleData["circle_name"]
+                                    .toString());
+                            Navigator.of(context).popUntil(
+                                (route) => route.settings.name == "/home");
+                          },
+                          child: FittedBox(
+                            child: Text(
+                              "CONTINUE",
+                              style: TextStyle(
+                                fontSize: height * 0.03,
+                                fontFamily: "OpunMai",
+                                fontWeight: FontWeight.w700,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: height * 0.05,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+
+      /*
+      Container(
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
@@ -183,10 +360,10 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
-      ),
+      ),*/
     );
   }
 }

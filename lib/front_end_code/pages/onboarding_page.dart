@@ -22,10 +22,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   String overviewSubtitle =
       'Stay connected with your family and\nmonitor their safety.';
 
-  /*final bgImg_1 = Image.asset("assets/images/onboarding/onboard-bg-1.png");
-  final bgImg_2 = Image.asset("assets/images/onboarding/onboard-bg-2.png");
-  final bgImg_3 = Image.asset("assets/images/onboarding/onboard-bg-3.png");
-*/
   @override
   void didChangeDependencies() {
     //LOGIN BG IMAGE
@@ -66,6 +62,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: Stack(
         children: [
@@ -117,28 +115,43 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             ],
           ),
           Positioned(
-            top: 40,
+            top: 0,
             left: 0,
             right: 0,
             child: Column(
               children: [
-                Icon(
-                  Icons.cancel,
-                  color: Colors.black,
-                  size: 40,
+                //APP LOGO
+                Container(
+                  height: height * 0.1,
+                  padding: EdgeInsets.only(top: height * 0.01),
+                  //color: const Color.fromARGB(105, 0, 0, 0),
+                  child: Image.asset(
+                    'assets/images/splash-logo.png',
+                  ),
                 ),
-                SizedBox(height: 10),
-                Image.asset(
-                  "assets/images/SafeConnex-Logo2.png",
-                  scale: 17,
+                //SAFECONNEX LOGO
+                Padding(
+                  padding: EdgeInsets.only(bottom: height * 0.005),
+                  child: Container(
+                    height: height * 0.035,
+                    //color: const Color.fromARGB(105, 0, 0, 0),
+                    child: Image.asset(
+                      "assets/images/SafeConnex-Logo2.png",
+                    ),
+                  ),
                 ),
-                SizedBox(height: 5),
-                Text(
-                  "YOUR SAFETY COMPANION",
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontFamily: "OpunMai",
-                    fontWeight: FontWeight.w700,
+                //TAGLINE
+                SizedBox(
+                  height: height * 0.015,
+                  child: FittedBox(
+                    child: Text(
+                      "YOUR SAFETY COMPANION",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontFamily: "OpunMai",
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -146,16 +159,189 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           ),
           //BOTTOM GLASS CARD
           Positioned(
-            top: MediaQuery.of(context).size.height * 0.57,
+            bottom: 0,
             left: 0,
             right: 0,
-            child: SizedBox(
+            child: Container(
               //color: Colors.blue,
-              height: MediaQuery.of(context).size.height * 0.45,
-              child: Image.asset(
-                  "assets/images/onboarding/onboard-glass-card.png"),
+              height: height * 0.45,
+              width: width,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(
+                    "assets/images/onboarding/onboard-glass-card.png",
+                    fit: BoxFit.fill,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(bottom: height * 0.075),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        //NEXT BUTTON
+                        Flexible(
+                          flex: 2,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: height * 0.013),
+                            child: Container(
+                              width: width * 0.2,
+                              height: height * 0.08,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: const Color.fromARGB(255, 255, 222, 89),
+                              ),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.nextPage(
+                                    duration: Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                  );
+                                },
+                                icon: FittedBox(
+                                  child: Text(
+                                    String.fromCharCode(Icons.east.codePoint),
+                                    style: TextStyle(
+                                      inherit: false,
+                                      color: Colors.white,
+                                      fontSize: width * 0.1,
+                                      fontWeight: FontWeight.w900,
+                                      fontFamily: Icons.east.fontFamily,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        //APP OVERVIEW TEXTS
+                        Flexible(
+                          child: FittedBox(
+                            child: Text(
+                              overviewTitle,
+                              style: TextStyle(
+                                fontSize: height * 0.03,
+                                fontFamily: "OpunMai",
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //APP OVERVIEW TEXTS
+                        Flexible(
+                          child: FittedBox(
+                            child: Text(
+                              overviewSubtitle,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: height * 0.015,
+                                fontFamily: "OpunMai",
+                                fontWeight: FontWeight.w600,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //PAGE INDICATOR
+                        Flexible(
+                          child: SmoothPageIndicator(
+                            controller: controller,
+                            count: 3,
+                            onDotClicked: (index) => controller.animateToPage(
+                              index,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            ),
+                            effect: CustomizableEffect(
+                              spacing: 5,
+                              dotDecoration: DotDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                height: height * 0.008,
+                                width: width * 0.08,
+                                color: Colors.grey,
+                              ),
+                              activeDotDecoration: DotDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                height: height * 0.008,
+                                width: width * 0.08,
+                                color: Color.fromARGB(255, 4, 226, 255),
+                              ),
+                            ),
+                          ),
+                        ),
+                        //LOGIN / SIGNUP
+                        Flexible(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              //SIGN UP BUTTON
+                              Flexible(
+                                child: SizedBox(
+                                  height: height * 0.045,
+                                  width: width * 0.3,
+                                  child: BtnContinue(
+                                    backgroundColor: Colors.white,
+                                    borderColor:
+                                        Color.fromARGB(255, 188, 188, 188),
+                                    fontColor: Colors.black,
+                                    borderRadius: width * 0.025,
+                                    borderWidth: 0.5,
+                                    topMargin: 0,
+                                    height: 0,
+                                    leftMargin: 0,
+                                    rightMargin: 0,
+                                    fontSize: 13,
+                                    btnName: "Sign Up",
+                                    continueClicked: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignupPage(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+
+                              //LOG IN BUTTON
+                              Flexible(
+                                child: SizedBox(
+                                  height: height * 0.045,
+                                  width: width * 0.3,
+                                  child: BtnContinue(
+                                    backgroundColor: Colors.cyanAccent,
+                                    borderColor: Colors.cyanAccent,
+                                    fontColor: Colors.black,
+                                    borderRadius: width * 0.025,
+                                    borderWidth: 0.5,
+                                    topMargin: 0,
+                                    height: 0,
+                                    leftMargin: 0,
+                                    rightMargin: 0,
+                                    fontSize: 13,
+                                    btnName: "Log In",
+                                    continueClicked: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LoginPage(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          /*
           //NEXT, SIGNUP, & LOGIN BTNS/APP OVERVIEW TEXTS
           Positioned(
             top: 485,
@@ -299,7 +485,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
               ],
             ),
-          ),
+          ),*/
         ],
       ),
     );

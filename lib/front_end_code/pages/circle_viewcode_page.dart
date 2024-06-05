@@ -6,14 +6,14 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 
-class CircleResultsPage extends StatefulWidget {
-  const CircleResultsPage({super.key});
+class ViewCircleCode extends StatefulWidget {
+  const ViewCircleCode({super.key});
 
   @override
-  State<CircleResultsPage> createState() => _CircleResultsPageState();
+  State<ViewCircleCode> createState() => _ViewCircleCodeState();
 }
 
-class _CircleResultsPageState extends State<CircleResultsPage> {
+class _ViewCircleCodeState extends State<ViewCircleCode> {
   @override
   Widget build(BuildContext context) {
     CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
@@ -118,14 +118,14 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                     ],
                   ),
                 ),
-                //CREATE CIRCL BANNER
+                //CREATE CIRCLE BANNER
                 if (MediaQuery.of(context).viewInsets.bottom == 0) ...[
                   Expanded(
                     flex: 2,
                     child: Stack(
                       children: [
                         Image.asset(
-                          "assets/images/create_button.png",
+                          "assets/images/circle-viewcode-button.png",
                         ),
                       ],
                     ),
@@ -134,72 +134,6 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                 ],
               ],
             ),
-
-            /*Stack(
-          children: [
-            Positioned(
-              top: 95,
-              left: 80,
-              child: Text(
-                'Here we go.\nYour Circle code is displayed\nbelow',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontFamily: "OpunMai",
-                  fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 62, 73, 101),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Positioned(
-              top: 200,
-              left: 140,
-              child: SelectableText(
-                '${CircleDatabaseHandler.generatedCode}',
-                style: TextStyle(
-                  fontSize: 35,
-                  fontFamily: "OpunMai",
-                  fontWeight: FontWeight.w700,
-                  color: Color.fromARGB(255, 62, 73, 101),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Positioned(
-              top: 290,
-              left: 75,
-              child: Container(
-                height: 50,
-                width: 270,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(style: BorderStyle.solid, width: 1.5)
-                ),
-                child: ElevatedButton(
-                  child: Text(
-                    "CONTINUE",
-                    style: TextStyle(
-                      fontSize: 21,
-                      fontFamily: "OpunMai",
-                      fontWeight: FontWeight.w700,
-                      color: Color.fromARGB(255, 62, 73, 101),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  onPressed: (){
-                    Navigator.of(context).popUntil((route) => route.settings.name == "/home");
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 65,
-              left: 72,
-              child: Image.asset("assets/images/create_button.png", scale: 9.5,)
-            )
-          ],
-        ),*/
           ),
         ),
       ),

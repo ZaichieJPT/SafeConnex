@@ -105,6 +105,13 @@ class _PasswordChangeState extends State<PasswordChange> {
   }
 
   @override
+  void dispose() {
+    _newPassController.dispose();
+    _confirmPassController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     height = MediaQuery.sizeOf(context).height;
     width = MediaQuery.sizeOf(context).width;

@@ -54,10 +54,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   Future<void> _onProfileTapped() async {
-    FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+    FirebaseProfileStorage profileStorage =
+        FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    profileStorage.uploadProfilePic(authHandler.authHandler.currentUser!.uid, image!.path);
+    profileStorage.uploadProfilePic(
+        authHandler.authHandler.currentUser!.uid, image!.path);
     if (image == null) return;
   }
 
@@ -134,6 +136,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   @override
   void dispose() {
     _phoneController.dispose();
+    _birthdateController.dispose();
     super.dispose();
   }
 
@@ -142,7 +145,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     UserDatabaseHandler userDatabase = UserDatabaseHandler();
     userDatabase.getRegularUser(authHandler.authHandler.currentUser!.uid);
-    Future.delayed(Duration(milliseconds: 500), (){
+    Future.delayed(Duration(milliseconds: 500), () {
       _phoneNumber = userDatabase.userData["phoneNumber"];
       _birthDate = userDatabase.userData["birthday"];
     });
@@ -584,7 +587,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: FirebaseProfileStorage.imageUrl != null ? Image.network(FirebaseProfileStorage.imageUrl!) : Container(color:Colors.white),
+                                          child: FirebaseProfileStorage
+                                                      .imageUrl !=
+                                                  null
+                                              ? Image.network(
+                                                  FirebaseProfileStorage
+                                                      .imageUrl!)
+                                              : Container(color: Colors.white),
                                         ),
                                       ),
                                     ),
