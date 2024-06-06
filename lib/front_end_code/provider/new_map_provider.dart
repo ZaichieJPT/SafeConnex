@@ -8,8 +8,10 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 
 class NewMapProvider extends StatefulWidget {
   const NewMapProvider({super.key});
@@ -150,6 +152,15 @@ class _NewMapProviderState extends State<NewMapProvider> {
     super.dispose();
   }
 
+  bool _checkIfProfileExist(){
+    for(var profile in CircleDatabaseHandler.circleDataValue){
+      if(profile["image"] != null){
+        return true;
+      }
+    }
+    return false;
+  }
+
   addGeolocationMarker(int index){
     geolocationMarkers.add(Marker(
         height: 50,
@@ -170,8 +181,8 @@ class _NewMapProviderState extends State<NewMapProvider> {
                 height: 23,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    color: Colors.green
                 ),
+                child: _checkIfProfileExist() ? Image.network(FirebaseProfileStorage.imageUrl!) : Container(color:Colors.white),
               ),
             )
           ],
@@ -184,7 +195,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
     geolocationMarkers.clear();
     index = 0;
     Future.delayed(Duration(milliseconds: 400), (){
-      flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], "Garry");
+      flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], authHandler.authHandler.currentUser!.uid);
     });
 
     _mapController = MapController();

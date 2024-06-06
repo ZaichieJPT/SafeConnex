@@ -51,6 +51,8 @@ class FlutterFireCoordinates {
               }
             }
           }
+
+          print(coordinatesData.length);
         }
         else if(coordinatesData.isNotEmpty) {
           coordinatesData.clear();

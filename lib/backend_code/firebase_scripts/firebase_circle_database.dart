@@ -15,13 +15,12 @@ class CircleDatabaseHandler{
   DatabaseReference dbUserReference =  FirebaseDatabase.instanceFor(
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
-      .ref("user");
+      .ref("users");
 
   final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
   static String? generatedCode;
   static String? circleException;
-  //static Map<String, String> circleData = <String, String>{};
   static List<Map<String, dynamic>> circleUsersData = [];
   static List<Map<String, dynamic>> circleList = [];
   static List<Map<String, dynamic>> circleDataValue = [];
@@ -98,38 +97,79 @@ class CircleDatabaseHandler{
   Future<void> getCircleList(String userId) async {
     DataSnapshot snapshot = await dbUserReference.child(userId).child("circle_list").get();
 
-    for(var circles in snapshot.children){
-      circleList.add({
-        "circle_name": circles.key,
-        "circle_code": circles.child("circleName").value
-      });
+    if(circleList.isEmpty){
+      for(var circles in snapshot.children){
+        circleList.add({
+          "circle_code": circles.key,
+          "circle_name": circles.child("circleName").value
+        });
+      }
     }
+    else{
+      circleList.clear();
+      for(var circles in snapshot.children){
+        circleList.add({
+          "circle_code": circles.key,
+          "circle_name": circles.child("circleName").value
+        });
+      }
+    }
+
+
+    print(circleList);
   }
 
   Future<void> getCircleDataForLocation(String circleCode) async {
     DataSnapshot snapshot = await dbCircleReference.child(circleCode).child("members").get();
 
-    for(var circleMembers in snapshot.children){
-      locationCircleData.add({
-        "id": circleMembers.child("id")
-      });
+    if(locationCircleData.isEmpty){
+      for(var circleMembers in snapshot.children){
+        locationCircleData.add({
+          "id": circleMembers.child("id").value
+        });
+      }
     }
+    else{
+      locationCircleData.clear();
+      for(var circleMembers in snapshot.children){
+        locationCircleData.add({
+          "id": circleMembers.child("id").value
+        });
+      }
+    }
+    print("LENGTH: ${locationCircleData.length}");
   }
 
   Future<void> getCircleData(String circleCode) async
   {
     DataSnapshot snapshot = await dbCircleReference.child(circleCode).get();
-
-    for(var user in snapshot.child("members").children){
-      circleDataValue.add({
-        "id": user.child("id").value,
-        "email": user.child("email").value,
-        "name": user.child("name").value,
-        "phoneNumber": user.child("phone").value,
-        "role": user.child("role").value,
-        "image": user.child("image").value,
-      });
+    if(circleDataValue.isEmpty){
+      for(var user in snapshot.child("members").children){
+        circleDataValue.add({
+          "id": user.child("id").value,
+          "email": user.child("email").value,
+          "name": user.child("name").value,
+          "phoneNumber": user.child("phone").value,
+          "role": user.child("role").value,
+          "image": user.child("image").value,
+        });
+      }
+    }else{
+      circleDataValue.clear();
+      for(var user in snapshot.child("members").children){
+        circleDataValue.add({
+          "id": user.child("id").value,
+          "email": user.child("email").value,
+          "name": user.child("name").value,
+          "phoneNumber": user.child("phone").value,
+          "role": user.child("role").value,
+          "image": user.child("image").value,
+        });
+      }
     }
+
+
+    print("Length: ${circleDataValue.length}");
   }
 
   String codeGenerator(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
