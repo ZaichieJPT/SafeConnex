@@ -12,7 +12,6 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
-import 'package:safeconnex/backend_code/geocode_coordinates.dart';
 
 class NewMapProvider extends StatefulWidget {
   const NewMapProvider({super.key});
@@ -32,7 +31,6 @@ class _NewMapProviderState extends State<NewMapProvider> {
   MapController? _mapController;
   FlutterFireCoordinates flutterFireMap = FlutterFireCoordinates();
   GeofenceDatabase flutterFireGeofence = GeofenceDatabase();
-  GeocodeCoordinates geocodeCoordinates = GeocodeCoordinates();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
   CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
   List<Marker> geolocationMarkers = [];

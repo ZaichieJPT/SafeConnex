@@ -6,7 +6,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
-import 'package:safeconnex/backend_code/geocode_coordinates.dart';
 import "firebase_init.dart";
 
 class CircleDatabaseHandler{
