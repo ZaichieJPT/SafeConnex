@@ -3,7 +3,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:safeconnex/front_end_code/pages/circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 
 class HomeAppBar extends StatefulWidget {
@@ -95,7 +95,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                 highlightColor: Colors.grey,
                                 borderRadius: BorderRadius.circular(250),
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CirclePage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CirclePage()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -170,7 +173,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                   ),
                                   child: IconButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => GeofencingPage()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  GeofencingPage()));
                                     },
                                     icon: Image.asset(
                                       'assets/images/home_location_icon.png',

@@ -8,8 +8,8 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/login_textformfield.dart';
-import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
-import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 class EditCircleName extends StatefulWidget {

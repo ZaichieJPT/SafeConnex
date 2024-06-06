@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/front_end_code/components/nav_button_component.dart';
-import 'package:safeconnex/front_end_code/pages/create_circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/create_circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle.dart';
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 
