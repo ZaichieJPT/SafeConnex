@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:safeconnex/front_end_code/components/nav_button_component.dart';
 import 'package:safeconnex/front_end_code/pages/create_circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle.dart';
@@ -15,31 +18,48 @@ class CirclePage extends StatefulWidget {
 class _CirclePageState extends State<CirclePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/circle_background.png'),
+          fit: BoxFit.fitWidth,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
           children: [
-            Container(
-              child: Image.asset("assets/images/circle_background.png",),
-              alignment: Alignment.center,
-            ),
-            Positioned(
-              child: NavButtonComponent(
-                imageLocation: "assets/images/join_button.png", scale: 9,
-                route: JoinCirclePage(),
+            Expanded(
+              child: Container(
+                width: width,
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.065,
+                  vertical: height * 0.05,
+                ),
+                child: NavButtonComponent(
+                  imageLocation: "assets/images/join_button.png",
+                  route: JoinCirclePage(),
+                ),
               ),
-              top: 90,
-              right: 40,
             ),
-            Positioned(
-              child: NavButtonComponent(
-                imageLocation: "assets/images/create_button.png", scale: 9,
-                route: CreateCirclePage(),
+            Expanded(
+              child: Container(
+                width: width,
+                padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.065,
+                  vertical: height * 0.05,
+                ),
+                child: NavButtonComponent(
+                  imageLocation: "assets/images/create_button.png",
+                  route: CreateCirclePage(),
+                ),
               ),
-              bottom: 60,
-              right: 10,
-            )
+            ),
           ],
         ),
+      ),
     );
   }
 }

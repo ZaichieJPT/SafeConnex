@@ -8,6 +8,7 @@ import "package:safeconnex/front_end_code/components/signup_textformfield.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter/widgets.dart";
+import "package:safeconnex/front_end_code/provider/setting_provider.dart";
 
 class EmailCard extends StatefulWidget {
   const EmailCard({
@@ -27,9 +28,19 @@ class EmailCard extends StatefulWidget {
 
 class _EmailCardState extends State<EmailCard> {
   final _emailCardFormKey = GlobalKey<FormState>();
+  SettingsProvider provider = SettingsProvider();
+  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+
+  @override
+  void dispose() {
+    widget.emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     return Column(
       children: [
         Stack(
@@ -38,13 +49,13 @@ class _EmailCardState extends State<EmailCard> {
             Container(
               //color: Colors.amber,
               //margin: EdgeInsets.only(top: 25),
-              height: 250,
-              width: double.infinity,
+              height: height * 0.32,
+              width: width,
               child: Container(
                 margin: EdgeInsets.only(top: 30),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 255, 221, 228),
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(width * 0.07),
                   boxShadow: const [
                     BoxShadow(
                       color: Color.fromARGB(62, 72, 76, 148),
@@ -55,81 +66,88 @@ class _EmailCardState extends State<EmailCard> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(width * 0.02),
                   child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        children: [
-                          //BACK ICON BUTTON
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(300),
-                            child: IconButton(
-                              icon: Icon(Icons.arrow_back_ios_new),
-                              color: Colors.black,
-                              style: IconButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                iconSize: 12,
-                                minimumSize: Size(10, 10),
+                      Flexible(
+                        flex: 2,
+                        child: Row(
+                          children: [
+                            //BACK ICON BUTTON
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(width),
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back_ios_new),
+                                color: Colors.black,
+                                style: IconButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  iconSize: 12,
+                                  minimumSize: Size(10, 10),
+                                ),
+                                onPressed: widget.backClicked,
                               ),
-                              onPressed: widget.backClicked,
                             ),
-                          ),
-                          //TOP TEXT
-                          Text(
-                            "We'll use this to sign you in",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'OpunMai',
+                            //TOP TEXT
+                            Text(
+                              "We're almost there!",
+                              style: TextStyle(
+                                fontSize: width * 0.035,
+                                fontFamily: 'OpunMai',
+                                fontWeight: FontWeight.w500,
+                                color: Color.fromARGB(255, 62, 73, 101),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      //WHAT'S YOUR NAME
-                      Container(
-                        //color: Colors.white,
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        width: double.infinity,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Enter your e-mail\naddress",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontFamily: "OpunMai",
-                            fontWeight: FontWeight.w700,
-                            color: Color.fromARGB(255, 62, 73, 101),
-                            height: 1.5,
-                          ),
+                          ],
                         ),
                       ),
-                      //EMAIL ADDRESS
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Form(
-                        key: _emailCardFormKey,
-                        child: SignupFormField(
-                          hintText: "Email Address",
-                          controller: widget.emailController,
-                          textMargin: 0,
-                          validator: (email) {
-                            Future.delayed(Duration(seconds: 1), (){
-                              print("validator");
-                              print(FirebaseAuthHandler.firebaseSignUpException);
-
-                              if (widget.emailController.text.isEmpty) {
-                                return "Email is required";
-                              }
-                              else if(FirebaseAuthHandler.firebaseSignUpException != null){
-                                return FirebaseAuthHandler.firebaseSignUpException;
-                              }
-                              // Still Errors Here
-                              //else if (!EmailValidator.validate(email)) {
-                               // return "Enter a valid email";
-                              //}
-                              return null;
-                            });
-                          },
+                      //ENTER YOU EMAIL ADDRESS
+                      Flexible(
+                        flex: 4,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                left: width * 0.06,
+                                right: width * 0.33,
+                              ),
+                              child: Container(
+                                //color: Colors.white,
+                                width: width,
+                                alignment: Alignment.centerLeft,
+                                child: FittedBox(
+                                  child: Text(
+                                    "Enter your e-mail\naddress",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: height * 0.027,
+                                      fontFamily: "OpunMai",
+                                      fontWeight: FontWeight.w700,
+                                      color: Color.fromARGB(255, 62, 73, 101),
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            //EMAIL ADDRESS
+                            Form(
+                              key: _emailCardFormKey,
+                              child: SignupFormField(
+                                hintText: "Email Address",
+                                controller: widget.emailController,
+                                textMargin: 0,
+                                validator: (email) {
+                                  return provider.emailSignupValidator(context,
+                                      height, width, email, authHandler);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -138,8 +156,8 @@ class _EmailCardState extends State<EmailCard> {
               ),
             ),
             Positioned(
-              height: 140,
-              width: 140,
+              height: width * 0.4,
+              width: width * 0.35,
               top: 5,
               right: 0,
               child: Image.asset(
@@ -152,10 +170,10 @@ class _EmailCardState extends State<EmailCard> {
         BtnContinue(
           backgroundColor: Color.fromARGB(255, 255, 240, 243),
           borderColor: Color.fromARGB(255, 255, 221, 228),
-          topMargin: 15.0,
-          height: 40,
-          leftMargin: 50,
-          rightMargin: 50,
+          topMargin: height * 0.017,
+          height: height * 0.05,
+          leftMargin: width * 0.12,
+          rightMargin: width * 0.12,
           fontSize: 12,
           btnName: "Continue",
           formKey: _emailCardFormKey,
@@ -163,9 +181,7 @@ class _EmailCardState extends State<EmailCard> {
             print("clicked");
             if (_emailCardFormKey.currentState!.validate()) {
               widget.continueClicked();
-            } else {
-
-            }
+            } else {}
           },
         ),
         Padding(

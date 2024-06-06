@@ -111,8 +111,8 @@ class _GeofencingPageState extends State<GeofencingPage> {
         ),
         title: Text("Place"),
         titleTextStyle: TextStyle(
-          color: Colors.white,
-          fontSize: 25
+            color: Colors.white,
+            fontSize: 25
         ),
       ),
       bottomSheet: BottomAppBar(
@@ -141,14 +141,14 @@ class _GeofencingPageState extends State<GeofencingPage> {
               height: 35,
               width: 150,
               decoration: BoxDecoration(
-                color: Colors.green.shade200,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.green.shade400,
-                    offset: Offset(0, 4)
-                  )
-                ],
-                borderRadius: BorderRadius.circular(20)
+                  color: Colors.green.shade200,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.green.shade400,
+                        offset: Offset(0, 4)
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(20)
               ),
               child: TextButton(
                 onPressed: (){
@@ -156,13 +156,13 @@ class _GeofencingPageState extends State<GeofencingPage> {
                   if(indexedStackValue == 1){
                     if(_geofenceKey.currentState!.validate()){
                       flutterGeofencing.addGeofence(
-                        "Garry",
-                        tapLocation!.latitude,
-                        tapLocation!.longitude,
-                        nameController.text,
-                        circleMarker.radius,
-                        "Great",
-                        addressController.text
+                          "Garry",
+                          tapLocation!.latitude,
+                          tapLocation!.longitude,
+                          nameController.text,
+                          circleMarker.radius,
+                          "Great",
+                          addressController.text
                       );
                     }
                     nameController.clear();
@@ -180,12 +180,12 @@ class _GeofencingPageState extends State<GeofencingPage> {
                   }
                 },
                 child: Text(
-                  indexedStackValue == 0 ? "Edit Location" : "Save Changes",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
-                  )
+                    indexedStackValue == 0 ? "Edit Location" : "Save Changes",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                    )
                 ),
               ),
             ),
@@ -237,50 +237,50 @@ class _GeofencingPageState extends State<GeofencingPage> {
             index: indexedStackValue,
             children: [
               Container(
-                  padding: EdgeInsets.only(
+                padding: EdgeInsets.only(
                   top: 100,
                   bottom: 20,
                 ),
                 child: ListView.builder(
-                  itemCount: 1,
-                  itemBuilder: (context, index){
-                    List<LocationList> _locationList = [];
+                    itemCount: 1,
+                    itemBuilder: (context, index){
+                      List<LocationList> _locationList = [];
 
-                    for(var data in flutterGeofencing.geofenceData){
-                      _locationList.add(LocationList(text: data['id']));
+                      for(var data in flutterGeofencing.geofenceData){
+                        _locationList.add(LocationList(text: data['id']));
+                      }
+
+                      return ToggleButtons(
+                          direction: Axis.vertical,
+                          onPressed: (int index){
+                            if(tempIndex == null){
+                              setState(() {
+                                isValueSelected[index] = !isValueSelected[index];
+                              });
+                            }else{
+                              setState(() {
+                                isValueSelected[tempIndex!] = false;
+                                isValueSelected[index] = true;
+                              });
+                            }
+                            tempIndex = index;
+                            flutterGeofencing.geofenceToUpdate = {
+                              "id": flutterGeofencing.geofenceData[tempIndex!]['id'].toString(),
+                              "latitude": flutterGeofencing.geofenceData[tempIndex!]['latitude'].toString(),
+                              "longitude": flutterGeofencing.geofenceData[tempIndex!]['longitude'].toString(),
+                              "radiusId": flutterGeofencing.geofenceData[tempIndex!]['radiusId'].toString(),
+                              "radiusSize": flutterGeofencing.geofenceData[tempIndex!]['radiusSize'].toString(),
+                              "addressLabel": flutterGeofencing.geofenceData[tempIndex!]['addressLabel'].toString(),
+                              //"circleName": circ
+                            };
+
+                            print(flutterGeofencing.geofenceToUpdate['id']);
+                          },
+                          borderColor: Colors.white,
+                          isSelected: isValueSelected,
+                          children: _locationList
+                      );
                     }
-
-                    return ToggleButtons(
-                      direction: Axis.vertical,
-                      onPressed: (int index){
-                        if(tempIndex == null){
-                          setState(() {
-                            isValueSelected[index] = !isValueSelected[index];
-                          });
-                        }else{
-                          setState(() {
-                            isValueSelected[tempIndex!] = false;
-                            isValueSelected[index] = true;
-                          });
-                        }
-                        tempIndex = index;
-                        flutterGeofencing.geofenceToUpdate = {
-                          "id": flutterGeofencing.geofenceData[tempIndex!]['id'].toString(),
-                          "latitude": flutterGeofencing.geofenceData[tempIndex!]['latitude'].toString(),
-                          "longitude": flutterGeofencing.geofenceData[tempIndex!]['longitude'].toString(),
-                          "radiusId": flutterGeofencing.geofenceData[tempIndex!]['radiusId'].toString(),
-                          "radiusSize": flutterGeofencing.geofenceData[tempIndex!]['radiusSize'].toString(),
-                          "addressLabel": flutterGeofencing.geofenceData[tempIndex!]['addressLabel'].toString(),
-                          //"circleName": circ
-                        };
-
-                        print(flutterGeofencing.geofenceToUpdate['id']);
-                      },
-                      borderColor: Colors.white,
-                      isSelected: isValueSelected,
-                      children: _locationList
-                    );
-                  }
                 ),
               ),
 
@@ -302,14 +302,14 @@ class _GeofencingPageState extends State<GeofencingPage> {
                         height: 230,
                         child: FlutterMap(
                           options: MapOptions(
-                            initialCenter: LatLng(16.0265, 120.3363),
-                            initialZoom: 13.2,
-                            onTap: (tapPosition, tapLocation){
-                              this.tapLocation = tapLocation;
-                              this.tapPosition = tapPosition;
-                              _currentSliderValue = 100;
-                              addGeolocationMarker(tapLocation, _currentSliderValue);
-                            }
+                              initialCenter: LatLng(16.0265, 120.3363),
+                              initialZoom: 13.2,
+                              onTap: (tapPosition, tapLocation){
+                                this.tapLocation = tapLocation;
+                                this.tapPosition = tapPosition;
+                                _currentSliderValue = 100;
+                                addGeolocationMarker(tapLocation, _currentSliderValue);
+                              }
                           ),
                           children: [
                             TileLayer(
@@ -360,9 +360,9 @@ class _GeofencingPageState extends State<GeofencingPage> {
                               "Location Details",
                               textAlign: TextAlign.start,
                               style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.brown.shade300
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.brown.shade300
                               ),
                             ),
                           ],
@@ -382,9 +382,9 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 child: Text(
                                   "Label",
                                   style: TextStyle(
-                                    fontSize: 23,
-                                    color: Colors.blueGrey.shade800,
-                                    fontWeight: FontWeight.w600
+                                      fontSize: 23,
+                                      color: Colors.blueGrey.shade800,
+                                      fontWeight: FontWeight.w600
                                   ),
                                 ),
                               ),
@@ -392,52 +392,52 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 height: 25,
                               ),
                               TextFormField(
-                                controller: nameController,
-                                onTapOutside: (event){
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                validator: (value){
-                                  print(value);
-                                  if(value!.isEmpty){
-                                    return "Please enter a Circle Name";
-                                  }
-                                  else{
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.bookmark),
-                                  iconColor: Colors.blueGrey.shade200,
-                                  hintText: "Name",
-                                  hintStyle: TextStyle(
-                                    color: Colors.blueGrey.shade200,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueGrey.shade800, width: 3))
-                                 )
-                               ),
+                                  controller: nameController,
+                                  onTapOutside: (event){
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                  },
+                                  validator: (value){
+                                    print(value);
+                                    if(value!.isEmpty){
+                                      return "Please enter a Circle Name";
+                                    }
+                                    else{
+                                      return null;
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                      icon: Icon(Icons.bookmark),
+                                      iconColor: Colors.blueGrey.shade200,
+                                      hintText: "Name",
+                                      hintStyle: TextStyle(
+                                        color: Colors.blueGrey.shade200,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueGrey.shade800, width: 3))
+                                  )
+                              ),
                               TextFormField(
-                                controller: addressController,
-                                onTapOutside: (event){
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                validator: (value){
-                                  print(value);
-                                  if(value!.isEmpty){
-                                    return "Please enter Address Label";
-                                  }
-                                  else{
-                                    return null;
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  icon: Icon(Icons.house),
-                                  iconColor: Colors.blueGrey.shade200,
-                                  hintText: "Address",
-                                  hintStyle: TextStyle(
-                                    color: Colors.blueGrey.shade200,
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueGrey.shade800, width: 3))
-                                )
+                                  controller: addressController,
+                                  onTapOutside: (event){
+                                    FocusManager.instance.primaryFocus?.unfocus();
+                                  },
+                                  validator: (value){
+                                    print(value);
+                                    if(value!.isEmpty){
+                                      return "Please enter Address Label";
+                                    }
+                                    else{
+                                      return null;
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                      icon: Icon(Icons.house),
+                                      iconColor: Colors.blueGrey.shade200,
+                                      hintText: "Address",
+                                      hintStyle: TextStyle(
+                                        color: Colors.blueGrey.shade200,
+                                      ),
+                                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.blueGrey.shade800, width: 3))
+                                  )
                               ),
                             ],
                           ),

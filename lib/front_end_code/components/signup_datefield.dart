@@ -29,7 +29,15 @@ class SignupDateField extends StatefulWidget {
 
 class _SignupDateFieldState extends State<SignupDateField> {
   @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       //child: SizedBox(
@@ -38,10 +46,9 @@ class _SignupDateFieldState extends State<SignupDateField> {
       //color: Colors.black,
       child: Container(
         margin: EdgeInsets.only(right: widget.textMargin ?? 0),
-        height: widget.height ?? 40, //widget.isValidated ? 40 :
+        height: widget.height ?? height * 0.05, //widget.isValidated ? 40 :
         child: TextFormField(
           validator: widget.validator,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: widget.controller,
           textAlignVertical: TextAlignVertical.center,
           cursorColor: Color.fromARGB(255, 175, 173, 173),
@@ -73,7 +80,10 @@ class _SignupDateFieldState extends State<SignupDateField> {
             ),
             counterText: '',
             //floatingLabelStyle: TextStyle(color: Colors.black),
-            suffixIcon: Icon(Icons.calendar_month_outlined),
+            suffixIcon: Icon(
+              Icons.calendar_month_outlined,
+              size: height * 0.03,
+            ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide(
@@ -110,7 +120,7 @@ class _SignupDateFieldState extends State<SignupDateField> {
             if (datePicked != null) {
               setState(() {
                 widget.controller.text =
-                    DateFormat('MM-dd-yyyy').format(datePicked);
+                    DateFormat('yMMMMd').format(datePicked);
               });
             }
           },

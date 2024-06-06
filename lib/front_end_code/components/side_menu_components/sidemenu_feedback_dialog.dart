@@ -22,6 +22,12 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
   final TextEditingController feedbackController = TextEditingController();
 
   @override
+  void dispose() {
+    feedbackController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: Colors.transparent,

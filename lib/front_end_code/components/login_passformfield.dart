@@ -72,6 +72,12 @@ class _PassFormFieldState extends State<PassFormField> {
   }
 
   @override
+  void dispose() {
+    widget.passController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),

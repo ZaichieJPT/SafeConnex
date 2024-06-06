@@ -54,10 +54,12 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   Future<void> _onProfileTapped() async {
-    FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+    FirebaseProfileStorage profileStorage =
+    FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    profileStorage.uploadProfilePic(authHandler.authHandler.currentUser!.uid, image!.path);
+    profileStorage.uploadProfilePic(
+        authHandler.authHandler.currentUser!.uid, image!.path);
     if (image == null) return;
   }
 
@@ -134,6 +136,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   @override
   void dispose() {
     _phoneController.dispose();
+    _birthdateController.dispose();
     super.dispose();
   }
 
@@ -142,7 +145,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     UserDatabaseHandler userDatabase = UserDatabaseHandler();
     userDatabase.getRegularUser(authHandler.authHandler.currentUser!.uid);
-    Future.delayed(Duration(milliseconds: 500), (){
+    Future.delayed(Duration(milliseconds: 500), () {
       _phoneNumber = userDatabase.userData["phoneNumber"];
       _birthDate = userDatabase.userData["birthday"];
     });
@@ -164,8 +167,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 end: Alignment.bottomCenter,
               ),
               border: Border(
-                  //bottom: BorderSide(width: 1),
-                  ),
+                //bottom: BorderSide(width: 1),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -202,7 +205,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
                               child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: [
                                   //EDIT PROFILE BUTTON
                                   Padding(
@@ -221,7 +224,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               //_isProfileEditable = !_isProfileEditable;
                                             } else {
                                               _isProfileEditable =
-                                                  !_isProfileEditable;
+                                              !_isProfileEditable;
                                             }
                                           });
                                         },
@@ -271,7 +274,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           _isProfileEditable
@@ -286,88 +289,88 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                                 : FontWeight.w400,
                                             color: _isProfileEditable
                                                 ? Color.fromARGB(
-                                                    255, 70, 85, 104)
+                                                255, 70, 85, 104)
                                                 : Colors.black,
                                           ),
                                         ),
                                         _isProfileEditable
                                             ? Container(
-                                                width: widget.width * 0.28,
-                                                alignment: Alignment.center,
-                                                //color: Colors.amber,
+                                            width: widget.width * 0.28,
+                                            alignment: Alignment.center,
+                                            //color: Colors.amber,
 
-                                                //PHONE TEXT FIELD
-                                                child: Form(
-                                                  key: _profileFormKey,
-                                                  child: TextFormField(
-                                                    controller:
-                                                        _phoneController,
-                                                    autofocus: true,
-                                                    validator: (value) {
-                                                      return provider
-                                                          .phoneNumberValidator(
-                                                              context,
-                                                              widget.height,
-                                                              widget.width,
-                                                              value!);
-                                                    },
-                                                    textAlign: TextAlign.center,
-                                                    cursorColor: Colors.grey,
-                                                    maxLength: 9,
-                                                    keyboardType:
-                                                        TextInputType.phone,
-                                                    style: TextStyle(
-                                                      fontFamily: 'OpunMai',
-                                                      fontSize:
-                                                          widget.height * 0.018,
-                                                      fontWeight:
-                                                          _isProfileEditable
-                                                              ? FontWeight.w700
-                                                              : FontWeight.w400,
-                                                      color: _isProfileEditable
-                                                          ? Color.fromARGB(
-                                                              255, 70, 85, 104)
-                                                          : Colors.black,
+                                            //PHONE TEXT FIELD
+                                            child: Form(
+                                              key: _profileFormKey,
+                                              child: TextFormField(
+                                                controller:
+                                                _phoneController,
+                                                autofocus: true,
+                                                validator: (value) {
+                                                  return provider
+                                                      .phoneNumberValidator(
+                                                      context,
+                                                      widget.height,
+                                                      widget.width,
+                                                      value!);
+                                                },
+                                                textAlign: TextAlign.center,
+                                                cursorColor: Colors.grey,
+                                                maxLength: 9,
+                                                keyboardType:
+                                                TextInputType.phone,
+                                                style: TextStyle(
+                                                  fontFamily: 'OpunMai',
+                                                  fontSize:
+                                                  widget.height * 0.018,
+                                                  fontWeight:
+                                                  _isProfileEditable
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w400,
+                                                  color: _isProfileEditable
+                                                      ? Color.fromARGB(
+                                                      255, 70, 85, 104)
+                                                      : Colors.black,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  counterText: '',
+                                                  border: _isProfileEditable
+                                                      ? UnderlineInputBorder()
+                                                      : InputBorder.none,
+                                                  focusedBorder:
+                                                  _isProfileEditable
+                                                      ? UnderlineInputBorder(
+                                                    borderSide:
+                                                    BorderSide(
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          70,
+                                                          85,
+                                                          104),
+                                                      width: 2,
                                                     ),
-                                                    decoration: InputDecoration(
-                                                      counterText: '',
-                                                      border: _isProfileEditable
-                                                          ? UnderlineInputBorder()
-                                                          : InputBorder.none,
-                                                      focusedBorder:
-                                                          _isProfileEditable
-                                                              ? UnderlineInputBorder(
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            70,
-                                                                            85,
-                                                                            104),
-                                                                    width: 2,
-                                                                  ),
-                                                                )
-                                                              : InputBorder
-                                                                  .none,
-                                                    ),
-                                                  ),
-                                                ))
-                                            : Container(
-                                                width: widget.width * 0.24,
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  '${_phoneNumber}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontFamily: 'OpunMai',
-                                                    fontSize:
-                                                        widget.height * 0.018,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
-                                                  ),
+                                                  )
+                                                      : InputBorder
+                                                      .none,
                                                 ),
                                               ),
+                                            ))
+                                            : Container(
+                                          width: widget.width * 0.24,
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${_phoneNumber}',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize:
+                                              widget.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -375,7 +378,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Text(
                                           'Birthdate: ',
@@ -388,114 +391,114 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                                 : FontWeight.w400,
                                             color: _isProfileEditable
                                                 ? Color.fromARGB(
-                                                    255, 70, 85, 104)
+                                                255, 70, 85, 104)
                                                 : Colors.black,
                                           ),
                                         ),
                                         _isProfileEditable
                                             ? Container(
-                                                width: widget.width * 0.4,
-                                                alignment: Alignment.center,
-                                                //color: Colors.amber,
+                                            width: widget.width * 0.4,
+                                            alignment: Alignment.center,
+                                            //color: Colors.amber,
 
-                                                //BIRTHDATE TEXT FIELD
-                                                child: Form(
-                                                  key: _profileDateFormKey,
-                                                  child: TextFormField(
-                                                    onTap: () async {
-                                                      DateTime? datePicked =
-                                                          await showDatePicker(
-                                                        context: context,
-                                                        initialDate:
-                                                            DateTime.now(),
-                                                        firstDate:
-                                                            DateTime(1900),
-                                                        lastDate:
-                                                            DateTime(2100),
-                                                      );
-                                                      if (datePicked != null) {
-                                                        setState(() {
+                                            //BIRTHDATE TEXT FIELD
+                                            child: Form(
+                                              key: _profileDateFormKey,
+                                              child: TextFormField(
+                                                onTap: () async {
+                                                  DateTime? datePicked =
+                                                  await showDatePicker(
+                                                    context: context,
+                                                    initialDate:
+                                                    DateTime.now(),
+                                                    firstDate:
+                                                    DateTime(1900),
+                                                    lastDate:
+                                                    DateTime(2100),
+                                                  );
+                                                  if (datePicked != null) {
+                                                    setState(() {
+                                                      _birthdateController
+                                                          .text = DateFormat(
+                                                          'yMMMMd')
+                                                          .format(
+                                                          datePicked);
+                                                      _birthDate =
                                                           _birthdateController
-                                                              .text = DateFormat(
-                                                                  'yMMMMd')
-                                                              .format(
-                                                                  datePicked);
-                                                          _birthDate =
-                                                              _birthdateController
-                                                                  .text;
-                                                        });
-                                                      }
-                                                    },
+                                                              .text;
+                                                    });
+                                                  }
+                                                },
 
-                                                    controller:
-                                                        _birthdateController,
-                                                    readOnly: true,
+                                                controller:
+                                                _birthdateController,
+                                                readOnly: true,
 
-                                                    validator: (value) {
-                                                      return provider
-                                                          .birthdateValidator(
-                                                              context,
-                                                              widget.height,
-                                                              widget.width,
-                                                              value!);
-                                                    },
-                                                    textAlign: TextAlign.center,
-                                                    cursorColor: Colors.grey,
-                                                    //maxLength: 9,
-                                                    keyboardType:
-                                                        TextInputType.datetime,
-                                                    style: TextStyle(
-                                                      fontFamily: 'OpunMai',
-                                                      fontSize:
-                                                          widget.height * 0.018,
-                                                      fontWeight:
-                                                          _isProfileEditable
-                                                              ? FontWeight.w700
-                                                              : FontWeight.w400,
-                                                      color: _isProfileEditable
-                                                          ? Color.fromARGB(
-                                                              255, 70, 85, 104)
-                                                          : Colors.black,
+                                                validator: (value) {
+                                                  return provider
+                                                      .birthdateValidator(
+                                                      context,
+                                                      widget.height,
+                                                      widget.width,
+                                                      value!);
+                                                },
+                                                textAlign: TextAlign.center,
+                                                cursorColor: Colors.grey,
+                                                //maxLength: 9,
+                                                keyboardType:
+                                                TextInputType.datetime,
+                                                style: TextStyle(
+                                                  fontFamily: 'OpunMai',
+                                                  fontSize:
+                                                  widget.height * 0.018,
+                                                  fontWeight:
+                                                  _isProfileEditable
+                                                      ? FontWeight.w700
+                                                      : FontWeight.w400,
+                                                  color: _isProfileEditable
+                                                      ? Color.fromARGB(
+                                                      255, 70, 85, 104)
+                                                      : Colors.black,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  counterText: '',
+                                                  border: _isProfileEditable
+                                                      ? UnderlineInputBorder()
+                                                      : InputBorder.none,
+                                                  focusedBorder:
+                                                  _isProfileEditable
+                                                      ? UnderlineInputBorder(
+                                                    borderSide:
+                                                    BorderSide(
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          70,
+                                                          85,
+                                                          104),
+                                                      width: 2,
                                                     ),
-                                                    decoration: InputDecoration(
-                                                      counterText: '',
-                                                      border: _isProfileEditable
-                                                          ? UnderlineInputBorder()
-                                                          : InputBorder.none,
-                                                      focusedBorder:
-                                                          _isProfileEditable
-                                                              ? UnderlineInputBorder(
-                                                                  borderSide:
-                                                                      BorderSide(
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            70,
-                                                                            85,
-                                                                            104),
-                                                                    width: 2,
-                                                                  ),
-                                                                )
-                                                              : InputBorder
-                                                                  .none,
-                                                    ),
-                                                  ),
-                                                ))
-                                            : Container(
-                                                width: widget.width * 0.32,
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  '${_birthDate}',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontFamily: 'OpunMai',
-                                                    fontSize:
-                                                        widget.height * 0.018,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.black,
-                                                  ),
+                                                  )
+                                                      : InputBorder
+                                                      .none,
                                                 ),
                                               ),
+                                            ))
+                                            : Container(
+                                          width: widget.width * 0.32,
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            '${_birthDate}',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize:
+                                              widget.height * 0.018,
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -508,7 +511,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                       width: innerWidth,
                                       decoration: BoxDecoration(
                                         color:
-                                            Color.fromARGB(255, 168, 165, 165),
+                                        Color.fromARGB(255, 168, 165, 165),
                                         borderRadius: BorderRadius.only(
                                           bottomLeft: Radius.circular(27),
                                           bottomRight: Radius.circular(27),
@@ -521,11 +524,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           onPressed: () {},
                                           style: ButtonStyle(
                                             overlayColor:
-                                                MaterialStateProperty.all(
+                                            MaterialStateProperty.all(
                                               const Color.fromARGB(50, 0, 0, 0),
                                             ),
                                             backgroundColor:
-                                                MaterialStateProperty.all(
+                                            MaterialStateProperty.all(
                                               Color.fromARGB(
                                                   255, 123, 123, 123),
                                             ),
@@ -584,7 +587,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: FirebaseProfileStorage.imageUrl != null ? Image.network(FirebaseProfileStorage.imageUrl!) : Container(color:Colors.white),
+                                          child: FirebaseProfileStorage
+                                              .imageUrl !=
+                                              null
+                                              ? Image.network(
+                                              FirebaseProfileStorage
+                                                  .imageUrl!)
+                                              : Container(color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -596,29 +605,29 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                       height: widget.height * 0.027,
                                       child: _isProfileEditable
                                           ? Row(
-                                              children: [
-                                                Flexible(
-                                                  flex: 10,
-                                                  child: Container(
-                                                      //color: Colors.yellow,
-                                                      ),
-                                                ),
-                                                Expanded(
-                                                  flex: 2,
-                                                  child: Container(
-                                                    //color: Colors.grey,
-                                                    child: Image.asset(
-                                                        'assets/images/side_menu/profilesettings_picker_icon.png'),
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  flex: 7,
-                                                  child: Container(
-                                                      //color: Colors.blue,
-                                                      ),
-                                                ),
-                                              ],
-                                            )
+                                        children: [
+                                          Flexible(
+                                            flex: 10,
+                                            child: Container(
+                                              //color: Colors.yellow,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            flex: 2,
+                                            child: Container(
+                                              //color: Colors.grey,
+                                              child: Image.asset(
+                                                  'assets/images/side_menu/profilesettings_picker_icon.png'),
+                                            ),
+                                          ),
+                                          Flexible(
+                                            flex: 7,
+                                            child: Container(
+                                              //color: Colors.blue,
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                           : null,
                                     ),
                                   ),

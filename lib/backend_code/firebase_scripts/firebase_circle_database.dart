@@ -77,20 +77,28 @@ class CircleDatabaseHandler{
 
   Future<void> getCircleToJoin(String circleCode, String userId) async {
     DataSnapshot snapshot = await dbCircleReference.child(circleCode).get();
-
+    bool isAMember = false;
     if(snapshot.exists){
       for(var id in snapshot.child("members").children){
+        // if the database id is not the same as the currentUserId
         if(id.child("id").value == userId){
-          circleToJoin = {
-            "circle_name": snapshot.child("circle_name").value.toString(),
-            "circle_code": snapshot.key.toString(),
-            "id": userId
-          };
-        }
-        else{
-          print("Already in Circle");
+          isAMember = true;
         }
       }
+
+      if(isAMember == false){
+        circleToJoin = {
+          "circle_name": snapshot.child("circle_name").value.toString(),
+          "circle_code": snapshot.key.toString(),
+          "isAMember": false
+        };
+      }else{
+        circleToJoin = {
+          "isAMember": true
+        };
+      }
+
+
     }else{
       print("Circle Does not exist");
     }

@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import "package:safeconnex/front_end_code/components/home_components/error_snackbar.dart";
 import "package:safeconnex/front_end_code/components/signup_textformfield.dart";
 import "package:safeconnex/front_end_code/components/signup_datefield.dart";
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
@@ -31,7 +32,17 @@ class _NameCardState extends State<NameCard> {
   final _nameCardFormKey = GlobalKey<FormState>();
 
   @override
+  void dispose() {
+    widget.firstNameController.dispose();
+    widget.lastNameController.dispose();
+    widget.dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.sizeOf(context).height;
+    final width = MediaQuery.sizeOf(context).width;
     return Column(
       children: [
         Stack(
@@ -39,110 +50,150 @@ class _NameCardState extends State<NameCard> {
           children: [
             Container(
               //color: Colors.amber,
-              margin: EdgeInsets.only(top: 33),
-              height: 280,
-              width: double.infinity,
+              //margin: EdgeInsets.only(top: 10),
+              //height: 280,
+              height: height * 0.33,
+
+              width: width,
               child: Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 218, 237, 254),
-                    borderRadius: BorderRadius.circular(30)),
+                  color: Color.fromARGB(255, 218, 237, 254),
+                  borderRadius: BorderRadius.circular(width * 0.07),
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(width * 0.02),
                   child: Form(
                     key: _nameCardFormKey,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            //BACK ICON BUTTON
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(300),
-                              child: IconButton(
-                                icon: Icon(Icons.arrow_back_ios_new),
-                                color: Colors.black,
-                                style: IconButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  iconSize: 12,
-                                  minimumSize: Size(10, 10),
+                        Flexible(
+                          child: Row(
+                            children: [
+                              //BACK ICON BUTTON
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(width),
+                                child: IconButton(
+                                  icon: Icon(Icons.arrow_back_ios_new),
+                                  color: Colors.black,
+                                  style: IconButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    iconSize: 12,
+                                    minimumSize: Size(10, 10),
+                                  ),
+                                  onPressed: widget.backClicked,
                                 ),
-                                onPressed: widget.backClicked,
                               ),
-                            ),
-                            //TOP TEXT
-                            Text(
-                              "Let us know who you are.",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontFamily: 'OpunMai',
+                              //TOP TEXT
+                              Text(
+                                "Let us know who you are.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: width * 0.035,
+                                  fontFamily: 'OpunMai',
+                                  fontWeight: FontWeight.w500,
+                                  color: Color.fromARGB(255, 62, 73, 101),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         //WHAT'S YOUR NAME
-                        Container(
-                          //color: Colors.white,
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          width: double.infinity,
-                          child: Text(
-                            "What's your name?",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: "OpunMai",
-                              fontWeight: FontWeight.w700,
-                              color: Color.fromARGB(255, 62, 73, 101),
+                        Flexible(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              left: width * 0.05,
+                              right: width * 0.33,
+                            ),
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              width: width,
+                              //color: Colors.grey,
+                              child: FittedBox(
+                                child: Text(
+                                  "What's your name?",
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                    fontSize: height * 0.03,
+                                    fontFamily: "OpunMai",
+                                    fontWeight: FontWeight.w700,
+                                    color: Color.fromARGB(255, 62, 73, 101),
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ),
                         //FIRST NAME
-                        SizedBox(
-                          height: 15,
-                        ),
-                        SignupFormField(
-                          hintText: "First Name",
-                          controller: widget.firstNameController,
-                          textMargin: 90,
-                          validator: (lastName) {
-                            if (lastName.toString().isEmpty) {
-                              return "First name is required";
-                            }
-                            return null;
-                          },
-                          //autofocus: false,
-                        ),
+                        Flexible(
+                          flex: 4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Flexible(
+                                child: SignupFormField(
+                                  hintText: "First Name",
+                                  controller: widget.firstNameController,
+                                  textMargin: width * 0.23,
+                                  validator: (lastName) {
+                                    if (lastName.toString().isEmpty) {
+                                      showErrorMessage(
+                                          context,
+                                          "First name is required",
+                                          height,
+                                          width);
+                                      return '';
+                                    }
+                                    return null;
+                                  },
+                                  //autofocus: false,
+                                ),
+                              ),
 
-                        //LAST NAME
-                        SizedBox(
-                          height: 10,
-                        ),
+                              //LAST NAME
+                              Flexible(
+                                child: SignupFormField(
+                                  hintText: "Last Name",
+                                  controller: widget.lastNameController,
+                                  textMargin: width * 0.23,
+                                  validator: (lastName) {
+                                    if (lastName.toString().isEmpty) {
+                                      showErrorMessage(
+                                          context,
+                                          "Last name is required",
+                                          height,
+                                          width);
+                                      return '';
+                                    }
+                                    return null;
+                                  },
+                                  //autofocus: false,
+                                ),
+                              ),
 
-                        SignupFormField(
-                          hintText: "Last Name",
-                          controller: widget.lastNameController,
-                          textMargin: 90,
-                          validator: (lastName) {
-                            if (lastName.toString().isEmpty) {
-                              return "Last name is required";
-                            }
-                            return null;
-                          },
-                          //autofocus: false,
-                        ),
+                              //DATE OF BIRTH
 
-                        //DATE OF BIRTH
-                        SizedBox(
-                          height: 15,
-                        ),
-                        SignupDateField(
-                          hintText: "Date of Birth",
-                          controller: widget.dateController,
-                          textMargin: 90,
-                          validator: (date) {
-                            if (date.toString().isEmpty) {
-                              return "Date of birth is required";
-                            }
-                            return null;
-                          },
-                          //autofocus: false,
+                              Flexible(
+                                child: SignupDateField(
+                                  hintText: "Date of Birth",
+                                  controller: widget.dateController,
+                                  textMargin: width * 0.23,
+                                  validator: (date) {
+                                    if (date.toString().isEmpty) {
+                                      showErrorMessage(
+                                          context,
+                                          "Date of birth is required",
+                                          height,
+                                          width);
+                                      return '';
+                                    }
+                                    return null;
+                                  },
+                                  //autofocus: false,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -151,19 +202,19 @@ class _NameCardState extends State<NameCard> {
               ),
             ),
             Positioned(
-              height: 85,
-              width: 85,
-              top: 25,
-              right: 60,
+              height: width * 0.25,
+              width: width * 0.2,
+              top: -15,
+              right: width * 0.17,
               child: Image.asset(
                 'assets/images/signup_page/signup_page_1.1.png',
                 fit: BoxFit.contain,
               ),
             ),
             Positioned(
-              height: 85,
-              width: 85,
-              top: 55,
+              height: width * 0.25,
+              width: width * 0.2,
+              top: 15,
               right: 0,
               child: Image.asset(
                 'assets/images/signup_page/signup_page_1.2.png',
@@ -176,11 +227,11 @@ class _NameCardState extends State<NameCard> {
         BtnContinue(
           backgroundColor: Color.fromARGB(255, 238, 247, 254),
           borderColor: Color.fromARGB(255, 218, 237, 254),
-          topMargin: 15.0,
-          height: 40,
-          leftMargin: 50,
-          rightMargin: 50,
-          fontSize: 12,
+          topMargin: height * 0.017,
+          height: height * 0.05,
+          leftMargin: width * 0.12,
+          rightMargin: width * 0.12,
+          fontSize: 13,
           btnName: "Continue",
           formKey: _nameCardFormKey,
           continueClicked: () {

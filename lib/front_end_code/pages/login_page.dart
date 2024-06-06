@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
@@ -28,16 +28,28 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
+  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-    CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
     Future.delayed(const Duration(milliseconds: 5), () {
       if(authHandler.authHandler.currentUser != null){
-        FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+        FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
         circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
+        if(CircleDatabaseHandler.circleList.isNotEmpty){
+          CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+        }
         Navigator.pushNamed(context, "/home");
       }
     });
@@ -46,329 +58,359 @@ class _LoginPageState extends State<LoginPage> {
       decoration: BoxDecoration(
         image: DecorationImage(
           image: AssetImage('assets/images/login-bg.png'),
-          fit: BoxFit.cover,
+          fit: BoxFit.fill,
         ),
       ),
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: Scaffold(
           backgroundColor: Colors.transparent,
+          resizeToAvoidBottomInset: false,
           body: SafeArea(
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Stack(
-                children: [
-                  //WELCOME BACK SHADOW
-                  Positioned(
-                    top: 103,
-                    left: 37,
-                    child: Text(
-                      'Welcome Back!',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontFamily: "OpunMai",
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 238, 232, 221),
+            child: Container(
+              height: height,
+              width: width,
+              alignment: Alignment.center,
+              child: SingleChildScrollView(
+                reverse: true,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //WELCOME BACK
+                    Container(
+                      width: width,
+                      padding: EdgeInsets.only(left: width * 0.1),
+                      child: Text(
+                        'Welcome Back!',
+                        style: TextStyle(
+                          fontSize: height * 0.035,
+                          fontFamily: "OpunMai",
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 62, 73, 101),
+                          shadows: [
+                            Shadow(
+                              color: Color.fromARGB(255, 238, 232, 221),
+                              //color: Colors.green,
+                              blurRadius: 1,
+                              offset: Offset(3.5, 2),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  //WELCOME BACK TEXT
-                  Positioned(
-                    top: 100,
-                    left: 35,
-                    child: Text(
-                      'Welcome Back!',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontFamily: "OpunMai",
-                        fontWeight: FontWeight.w600,
-                        color: Color.fromARGB(255, 62, 73, 101),
-                      ),
-                    ),
-                  ),
-                  //BACK CARD
-                  Positioned(
-                    top: 185,
-                    left: 55,
-                    child: Container(
-                      width: 285,
-                      height: 445,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 235, 228, 203),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                  //CIRCLE DESIGN
-                  Positioned(
-                    top: 210,
-                    left: 325,
-                    child: Container(
-                      width: 25,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 252, 223, 105),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                  ),
-                  //LOGIN CARD
-                  Positioned(
-                    top: 170,
-                    left: 40,
-                    child: Container(
-                      width: 285,
-                      height: 440,
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 253, 250, 197),
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(
-                            color: Color.fromARGB(255, 235, 228, 203),
-                          )),
-                    ),
-                  ),
-                  Positioned(
-                    top: 150,
-                    left: 150,
-                    child: Icon(
-                      Icons.cancel,
-                      size: 75,
-                    ),
-                  ),
-                  Column(
-                    children: [
-                      SizedBox(height: 220),
-                      //APP LOGO
-                      Container(
-                        alignment: Alignment.center,
-                        width: 375,
-                        //color: Color.fromARGB(93, 18, 198, 222),
-                        child: Form(
-                          key: _loginFormKey,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              //LOGIN TEXT
-                              Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 35,
-                                  fontFamily: "OpunMai",
-                                  fontWeight: FontWeight.w700,
-                                  color: Color.fromARGB(255, 62, 73, 101),
+                    //LOGIN CARD
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(
+                          children: [
+                            SizedBox(
+                              //color: Colors.green,
+                              width: width * 0.75,
+                              height: height * 0.6,
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                width: width * 0.75,
+                                height: height * 0.55,
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 0,
+                                  vertical: 20,
                                 ),
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              //EMAIL TEXT FIELD
-                              Container(
-                                //color: Colors.black,
-                                alignment: AlignmentDirectional.center,
-                                width: 300,
-                                child: LoginFormField(
-                                  hintText: 'Email',
-                                  controller: _emailController,
-                                  textMargin: 10,
-                                  validator: (email) {
-                                    if (email.toString().isEmpty) {
-                                      return "Email is required";
-                                    } else if (!EmailValidator.validate(
-                                        email)) {
-                                      return "Enter a valid email";
-                                    }else if(authHandler.firebaseLoginException != null)
-                                    {
-                                      print("Firebase Error: ${authHandler.firebaseLoginException}");
-                                      return authHandler.firebaseLoginException;
-                                    }else{
-                                      return null;
-                                    }
-                                  },
-                                  height: 60,
-                                  verticalPadding: 0,
-                                  borderRadius: 7,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              //PASSWORD
-                              Container(
-                                //color: Colors.black,
-                                alignment: AlignmentDirectional.center,
-                                //margin: EdgeInsets.only(right: 30, left: 20),
-                                width: 300,
-                                child: PassFormField(
-                                  hintText: 'Password',
-                                  passController: _passController,
-                                  textMargin: 10,
-                                  //height: 55,
-                                  verticalPadding: 0,
-                                  validator: (value) {
-                                      if (value.toString().isEmpty)
-                                      {
-                                        setState(() {
-                                          isPasswordValidated = true;
-                                        });
-                                        return "Please enter your password";
-                                      }else if(authHandler.firebaseLoginException != null)
-                                      {
-                                        print("Firebase Error: ${authHandler.firebaseLoginException}");
-                                        return authHandler.firebaseLoginException;
-                                      }else{
-                                        return null;
-                                      }
-                                  },
-                                  isValidated: isPasswordValidated,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              //FORGOT PASSWORD
-                              Container(
-                                //color: Colors.amber,
-                                width: 260,
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    'Forgot Password?',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontFamily: "OpunMai",
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 0.6,
-                                      color: Color.fromARGB(255, 62, 73, 101),
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 253, 250, 197),
+                                  borderRadius: BorderRadius.circular(15),
+                                  border: Border.all(
+                                    color: Color.fromARGB(255, 235, 228, 203),
+                                  ),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromARGB(255, 238, 232, 221),
+                                      blurRadius: 1,
+                                      offset: Offset(12, 12),
                                     ),
+                                  ],
+                                ),
+                                //LOGIN CONTENTS
+                                child: Form(
+                                  key: _loginFormKey,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Flexible(
+                                        child: SizedBox(
+                                          height: height * 0.05,
+                                        ),
+                                      ),
+                                      //LOGIN TEXT
+                                      Flexible(
+                                        flex: 5,
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          //color: Colors.black,
+                                          child: Text(
+                                            'Login',
+                                            style: TextStyle(
+                                              fontSize: height * 0.05,
+                                              fontFamily: "OpunMai",
+                                              fontWeight: FontWeight.w700,
+                                              color: Color.fromARGB(
+                                                  255, 62, 73, 101),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      //EMAIL TEXT FIELD
+                                      Flexible(
+                                        flex: 4,
+                                        child: Container(
+                                          //color: Colors.black,
+                                          alignment:
+                                          AlignmentDirectional.center,
+                                          //width: 300,
+                                          child: LoginFormField(
+                                            hintText: 'Email',
+                                            controller: _emailController,
+                                            textMargin: 10,
+                                            validator: (email) {
+                                              return provider.emailValidator(
+                                                  context,
+                                                  height,
+                                                  width,
+                                                  email,
+                                                  authHandler);
+                                            },
+                                            height: 60,
+                                            verticalPadding: 0,
+                                            borderRadius: 7,
+                                          ),
+                                        ),
+                                      ),
+
+                                      //PASSWORD
+                                      Flexible(
+                                        flex: 4,
+                                        child: Container(
+                                          //color: Colors.black,
+                                          alignment:
+                                          AlignmentDirectional.center,
+                                          //margin: EdgeInsets.only(right: 30, left: 20),
+                                          width: 300,
+                                          child: PassFormField(
+                                            hintText: 'Password',
+                                            passController: _passController,
+                                            textMargin: 10,
+                                            //height: 55,
+                                            verticalPadding: 0,
+                                            validator: (loginPass) {
+                                              return provider
+                                                  .loginPassValidatior(
+                                                  context,
+                                                  height,
+                                                  width,
+                                                  loginPass,
+                                                  authHandler);
+                                            },
+                                            isValidated: isPasswordValidated,
+                                          ),
+                                        ),
+                                      ),
+
+                                      //FORGOT PASSWORD
+                                      Flexible(
+                                        flex: 3,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: width * 0.05),
+                                          child: Container(
+                                            //color: Colors.amber,
+                                            alignment: Alignment.centerRight,
+                                            child: TextButton(
+                                              onPressed: () {},
+                                              child: FittedBox(
+                                                child: Text(
+                                                  'Forgot Password?',
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontFamily: "OpunMai",
+                                                    fontWeight: FontWeight.w400,
+                                                    letterSpacing: 0.6,
+                                                    color: Color.fromARGB(
+                                                        255, 62, 73, 101),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                      //LOGIN BUTTON
+                                      Flexible(
+                                        flex: 4,
+                                        child: BtnContinue(
+                                          backgroundColor: Color.fromARGB(
+                                              255, 236, 230, 217),
+                                          borderColor: Color.fromARGB(
+                                              255, 235, 228, 203),
+                                          btnName: 'Login',
+                                          height: height * 0.055,
+                                          topMargin: 0,
+                                          leftMargin: 10,
+                                          rightMargin: 10,
+                                          fontSize: 15,
+                                          formKey: _loginFormKey,
+                                          continueClicked: () {
+                                            authHandler.loginEmailAccount(
+                                                _emailController.text,
+                                                _passController.text);
+
+                                            Future.delayed(Duration(seconds: 1),
+                                                    () {
+                                                  if (_loginFormKey.currentState!
+                                                      .validate()) {
+                                                    if (authHandler
+                                                        .firebaseLoginException ==
+                                                        null) {
+                                                      FirebaseProfileStorage(
+                                                          authHandler
+                                                              .authHandler
+                                                              .currentUser!
+                                                              .uid);
+                                                      circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
+                                                      if(CircleDatabaseHandler.circleList.isNotEmpty){
+                                                        CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                      }
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MainScreen(),
+                                                        ),
+                                                      );
+                                                    }
+                                                  }
+                                                });
+                                          },
+                                        ),
+                                      ),
+                                      //GOOGLE SIGN IN
+                                      Flexible(
+                                        flex: 4,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Flexible(
+                                              child: Divider(
+                                                color: Color.fromARGB(
+                                                    255, 236, 230, 217),
+                                                thickness: 1.5,
+                                                indent: 7,
+                                                endIndent: 7,
+                                              ),
+                                            ),
+                                            Text(
+                                              "or login with ",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: const Color.fromARGB(
+                                                    255, 120, 120, 120),
+                                              ),
+                                            ),
+                                            InkWell(
+                                              child: Image.asset(
+                                                "assets/images/google_signin_icon.png",
+                                                scale: 7,
+                                              ),
+                                              onTap: () {
+                                                authHandler.signInWithGoogle();
+                                              },
+                                            ),
+                                            Flexible(
+                                              child: Divider(
+                                                color: Color.fromARGB(
+                                                    255, 236, 230, 217),
+                                                thickness: 1.5,
+                                                indent: 7,
+                                                endIndent: 5,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      //DONT HAVE AN ACCOUNT
+                                      Flexible(
+                                        flex: 3,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Don't have an account? ",
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: const Color.fromARGB(
+                                                    255, 120, 120, 120),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              child: Text(
+                                                "Sign Up",
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  color: Color.fromARGB(
+                                                      255, 62, 73, 101),
+                                                  fontWeight: FontWeight.bold,
+                                                  decorationThickness: 2,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SignupPage(),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              //LOGIN BUTTON
-                              BtnContinue(
-                                backgroundColor:
-                                    Color.fromARGB(255, 236, 230, 217),
-                                borderColor: Color.fromARGB(255, 235, 228, 203),
-                                btnName: 'Login',
-                                height: 30,
-                                topMargin: 0,
-                                leftMargin: 120,
-                                rightMargin: 120,
-                                fontSize: 15,
-                                formKey: _loginFormKey,
-                                continueClicked: (){
-                                  authHandler.loginEmailAccount(_emailController.text, _passController.text);
-                                  Future.delayed(Duration(seconds: 1), (){
-                                    if (_loginFormKey.currentState!.validate()) {
-                                      if (authHandler.firebaseLoginException == null) {
-                                        FirebaseProfileStorage profileStorage = FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
-                                        circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
-                                      }
-                                    }
-                                  });
-                                }
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              Container(
-                                height: 34,
-                                padding: EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.topCenter,
-                                //color: Colors.blueGrey,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      color: Colors.grey.shade300,
-                                      width: 70,
-                                      height: 1,
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      "or login with",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: const Color.fromARGB(
-                                            255, 120, 120, 120),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    InkWell(
-                                      child: Image.asset("assets/images/google_signin_icon.png"),
-                                      onTap: (){
-                                        authHandler.signInWithGoogle();
-
-                                      } ,
-                                    ),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Container(
-                                      color: Colors.grey.shade300,
-                                      width: 70,
-                                      height: 1,
-                                    ),
-                                  ],
+                            ),
+                            //APP LOGO
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: height * 0.135,
+                                //color: const Color.fromARGB(91, 244, 67, 54),
+                                child: Image.asset(
+                                  'assets/images/splash-logo.png',
                                 ),
                               ),
-                              //DONT HAVE AN ACCOUNT
-                              Container(
-                                height: 90,
-                                padding: EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.topCenter,
-                                //color: Colors.blueGrey,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Don't have an account? ",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        color: const Color.fromARGB(
-                                            255, 120, 120, 120),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      child: Text(
-                                        "Sign Up",
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color:
-                                              Color.fromARGB(255, 62, 73, 101),
-                                          fontWeight: FontWeight.bold,
-                                          decorationThickness: 2,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SignupPage(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
