@@ -33,19 +33,21 @@ class FlutterFireCoordinates {
   getCoordinates(){
     final snapshot = dbReference.collection("geoCoordinates");
     _listener = snapshot.snapshots(includeMetadataChanges: true).listen(
-      (event) {
+      (event) async {
         //coordinatesData.add({"markerCount": event.docs.length});
         int index = 0;
         circleDatabase.getCircleDataForLocation(CircleDatabaseHandler.currentCircleCode!);
         if(coordinatesData.isEmpty){
-          for (var docs in event.docs) {
+          for (var docs in event.docs){
             for (var indx in CircleDatabaseHandler.locationCircleData){
               if(indx["id"] == docs.id){
+                List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
                 coordinatesData.add(
                     {
                       "userId": docs.id,
                       "latitude": docs.data()["latitude"],
                       "longitude": docs.data()["longitude"],
+                      "geocoded": placemarks[0].street
                     }
                 );
               }
@@ -59,11 +61,13 @@ class FlutterFireCoordinates {
           for (var docs in event.docs) {
             for (var indx in CircleDatabaseHandler.locationCircleData){
               if(indx["id"] == docs.id){
+                List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
                 coordinatesData.add(
                   {
                     "userId": docs.id,
                     "latitude": docs.data()["latitude"],
                     "longitude": docs.data()["longitude"],
+                    "geocoded": placemarks[0].street
                   }
                 );
               }

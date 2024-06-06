@@ -1,6 +1,8 @@
+import 'dart:ffi';
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
@@ -19,6 +21,7 @@ class CircleDatabaseHandler{
 
   final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
+  String tempCircleCode = "";
   static String? generatedCode;
   static String? circleException;
   static List<Map<String, dynamic>> circleUsersData = [];
@@ -27,6 +30,7 @@ class CircleDatabaseHandler{
   static List<Map<String, dynamic>> locationCircleData = [];
   static Map<String, dynamic> circleToJoin = {};
   static String? currentCircleCode;
+  static List<Map<String, String>> currentAddress = [];
 
   Future<void> createCircle(String? uid, String? name, String? circleName, String? email, String? phone) async
   {
@@ -91,7 +95,6 @@ class CircleDatabaseHandler{
     }else{
       print("Circle Does not exist");
     }
-
   }
 
   Future<void> getCircleList(String userId) async {
@@ -114,9 +117,6 @@ class CircleDatabaseHandler{
         });
       }
     }
-
-
-    print(circleList);
   }
 
   Future<void> getCircleDataForLocation(String circleCode) async {
@@ -137,7 +137,6 @@ class CircleDatabaseHandler{
         });
       }
     }
-    print("LENGTH: ${locationCircleData.length}");
   }
 
   Future<void> getCircleData(String circleCode) async
@@ -168,8 +167,7 @@ class CircleDatabaseHandler{
       }
     }
 
-
-    print("Length: ${circleDataValue.length}");
+    print("Geocode: ${circleDataValue[0]["geocode"]}");
   }
 
   String codeGenerator(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));

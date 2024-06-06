@@ -28,6 +28,24 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
     return false;
   }
 
+  bool _checkIfGeocodeExist(){
+    for(var geocodes in FlutterFireCoordinates.coordinatesData){
+      if(geocodes["geocoded"] != null){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  String _getGeocodeValue(String userId){
+    for(var geocodes in FlutterFireCoordinates.coordinatesData){
+      if(geocodes["userId"] == userId){
+        return geocodes["geocoded"];
+      }
+    }
+    return "No Name";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -167,7 +185,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                           ),
                           child: Material(
                               child: Text(
-                                "Wala Muna",
+                                _getGeocodeValue(userData["id"]),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.blueGrey.shade800,
