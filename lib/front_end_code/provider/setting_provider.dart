@@ -150,7 +150,6 @@ class SettingsProvider extends ChangeNotifier {
       }
       return '';
     }
-    return null;
   }
 
   createCircleNameValidator(

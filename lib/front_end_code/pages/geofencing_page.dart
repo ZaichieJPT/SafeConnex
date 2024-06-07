@@ -1,14 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:latlong2/latlong.dart';
-//import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
-import 'package:safeconnex/front_end_code/components/location_list.dart';
+import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
+import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 
 class GeofencingPage extends StatefulWidget {
   const GeofencingPage({super.key});
@@ -18,449 +14,649 @@ class GeofencingPage extends StatefulWidget {
 }
 
 class _GeofencingPageState extends State<GeofencingPage> {
-  List<bool> isSelected = [true, false];
-  int? indexedStackValue = 0;
-  double _currentSliderValue = 100;
-  double? maxSliderValue = 1000;
-  GeofenceDatabase flutterGeofencing = GeofenceDatabase();
-  TapPosition? tapPosition;
-  LatLng? tapLocation;
-  Marker geolocationMarker = Marker(point: LatLng(0, 0), child: Container());
-  CircleMarker circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
-  List<Container> locationList = [];
-  TextEditingController nameController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-  final _geofenceKey = GlobalKey<FormState>();
-  int? tempIndex;
-  List<bool> isValueSelected = [];
-  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+  ScrollController placesScrollControl = ScrollController();
+  TextEditingController _placeNameController = TextEditingController();
+  TextEditingController _locationNameController = TextEditingController();
+  final _geofenceTextFieldsKey = GlobalKey<FormState>();
 
-  addGeolocationMarker(LatLng markerLocation, double sliderValue) {
-    geolocationMarker = Marker(
-        height: 50,
-        width: 50,
-        rotate: true,
-        alignment: Alignment.topCenter,
-        point: markerLocation,
-        child: Stack(
-          children: [
-            Positioned(child: Icon(Icons.location_pin, size: 55)),
-            Positioned(
-              top: 10,
-              left: 16,
-              child: Container(
-                width: 23,
-                height: 23,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    color: Colors.green),
-              ),
-            ),
-          ],
-        ));
-    circleMarker = CircleMarker(
-        color: Colors.blue.shade300.withOpacity(0.5),
-        borderColor: Colors.blue.shade500,
-        borderStrokeWidth: 2,
-        point: markerLocation,
-        radius: sliderValue,
-        useRadiusInMeter: true);
-    setState(() {});
+  int _selectedTabIndex = 0;
+  int? _selectedPlaceIndex;
+
+  String? placeLabelName;
+  String? placeLocationName;
+  double _sliderValue = 100.0;
+
+  List<String> places = [
+    'At Home',
+    'At School',
+    'At Luneta Park',
+    'Home Sweet Home',
+    'SM Mall of Asia',
+    'Pangasinan Solid North Bus Terminal',
+    'AMA College Pangasinan',
+    'Universidad de Dagupan',
+    'Bonifacio Global City',
+  ];
+
+  saveEditChanges() {
+    if (_geofenceTextFieldsKey.currentState!.validate()) {
+      print('Edit Changes have been saved!');
+    }
+  }
+
+  saveNewLocation() {
+    if (_geofenceTextFieldsKey.currentState!.validate()) {
+      print('New Location has been saved!');
+    }
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      flutterGeofencing.getGeofence("Great");
-      //circleDatabase.getCircle(uid, circleCode)
-    });
+  void dispose() {
+    placesScrollControl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (indexedStackValue == 0) {
-      if (isValueSelected.length != flutterGeofencing.geofenceData.length) {
-        isValueSelected = List.generate(
-            flutterGeofencing.geofenceData.length, (index) => false);
-      }
-    } else if (indexedStackValue == 1) {
-      /*addGeolocationMarker(
-        LatLng(
-          flutterGeofencing.geofenceToUpdate['latitude'],
-          flutterGeofencing.geofenceToUpdate['longitude']),
-          flutterGeofencing.geofenceToUpdate['radiusSize']
-      );
-      nameController.value = flutterGeofencing.geofenceToUpdate['radiusId'];
-      addressController.value = flutterGeofencing.geofenceToUpdate['addressLabel'];*/
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+
+    void _onTabTapped(int index) {
+      setState(() {
+        _selectedTabIndex = index;
+        if (index == 1) {
+          placeLabelName = '';
+          placeLocationName = '';
+        }
+      });
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.blueGrey.shade500,
-        iconTheme: IconThemeData(
-          color: Colors.white,
-        ),
-        title: Text("Place"),
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 25),
-      ),
-      bottomSheet: BottomAppBar(
-        color: Colors.blueGrey.shade800,
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                color: Colors.white,
-                icon: Icon(Icons.cancel_outlined),
-                iconSize: 40,
-              ),
-            ),
-            SizedBox(
-              width: 80,
-            ),
-            Container(
-              alignment: Alignment.center,
-              height: 35,
-              width: 150,
-              decoration: BoxDecoration(
-                  color: Colors.green.shade200,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.green.shade400, offset: Offset(0, 4))
-                  ],
-                  borderRadius: BorderRadius.circular(20)),
-              child: TextButton(
-                onPressed: () {
-                  //Save Changes
-                  if (indexedStackValue == 1) {
-                    if (_geofenceKey.currentState!.validate()) {
-                      flutterGeofencing.addGeofence(
-                          "Garry",
-                          tapLocation!.latitude,
-                          tapLocation!.longitude,
-                          nameController.text,
-                          circleMarker.radius,
-                          "Great",
-                          addressController.text);
-                    }
-                    nameController.clear();
-                    addressController.clear();
-                    indexedStackValue = 0;
-                    setState(() {});
-                  }
-                  if (indexedStackValue == 0) {
-                    if (tempIndex == null) {
-                      print("Click a Geofence");
-                    } else {
-                      //flutterGeofencing.geofenceToUpdate =
-                    }
-                  }
-                },
-                child: Text(
-                    indexedStackValue == 0 ? "Edit Location" : "Save Changes",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                    )),
-              ),
-            ),
-            SizedBox(
-              width: 60,
-            )
-          ],
-        ),
-      ),
-      body: Stack(
-        children: [
-          Positioned(
-            width: 320,
-            height: 43,
-            top: 20,
-            left: 50,
-            child: ToggleButtons(
-              children: [
-                Container(
-                  child: Text(
-                    "View Location",
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  width: 150,
-                  padding: EdgeInsets.all(10),
-                ),
-                Container(
-                  child: Text(
-                    "Add Location",
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  width: 150,
-                  padding: EdgeInsets.all(10),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(40),
-              borderColor: Colors.blueGrey.shade800,
-              borderWidth: 1.5,
-              color: Colors.blueGrey.shade800,
-              selectedColor: Colors.white,
-              fillColor: Colors.blueGrey.shade800,
-              onPressed: (int index) {
-                setState(() {
-                  if (index == 0) {
-                    isSelected[0] = true;
-                    isSelected[1] = false;
-                    indexedStackValue = 0;
-                  } else if (index == 1) {
-                    if (index == 1) {
-                      isSelected[1] = true;
-                      isSelected[0] = false;
-                      indexedStackValue = 1;
-                    }
-                  }
-                });
-              },
-              isSelected: isSelected,
+    void _onPlaceTapped(int index) {
+      setState(() {
+        if (index == _selectedPlaceIndex) {
+          _selectedPlaceIndex = null;
+        } else {
+          _selectedPlaceIndex = index;
+        }
+      });
+    }
+
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Color.fromARGB(255, 71, 82, 98),
+          leadingWidth: width * 0.15,
+          toolbarHeight: height * 0.1,
+          title: Text(
+            'Places',
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontFamily: 'OpunMai',
+              fontSize: height * 0.03,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
             ),
           ),
-          IndexedStack(
-            index: indexedStackValue,
-            children: [
-              Container(
-                padding: EdgeInsets.only(
-                  top: 100,
-                  bottom: 20,
-                ),
-                child: ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (context, index) {
-                      List<LocationList> _locationList = [];
-
-                      for (var data in flutterGeofencing.geofenceData) {
-                        _locationList.add(LocationList(text: data['id']));
-                      }
-
-                      return ToggleButtons(
-                          direction: Axis.vertical,
-                          onPressed: (int index) {
-                            if (tempIndex == null) {
-                              setState(() {
-                                isValueSelected[index] =
-                                    !isValueSelected[index];
-                              });
-                            } else {
-                              setState(() {
-                                isValueSelected[tempIndex!] = false;
-                                isValueSelected[index] = true;
-                              });
-                            }
-                            tempIndex = index;
-                            flutterGeofencing.geofenceToUpdate = {
-                              "id": flutterGeofencing.geofenceData[tempIndex!]
-                                      ['id']
-                                  .toString(),
-                              "latitude": flutterGeofencing
-                                  .geofenceData[tempIndex!]['latitude']
-                                  .toString(),
-                              "longitude": flutterGeofencing
-                                  .geofenceData[tempIndex!]['longitude']
-                                  .toString(),
-                              "radiusId": flutterGeofencing
-                                  .geofenceData[tempIndex!]['radiusId']
-                                  .toString(),
-                              "radiusSize": flutterGeofencing
-                                  .geofenceData[tempIndex!]['radiusSize']
-                                  .toString(),
-                              "addressLabel": flutterGeofencing
-                                  .geofenceData[tempIndex!]['addressLabel']
-                                  .toString(),
-                              //"circleName": circ
-                            };
-
-                            print(flutterGeofencing.geofenceToUpdate['id']);
-                          },
-                          borderColor: Colors.white,
-                          isSelected: isValueSelected,
-                          children: _locationList);
-                    }),
-              ),
-
-              //Add Location
-              SingleChildScrollView(
-                reverse: true,
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: 100,
-                    bottom: 20,
+          leading: Padding(
+            padding: EdgeInsets.only(left: height * 0.035),
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              radius: 1,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Color.fromARGB(255, 232, 220, 206),
+                    width: 3,
                   ),
-                  child: Column(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 182, 176, 163),
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: FittedBox(
+                  child: Text(
+                    String.fromCharCode(Icons.west.codePoint),
+                    style: TextStyle(
+                      fontFamily: Icons.west.fontFamily,
+                      fontSize: width * 0.055,
+                      fontWeight: FontWeight.w900,
+                      color: Color.fromARGB(255, 110, 101, 94),
+                      package: Icons.west.fontPackage,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        body: Center(
+          child: SizedBox(
+            height: height * 0.8,
+            child: Column(
+              children: [
+                //VIEW AND ADD BUTTONS
+                Container(
+                  height: height * 0.1,
+                  width: width * 0.85,
+                  padding: EdgeInsets.symmetric(vertical: height * 0.027),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Divider(
-                        thickness: 7,
-                        color: Colors.brown.shade200,
-                      ),
-                      Container(
-                        height: 230,
-                        child: FlutterMap(
-                          options: MapOptions(
-                              initialCenter: LatLng(16.0265, 120.3363),
-                              initialZoom: 13.2,
-                              onTap: (tapPosition, tapLocation) {
-                                this.tapLocation = tapLocation;
-                                this.tapPosition = tapPosition;
-                                _currentSliderValue = 100;
-                                addGeolocationMarker(
-                                    tapLocation, _currentSliderValue);
-                              }),
-                          children: [
-                            TileLayer(
-                              urlTemplate:
-                                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                              userAgentPackageName: 'com.safeconnex.app',
-                            ),
-                            CircleLayer(
-                              circles: [circleMarker],
-                            ),
-                            MarkerLayer(
-                              markers: [geolocationMarker],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Divider(
-                        thickness: 5,
-                        color: Colors.brown.shade200,
-                      ),
-                      Slider(
-                        value: _currentSliderValue,
-                        max: maxSliderValue!,
-                        divisions: maxSliderValue!.round(),
-                        label: _currentSliderValue.round().toString(),
-                        onChanged: (value) {
-                          setState(() {
-                            _currentSliderValue = value;
-                            addGeolocationMarker(tapLocation!, value);
-                          });
-                        },
-                      ),
-                      Container(
-                        width: 1000,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: Colors.brown.shade100,
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              "Location Details",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.brown.shade300),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 300,
-                        child: Form(
-                          key: _geofenceKey,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 30,
+                      //VIEW PLACES BUTTON
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => _onTabTapped(0),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          child: Container(
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.005),
+                            decoration: BoxDecoration(
+                              color: _selectedTabIndex == 0
+                                  ? Color.fromARGB(255, 70, 85, 104)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(50),
+                                bottomLeft: Radius.circular(50),
                               ),
-                              Container(
-                                width: 450,
-                                child: Text(
-                                  "Label",
-                                  style: TextStyle(
-                                      fontSize: 23,
-                                      color: Colors.blueGrey.shade800,
-                                      fontWeight: FontWeight.w600),
+                              border: Border.all(
+                                width: 2,
+                                color: Color.fromARGB(255, 70, 85, 104),
+                              ),
+                            ),
+                            child: FittedBox(
+                              child: Text(
+                                'view locations',
+                                style: TextStyle(
+                                  fontFamily: 'OpunMai',
+                                  fontWeight: FontWeight.w500,
+                                  color: _selectedTabIndex == 0
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 70, 85, 104),
                                 ),
                               ),
-                              SizedBox(
-                                height: 25,
-                              ),
-                              TextFormField(
-                                  controller: nameController,
-                                  onTapOutside: (event) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  validator: (value) {
-                                    print(value);
-                                    if (value!.isEmpty) {
-                                      return "Please enter a Circle Name";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                      icon: Icon(Icons.bookmark),
-                                      iconColor: Colors.blueGrey.shade200,
-                                      hintText: "Name",
-                                      hintStyle: TextStyle(
-                                        color: Colors.blueGrey.shade200,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.blueGrey.shade800,
-                                              width: 3)))),
-                              TextFormField(
-                                  controller: addressController,
-                                  onTapOutside: (event) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  validator: (value) {
-                                    print(value);
-                                    if (value!.isEmpty) {
-                                      return "Please enter Address Label";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
-                                  decoration: InputDecoration(
-                                      icon: Icon(Icons.house),
-                                      iconColor: Colors.blueGrey.shade200,
-                                      hintText: "Address",
-                                      hintStyle: TextStyle(
-                                        color: Colors.blueGrey.shade200,
-                                      ),
-                                      enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.blueGrey.shade800,
-                                              width: 3)))),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                      )
+
+                      //ADD LOCATION BUTTON
+                      Expanded(
+                        child: InkWell(
+                          onTap: () => _onTabTapped(1),
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          child: Container(
+                            padding:
+                                EdgeInsets.symmetric(vertical: height * 0.005),
+                            decoration: BoxDecoration(
+                              color: _selectedTabIndex == 1
+                                  ? Color.fromARGB(255, 70, 85, 104)
+                                  : Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(50),
+                                bottomRight: Radius.circular(50),
+                              ),
+                              border: Border.all(
+                                width: 2,
+                                color: Color.fromARGB(255, 70, 85, 104),
+                              ),
+                            ),
+                            child: FittedBox(
+                              child: Text(
+                                'add location',
+                                style: TextStyle(
+                                  fontFamily: 'OpunMai',
+                                  fontWeight: FontWeight.w500,
+                                  color: _selectedTabIndex == 1
+                                      ? Colors.white
+                                      : Color.fromARGB(255, 70, 85, 104),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )
+                //SAVED LOCATIONS LIST && ADD LOCATIONS
+                Flexible(
+                  child: SingleChildScrollView(
+                    reverse: true,
+                    child: SizedBox(
+                      height: height * 0.7,
+                      child: Column(
+                        children: [
+                          //SAVED LOCATIONS LIST
+                          if (_selectedTabIndex == 0) ...[
+                            Expanded(
+                              child: Scrollbar(
+                                trackVisibility: true,
+                                thickness: 8,
+                                radius: Radius.circular(15),
+                                child: ListView.builder(
+                                  controller: placesScrollControl,
+                                  itemCount: places.length,
+                                  itemBuilder: ((context, index) {
+                                    return InkWell(
+                                      onTap: () => _onPlaceTapped(index),
+                                      child: Container(
+                                        height: height * 0.085,
+                                        width: width,
+                                        color: _selectedPlaceIndex == index
+                                            ? Color.fromARGB(255, 232, 220, 206)
+                                            : Colors.transparent,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              left: width * 0.1,
+                                              right: width * 0.06),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              //LOCATION ICON
+                                              CircleAvatar(
+                                                backgroundColor:
+                                                    _selectedPlaceIndex == index
+                                                        ? Color.fromARGB(
+                                                            255, 71, 82, 98)
+                                                        : Color.fromARGB(
+                                                            255, 232, 220, 206),
+                                                radius: width * 0.06,
+                                                child: FittedBox(
+                                                  child: Image.asset(
+                                                    'assets/images/geofence_location_icon.png',
+                                                    color:
+                                                        _selectedPlaceIndex ==
+                                                                index
+                                                            ? Color.fromARGB(
+                                                                255,
+                                                                232,
+                                                                220,
+                                                                206)
+                                                            : Color.fromARGB(
+                                                                255,
+                                                                71,
+                                                                82,
+                                                                98),
+                                                    width: width * 0.08,
+                                                    height: width * 0.085,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width * 0.05,
+                                              ),
+                                              //PLACE NAME
+                                              Expanded(
+                                                child: Text(
+                                                  places[index],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontFamily: 'OpunMai',
+                                                    fontSize: height * 0.026,
+                                                    color: Color.fromARGB(
+                                                        255, 71, 82, 98),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ),
+                          ],
+
+                          //MAP VIEW
+                          if (_selectedTabIndex == 1) ...[
+                            Container(
+                              width: width,
+                              height: height * 0.3,
+                              decoration: BoxDecoration(
+                                color: Colors.blue[100],
+                                border: Border.symmetric(
+                                  horizontal: BorderSide(
+                                    color: Color.fromARGB(255, 173, 162, 153),
+                                    width: 6,
+                                  ),
+                                ),
+                              ),
+                              //child: NewMapProvider(),
+                            ),
+                            //SLIDER
+                            Container(
+                              height: height * 0.1,
+                              width: width,
+                              padding: EdgeInsets.only(
+                                  left: width * 0.02, right: width * 0.03),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 5,
+                                    child: SliderTheme(
+                                      data: SliderThemeData(
+                                        activeTickMarkColor: Colors.transparent,
+                                        trackHeight: height * 0.0065,
+                                        thumbShape: RoundSliderThumbShape(
+                                          enabledThumbRadius: width * 0.045,
+                                        ),
+                                      ),
+                                      child: Slider(
+                                        value: _sliderValue,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            this._sliderValue = value;
+                                          });
+                                        },
+                                        min: 50,
+                                        max: 3000,
+                                        divisions: 100,
+                                        activeColor:
+                                            Color.fromARGB(255, 70, 85, 104),
+                                        inactiveColor:
+                                            Color.fromARGB(255, 70, 85, 104),
+                                        thumbColor: Colors.deepPurple[400],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: width * 0.03,
+                                  ),
+                                  //RADIUS VALUE
+                                  Flexible(
+                                    child: Text(
+                                      '${_sliderValue.toStringAsFixed(1)} m zone',
+                                      overflow: TextOverflow.clip,
+                                      style: TextStyle(
+                                        fontFamily: 'OpunMai',
+                                        fontSize: height * 0.013,
+                                        color: Color.fromARGB(255, 70, 85, 104),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //LOCATION DETAILS HEADER
+                            Container(
+                              width: width,
+                              height: height * 0.05,
+                              color: Color.fromARGB(255, 232, 220, 206),
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(left: width * 0.05),
+                              child: Text(
+                                'Location Details',
+                                style: TextStyle(
+                                  fontFamily: 'OpunMai',
+                                  fontSize: height * 0.022,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color.fromARGB(255, 173, 162, 153),
+                                ),
+                              ),
+                            ),
+                            //LOCATION LABELS
+                            Expanded(
+                              child: Form(
+                                key: _geofenceTextFieldsKey,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    //LABEL TEXT
+                                    Flexible(
+                                      child: Container(
+                                        alignment: Alignment.centerLeft,
+                                        padding:
+                                            EdgeInsets.only(left: width * 0.05),
+                                        child: Text(
+                                          'Label',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'OpunMai',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: height * 0.022,
+                                            color:
+                                                Color.fromARGB(255, 71, 82, 98),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //LABEL TEXT FIELD
+                                    Flexible(
+                                      flex: 4,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.1),
+                                        child: TextFormField(
+                                          controller: _placeNameController,
+                                          validator: (placeName) {
+                                            if (placeName!.isEmpty) {
+                                              showErrorMessage(
+                                                  context,
+                                                  'Please enter a place name',
+                                                  height,
+                                                  width);
+                                              return '';
+                                            }
+                                            return null;
+                                          },
+                                          cursorColor: Color.fromARGB(
+                                              255, 173, 162, 153),
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.bookmark,
+                                              size: width * 0.085,
+                                              color: Color.fromARGB(
+                                                  255, 173, 162, 153),
+                                            ),
+                                            hintText: 'Name this place',
+                                            hintStyle: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize: height * 0.022,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color.fromARGB(
+                                                  255, 173, 162, 153),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 71, 82, 98),
+                                                width: 3.5,
+                                              ),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 71, 82, 98),
+                                                width: 3.5,
+                                              ),
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: 'OpunMai',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: height * 0.022,
+                                            color: Color.fromARGB(
+                                                255, 173, 162, 153),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    //LOCATION LABEL TEXT FIELD
+                                    Flexible(
+                                      flex: 4,
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.1),
+                                        child: TextFormField(
+                                          controller: _locationNameController,
+                                          cursorColor: Color.fromARGB(
+                                              255, 173, 162, 153),
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.location_on,
+                                              size: width * 0.085,
+                                              color: Color.fromARGB(
+                                                  255, 173, 162, 153),
+                                            ),
+                                            hintText: 'Location Name',
+                                            hintStyle: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize: height * 0.022,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color.fromARGB(
+                                                  255, 173, 162, 153),
+                                            ),
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 71, 82, 98),
+                                                width: 3.5,
+                                              ),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: BorderSide(
+                                                color: Color.fromARGB(
+                                                    255, 71, 82, 98),
+                                                width: 3.5,
+                                              ),
+                                            ),
+                                          ),
+                                          style: TextStyle(
+                                            fontFamily: 'OpunMai',
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: height * 0.022,
+                                            color: Color.fromARGB(
+                                                255, 173, 162, 153),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: height * 0.01,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: Container(
+          height: height * 0.1,
+          color: Color.fromARGB(255, 71, 82, 98),
+          child: Row(
+            children: [
+              //CANCEL BUTTON
+              Expanded(
+                child: Container(
+                  height: height * 0.1,
+                  color: Color.fromARGB(255, 81, 97, 112),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(Icons.cancel_outlined),
+                    color: Color.fromARGB(255, 227, 230, 229),
+                    iconSize: width * 0.125,
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    focusColor: Colors.transparent,
+                  ),
+                ),
+              ),
+              //EDIT || SAVE LOCATION BUTTON
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.1),
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (_selectedTabIndex == 0) {
+                        //if place index == null
+                        //prevent navigation, show snackbar error
+
+                        //if edit is clicked with place index
+                        //pass all the data of that place index
+                        //navigate to add location page
+                        //display the value of the placeLabelName and placeLocationName as hintexts of textfields (using ternary operator)
+
+                        if (_selectedPlaceIndex == null) {
+                          showErrorMessage(context,
+                              'Please select a place to edit', height, width);
+                        } else {
+                          setState(() {
+                            _selectedTabIndex = 1;
+                            //set placeLabelName to the name of the selected index
+                            //set placeLocationName to the the location name of the selected index
+                          });
+                        }
+                      } else {
+                        if (placeLabelName == '' && placeLocationName == '') {
+                          //get the value of the textfields
+
+                          //add the geofence, label, and location to database
+                        } else {
+                          //get the value of the texfields
+                          //modify the selected place's value in the database
+                        }
+                      }
+                    },
+                    elevation: 2,
+                    height: height * 0.05,
+                    color: const Color.fromARGB(255, 121, 192, 148),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(width * 0.2),
+                    ),
+                    child: Text(
+                      _selectedTabIndex == 0 ? 'edit location' : 'save changes',
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontFamily: 'OpunMai',
+                        fontSize: height * 0.025,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
-          )
-        ],
+          ),
+        ),
       ),
     );
   }

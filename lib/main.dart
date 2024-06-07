@@ -90,7 +90,7 @@ class _MyAppState extends State<MyApp> {
       //   "/temp2": (context) => GeofencingPage(),
       //   "/temp3": (context) => CarouseSliderComponent(),
       // },
-      home: MainScreen(),
+      home: GeofencingPage(),
       //home: SOSSentPage(),
     );
   }
