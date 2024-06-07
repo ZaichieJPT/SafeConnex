@@ -1,10 +1,9 @@
-import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:safeconnex/front_end_code/pages/circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 
 class HomeAppBar extends StatefulWidget {
@@ -21,7 +20,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
   CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
   FirebaseAuthHandler authHandler = FirebaseAuthHandler();
 
-  //List<String> _circleList = [];
   int currentCircleIndex = 0;
 
   @override
@@ -90,7 +88,10 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                 highlightColor: Colors.grey,
                                 borderRadius: BorderRadius.circular(250),
                                 onTap: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => CirclePage()));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CirclePage()));
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -131,8 +132,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
                         child: FractionallySizedBox(
                           heightFactor: 1,
                           child: Container(
-                              //color: Colors.red,
-                              ),
+                            //color: Colors.red,
+                          ),
                         ),
                       ),
                       //2ND ROW APP BAR
@@ -165,7 +166,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                   ),
                                   child: IconButton(
                                     onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => GeofencingPage()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  GeofencingPage()));
                                     },
                                     icon: Image.asset(
                                       'assets/images/home_location_icon.png',
@@ -224,7 +229,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                         child: ExpansionTile(
                           iconColor: const Color.fromARGB(255, 62, 73, 101),
                           collapsedIconColor:
-                              const Color.fromARGB(255, 62, 73, 101),
+                          const Color.fromARGB(255, 62, 73, 101),
                           title: Text(
                             CircleDatabaseHandler.circleList.isEmpty ? "No Circle" : CircleDatabaseHandler.circleList[currentCircleIndex]["circle_name"],
                             textScaler: TextScaler.linear(0.9),
@@ -254,20 +259,19 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: CircleDatabaseHandler.circleList.length ,//_circleList.length,
-                                        itemBuilder: (context, index){
-                                          return CircleListTile(
-                                            title: CircleDatabaseHandler.circleList[index]["circle_name"] ,//_circleList[index],
-                                            onTap: (){
-                                              setState(() {
-                                                currentCircleIndex = index;
-                                                circleDatabaseHandler.getCircleData(CircleDatabaseHandler.circleList[index]["circle_code"]);
-                                                CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[index]["circle_code"];
-                                                print(index);
-                                              });
-                                            },
-                                          );
-                                        }
+                                        itemCount: CircleDatabaseHandler.circleList.length,
+                                        itemBuilder: (context, index) =>
+                                            CircleListTile(
+                                              title: CircleDatabaseHandler.circleList[index]["circle_name"],
+                                              onTap: (){
+                                                setState(() {
+                                                  currentCircleIndex = index;
+                                                  circleDatabaseHandler.getCircleData(CircleDatabaseHandler.circleList[index]["circle_code"]);
+                                                  CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[index]["circle_code"];
+                                                  print(index);
+                                                });
+                                              },
+                                            ),
                                       ),
                                     );
                                   },

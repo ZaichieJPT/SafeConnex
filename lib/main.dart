@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/components/carouse_slider.dart';
-import 'package:safeconnex/front_end_code/pages/circle_page.dart';
-import 'package:safeconnex/front_end_code/pages/circle_results_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/front_end_code//pages/signup_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle.dart';
-import 'package:safeconnex/front_end_code/pages/join_circle_confirm.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'backend_code/firebase_scripts/firebase_options.dart';
-import 'front_end_code/pages/create_circle_page.dart';
+import 'front_end_code/pages/circle_pages/create_circle_page.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
