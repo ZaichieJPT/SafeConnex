@@ -45,7 +45,6 @@ dependencies:
 
   #Front-end
   cupertino_icons: ^1.0.6
-  flutter_screenutil: ^5.9.0
   intl: ^0.18.1
   flutter_pw_validator: ^1.6.0
   provider: ^6.1.2
@@ -110,6 +109,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/side_menu/
     - assets/images/emergency_page/
+    - assets/images/change_to_agency/
     - assets/images/side_menu/circle_settings/
 
   # An image asset can refer to one or more resolution-specific "variants", see

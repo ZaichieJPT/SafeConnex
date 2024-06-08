@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/components/carouse_slider.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/sidemenu_changetoagency_dialog.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_profile_settings.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_editname_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_viewcode_page.dart';
+import 'package:safeconnex/front_end_code/pages/email_verification_page.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_pinsetup_page.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
@@ -15,6 +19,7 @@ import 'package:safeconnex/front_end_code/pages/join_circle.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
+import 'package:safeconnex/front_end_code/pages/password_change_page.dart';
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'backend_code/firebase_scripts/firebase_options.dart';
@@ -90,8 +95,11 @@ class _MyAppState extends State<MyApp> {
       //   "/temp2": (context) => GeofencingPage(),
       //   "/temp3": (context) => CarouseSliderComponent(),
       // },
-      home: GeofencingPage(),
-      //home: SOSSentPage(),
+      // home: ChangeToAgency(
+      //   height: MediaQuery.sizeOf(context).height,
+      //   width: MediaQuery.sizeOf(context).width,
+      // ),
+      home: MainScreen(),
     );
   }
 }

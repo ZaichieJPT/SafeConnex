@@ -85,7 +85,6 @@ class _GeofencingPageState extends State<GeofencingPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 71, 82, 98),
           leadingWidth: width * 0.15,
@@ -565,11 +564,11 @@ class _GeofencingPageState extends State<GeofencingPage> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.only(
+                //     bottom: MediaQuery.of(context).viewInsets.bottom,
+                //   ),
+                // ),
               ],
             ),
           ),

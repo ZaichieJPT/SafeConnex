@@ -16,8 +16,6 @@ import 'package:safeconnex/front_end_code/components/side_menu_components/sideme
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_profile_option.dart';
 import 'package:intl/intl.dart';
-import 'package:safeconnex/front_end_code/pages/password_change_page.dart';
-import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 class ProfileSettings extends StatefulWidget {
   final double height;
