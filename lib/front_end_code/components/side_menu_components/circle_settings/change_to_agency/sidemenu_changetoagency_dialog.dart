@@ -89,18 +89,92 @@ class _ChangeToAgencyState extends State<ChangeToAgency> {
                           ),
                           //STEP 1 TEXT
                           Flexible(
-                            child: FittedBox(
-                              child: Text(
-                                'STEP $step',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: 'OpunMai',
-                                  fontSize: widget.width * 0.07,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                //BACKBUTTON
+                                step > 1
+                                    ? Flexible(
+                                        child: Padding(
+                                        padding: EdgeInsets.only(
+                                          top: widget.height * 0.02,
+                                          bottom: widget.height * 0.02,
+                                        ),
+                                        child: InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              step--;
+                                            });
+                                          },
+                                          highlightColor: Colors.transparent,
+                                          splashColor: Colors.transparent,
+                                          radius: 1,
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color: Color.fromARGB(
+                                                    255, 232, 220, 206),
+                                                width: 3,
+                                              ),
+                                              boxShadow: const [
+                                                BoxShadow(
+                                                  color: Color.fromARGB(
+                                                      255, 182, 176, 163),
+                                                  offset: Offset(0, 3),
+                                                ),
+                                              ],
+                                            ),
+                                            child: FittedBox(
+                                              child: Text(
+                                                String.fromCharCode(
+                                                    Icons.west.codePoint),
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      Icons.west.fontFamily,
+                                                  fontSize:
+                                                      widget.width * 0.055,
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Color.fromARGB(
+                                                      255, 110, 101, 94),
+                                                  package:
+                                                      Icons.west.fontPackage,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ))
+                                    : Spacer(),
+                                //STEP TITLE TEXT
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'STEP $step',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontFamily: 'OpunMai',
+                                      fontSize: widget.width * 0.07,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Spacer(),
+                              ],
                             ),
+                            // child: Text(
+                            //   'STEP $step',
+                            //   textAlign: TextAlign.center,
+                            //   style: TextStyle(
+                            //     fontFamily: 'OpunMai',
+                            //     fontSize: widget.width * 0.07,
+                            //     fontWeight: FontWeight.w700,
+                            //     color: Colors.white,
+                            //   ),
+                            // ),
                           ),
                           //STEP BODY
                           Flexible(

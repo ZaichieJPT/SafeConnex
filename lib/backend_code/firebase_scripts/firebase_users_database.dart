@@ -6,8 +6,9 @@ import "firebase_init.dart";
 class UserDatabaseHandler {
   // DB references list
   DatabaseReference dbUserReference = FirebaseDatabase.instanceFor(
-      app: FirebaseInit.firebaseApp,
-      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+          app: FirebaseInit.firebaseApp,
+          databaseURL:
+              "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");
   late bool circleExists = false;
   Map<String, String> circleData = <String, String>{};
@@ -15,43 +16,45 @@ class UserDatabaseHandler {
 
   /// Adds a user data to the database using the [uid] as the Identication
   /// [birthday] and [role] are the contents of the Collection
-  Future<void> addRegularUser(String? uid, String? birthday, String? role) async
-  {
+  Future<void> addRegularUser(
+      String? uid, String? birthday, String? role) async {
     // Gets the Collection using the uid parameter
-    await dbUserReference.child(uid!).set
-      ({
-      "birthday": birthday,
-      "role": role
-    });
+    await dbUserReference.child(uid!).set({"birthday": birthday, "role": role});
     // Delete this in Production
     print("Data Added");
   }
 
-  Future<void> addUserCircle(String? uid, String? circleCode, String? circleName) async {
+  Future<void> addUserCircle(
+      String? uid, String? circleCode, String? circleName) async {
     // Gets the Collection using the uid parameter
-    await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).set
-      ({
-        "circleName": circleName,
-        "circleCode": circleCode
-    });
+    await dbUserReference
+        .child(uid!)
+        .child("circle_list")
+        .child(circleCode.toString())
+        .set({"circleName": circleName, "circleCode": circleCode});
     // Delete this in Production
     print("Data Added");
   }
 
   Future<void> getCurrentCircle(String? uid, String? circleCode) async {
-    DataSnapshot snapshot = await dbUserReference.child(uid!).child("circle_list").child(circleCode.toString()).get();
+    DataSnapshot snapshot = await dbUserReference
+        .child(uid!)
+        .child("circle_list")
+        .child(circleCode.toString())
+        .get();
     circleData["circle_name"] = snapshot.child('circleName').value.toString();
     circleData["circle_code"] = snapshot.ref.parent!.key.toString();
   }
 
   Future<void> getAllCircle(String? uid, String? circleCode) async {
-    DataSnapshot snapshot = await dbUserReference.child(uid!).child("circle_list").get();
+    DataSnapshot snapshot =
+        await dbUserReference.child(uid!).child("circle_list").get();
     print(snapshot.value);
   }
 
   Future<void> getRegularUser(String? uid) async {
     final snapshot = await dbUserReference.child(uid!).get();
-    if(snapshot.exists){
+    if (snapshot.exists) {
       userData = {
         "birthday": snapshot.child("birthday").value,
         "role": snapshot.child("role").value
@@ -59,21 +62,21 @@ class UserDatabaseHandler {
     }
   }
 
-  /// Gets the User from the database and 
+  /// Gets the User from the database and
   //Future<void> getRegularUser(String? uid) async
   //{
-    // Gets the data from the database using the uid identifier
-    //final snapshot = await dbUserReference.child(uid!).get();
-    //if (snapshot.exists) {
-      // Format snapshot.child("<database collection>").value
-      // Map the data to the UI
-      //if(snapshot.child("circleCode").value != null){
-        //circleExists = true;
-      //}
-    //}
-    //else {
-      // Run Error to the UI the account data does not exist
-      //print("No Data");
-    //}
+  // Gets the data from the database using the uid identifier
+  //final snapshot = await dbUserReference.child(uid!).get();
+  //if (snapshot.exists) {
+  // Format snapshot.child("<database collection>").value
+  // Map the data to the UI
+  //if(snapshot.child("circleCode").value != null){
+  //circleExists = true;
+  //}
+  //}
+  //else {
+  // Run Error to the UI the account data does not exist
+  //print("No Data");
+  //}
   //}
 }

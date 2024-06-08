@@ -22,7 +22,7 @@ class _AgencyStep1State extends State<AgencyStep1> {
     'Fire Incident Responder',
     'Crime Incident Responder',
     'Medical Emergency Responder',
-    'Natural Disaster and Accidents',
+    'Natural Disaster and Accident\nResponder',
   ];
 
   @override
@@ -61,11 +61,13 @@ class _AgencyStep1State extends State<AgencyStep1> {
                       });
                     },
                     child: Container(
+                      width: width,
                       decoration: BoxDecoration(
                         color: _currentAgencyIndex == index && _isAgencySelected
                             ? Color.fromARGB(255, 207, 207, 207)
                             : Colors.transparent,
-                        shape: BoxShape.circle,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(width * 0.05),
                       ),
                       child: Image.asset(
                         'assets/images/change_to_agency/agency_${index}_icon.png',
