@@ -31,13 +31,10 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isFirstTimeOpen;
-
   setPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     isFirstTimeOpen = preferences.getBool("isFirstTime");
-   if(isFirstTimeOpen == null){
-     preferences.setBool("isFirstTime", true);
-   }else if(isFirstTimeOpen == true){
+   if(isFirstTimeOpen == null || isFirstTimeOpen == true){
      preferences.setBool("isFirstTime", false);
    }
   }
@@ -46,18 +43,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    //setPreferences();
+    setPreferences();
     precacheImage(AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
-    //print(isFirstTimeOpen);
-    //if(isFirstTimeOpen == null){
-      //return Material(
-        //child: Container(
-        //  color: Colors.white,
-        //  child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,)),
-       // ),
-      //);
-    //}
+    if(isFirstTimeOpen == null){
+      return Material(
+        child: Container(
+          color: Colors.white,
+          child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,), debugShowCheckedModeBanner: false,),
+        ),
+      );
+    }
     return MaterialApp(
       title: 'Safe Connex',
       theme: ThemeData(
@@ -66,7 +62,7 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: "/login", //isFirstTimeOpen! == true ? "/" :"/login",
+      initialRoute: isFirstTimeOpen! == true ? "/" :"/login",
       routes: {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),

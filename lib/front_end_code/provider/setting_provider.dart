@@ -107,23 +107,10 @@ class SettingsProvider extends ChangeNotifier {
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
       return '';
-    } else {
-      Future.delayed(
-        Duration(seconds: 1),
-            () {
-          print("validator");
-          print(FirebaseAuthHandler.firebaseSignUpException);
-
-          if (FirebaseAuthHandler.firebaseSignUpException != null) {
-            showErrorMessage(context,
-                FirebaseAuthHandler.firebaseSignUpException!, height, width);
-            return '';
-          }
-          // Still Errors Here
-
-          return null;
-        },
-      );
+    } else if(FirebaseAuthHandler.firebaseSignUpException != null){
+      showErrorMessage(context,
+          FirebaseAuthHandler.firebaseSignUpException!, height, width);
+      return '';
     }
     return null;
   }

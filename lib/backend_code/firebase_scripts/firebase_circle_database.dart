@@ -4,8 +4,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import "firebase_init.dart";
 
 class CircleDatabaseHandler{
@@ -21,10 +23,12 @@ class CircleDatabaseHandler{
   final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   Random _rnd = Random();
   String tempCircleCode = "";
+  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
   static String? generatedCode;
   static String? circleException;
   static List<Map<String, dynamic>> circleUsersData = [];
   static List<Map<String, dynamic>> circleList = [];
+  static List<Map<String, dynamic>> circleDataList = [];
   static List<Map<String, dynamic>> circleDataValue = [];
   static List<Map<String, dynamic>> locationCircleData = [];
   static Map<String, dynamic> circleToJoin = {};
@@ -75,6 +79,24 @@ class CircleDatabaseHandler{
     await dbCircleReference.child(circleCode).child('members').child(uid!).remove();
   }
 
+  Future<void> changeUsername(String username, String circleCode, String userId) async {
+    await authHandler.authHandler.currentUser!.updateDisplayName(username);
+    await dbCircleReference.child(circleCode).child("members").child(userId).update({
+      "name": username
+    });
+  }
+
+  Future<void> changeCircleName(String circleName, String circleCode, String userId) async {
+    await dbCircleReference.child(circleCode).update({
+      "circle_name": circleName
+    });
+    await dbUserReference.child(userId).child("circle_list").child(circleCode).update({
+        "circleName": circleName
+      });
+
+    print("Circle Name Updated");
+  }
+
   Future<void> getCircleToJoin(String circleCode, String userId) async {
     DataSnapshot snapshot = await dbCircleReference.child(circleCode).get();
     bool isAMember = false;
@@ -102,6 +124,40 @@ class CircleDatabaseHandler{
     }else{
       print("Circle Does not exist");
     }
+  }
+
+  Future<void> listCircleDataForSettings(String userId, String circleCode) async {
+    DataSnapshot snapshot = await dbCircleReference.child(circleCode).get();
+
+    if(circleDataList.isEmpty){
+      for(var circleDatas in snapshot.children){
+        List<String> memberNames = [];
+        for(var memberName in snapshot.child("members").children){
+          memberNames.add(memberName.child("name").value.toString());
+        }
+        circleDataList.add({
+        "circleName": circleDatas.child("circle_name").value,
+        "circleCode": circleDatas.key.toString(),
+        "names": memberNames
+        });
+      }
+    }
+    else{
+      circleDataList.clear();
+      for(var circleDatas in snapshot.children){
+        List<String> memberNames = [];
+        for(var memberName in snapshot.child("members").children){
+          memberNames.add(memberName.child("name").value.toString());
+        }
+        circleDataList.add({
+          "circleName": circleDatas.child("circle_name").value,
+          "circleCode": circleDatas.key.toString(),
+          "names": memberNames
+        });
+      }
+    }
+
+    print("Data: ${circleDataList}");
   }
 
   Future<void> getCircleList(String userId) async {
@@ -175,6 +231,11 @@ class CircleDatabaseHandler{
     }
 
     print("Geocode: ${circleDataValue[0]["geocode"]}");
+  }
+
+  Future<void> leaveCircle(String userId, String circleCode) async {
+    await dbCircleReference.child(circleCode).child("members").child(userId).remove();
+    await dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
   }
 
   String codeGenerator(int length) => String.fromCharCodes(Iterable.generate(length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));

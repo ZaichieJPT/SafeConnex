@@ -178,10 +178,13 @@ class _EmailCardState extends State<EmailCard> {
           btnName: "Continue",
           formKey: _emailCardFormKey,
           continueClicked: () {
-            print("clicked");
-            if (_emailCardFormKey.currentState!.validate()) {
-              widget.continueClicked();
-            } else {}
+            authHandler.verifyEmailAddress(widget.emailController.text);
+            Future.delayed(Duration(seconds: 1),(){
+              if (_emailCardFormKey.currentState!.validate()) {
+                widget.continueClicked();
+              } else {}
+            });
+
           },
         ),
         Padding(

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'firebase_user.dart';
 import 'firebase_users_database.dart';
-import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
 /// Handles all the Functionalities of User Authentications
 class FirebaseAuthHandler
@@ -31,7 +31,7 @@ class FirebaseAuthHandler
       await authHandler.signOut();
       print("Account Created");
     } 
-    on FirebaseAuthException catch(exception) 
+    on FirebaseAuthException catch(exception)
     {
       if(exception.code == "weak-password")
       {
@@ -56,6 +56,36 @@ class FirebaseAuthHandler
         //Replace with something else
         firebaseSignUpException = "Email is banned";
         print("The account has been disabled");  
+      }
+    }
+  }
+
+  /// Creates a user account if the email is not valid it throws exceptions if it is valid it deletes
+  /// the temporary credentials
+  Future<void> verifyEmailAddress(String email) async {
+    try{
+      await authHandler.createUserWithEmailAndPassword(email: email, password: "Test_Pass123");
+      print("Accepted");
+      await authHandler.currentUser!.delete();
+    }
+    on FirebaseAuthException catch(exception){
+      if(exception.code == "email-already-in-use")
+      {
+        //Replace with something else
+        firebaseSignUpException = "Email already in use";
+        print("Email Already in use");
+      }
+      else if(exception.code == "invalid-email")
+      {
+        //Replace with something else
+        firebaseSignUpException = "Invalid email";
+        print("Email is Invalid");
+      }
+      else if(exception.code == "operation-not-allowed")
+      {
+        //Replace with something else
+        firebaseSignUpException = "Email is banned";
+        print("The account has been disabled");
       }
     }
   }
@@ -147,6 +177,12 @@ class FirebaseAuthHandler
     await FirebaseUserCredentials.userCredential.user?.sendEmailVerification();
   }
 
+  /// Delete user account
+  Future<void> deleteUserAccount() async {
+    await authHandler.currentUser?.delete();
+    print("Account Deleted");
+  }
+
   /// Handler for Password Reset
   Future<void> sendPasswordReset(String email) async 
   {
@@ -158,14 +194,14 @@ class FirebaseAuthHandler
   {
     await authHandler.signOut();
   }
-
+  /// Sign in with you google account
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
     final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken
+        idToken: googleAuth?.idToken // this is the universal token used to auto login
     );
 
     databaseHandler.addRegularUser(credential.idToken, "01-01-1999", "user");

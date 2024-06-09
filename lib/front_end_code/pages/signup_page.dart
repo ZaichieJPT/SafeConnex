@@ -38,6 +38,8 @@ class _SignupPageState extends State<SignupPage> {
   bool isContinueClicked_2 = false;
   bool isContinueClicked_3 = false;
 
+  FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
+
   continueClicked() {
     setState(() {
       if (isContinueClicked_1) {
@@ -104,7 +106,6 @@ class _SignupPageState extends State<SignupPage> {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
     final isKeyboardVisible = MediaQuery.of(context).viewInsets.bottom != 0;
-    FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
 
     positionTop_2 = height * 0.1;
 

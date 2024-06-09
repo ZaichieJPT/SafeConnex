@@ -4,17 +4,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 
 class LeaveDialog extends StatefulWidget {
   final double height;
   final double width;
   final String? circleName;
+  final String? circleCode;
 
   const LeaveDialog({
     super.key,
     required this.height,
     required this.width,
     this.circleName,
+    this.circleCode,
   });
 
   @override
@@ -27,6 +31,8 @@ class _LeaveDialogState extends State<LeaveDialog> {
   @override
   Widget build(BuildContext context) {
     String? _circleName = widget.circleName;
+    CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
+    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Dialog(
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
@@ -180,6 +186,8 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                     reverseAnimation: StyledToastAnimation.fade,
                                     fullWidth: true,
                                   );
+                                  // Circle leave Function
+                                  circleDatabaseHandler.leaveCircle(authHandler.authHandler.currentUser!.uid, widget.circleCode!);
                                   Navigator.of(context).pop();
                                 },
                                 style: ButtonStyle(

@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import "package:firebase_auth/firebase_auth.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
@@ -7,6 +8,8 @@ import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
+import "package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart";
+import "package:safeconnex/front_end_code/pages/circle_pages/create_circle_page.dart";
 import "package:safeconnex/front_end_code/pages/home_mainscreen.dart";
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import "package:flutter/cupertino.dart";
@@ -29,12 +32,41 @@ class _LoginPageState extends State<LoginPage> {
 
   bool isPasswordValidated = false;
   CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
+  bool isTransferred = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passController.dispose();
+    isTransferred = false;
     super.dispose();
+  }
+
+
+  _loginWithToken(FirebaseAuthHandler authHandler){
+    if(authHandler.authHandler.currentUser != null && isTransferred == false) {
+      print(ModalRoute.of(context)!.settings.name);
+      print("called");
+      FirebaseProfileStorage profile = FirebaseProfileStorage(
+          authHandler
+              .authHandler
+              .currentUser!
+              .uid);
+      circleDatabaseHandler.getCircleList(
+          authHandler.authHandler.currentUser!.uid);
+      if (CircleDatabaseHandler.circleList.isNotEmpty) {
+        CircleDatabaseHandler.currentCircleCode =
+            CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+      }
+      isTransferred = true;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                MainScreen(),
+          )
+      );
+    }
   }
 
   @override
@@ -43,17 +75,12 @@ class _LoginPageState extends State<LoginPage> {
     double width = MediaQuery.sizeOf(context).width;
 
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-    Future.delayed(const Duration(milliseconds: 5), () {
-      if(authHandler.authHandler.currentUser != null){
-        FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
-        circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
-        if(CircleDatabaseHandler.circleList.isNotEmpty){
-          CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
-        }
-        Navigator.pushNamed(context, "/home");
-      }
-    });
+
     SettingsProvider provider = SettingsProvider();
+
+    Future.delayed(const Duration(milliseconds: 5), () {
+      _loginWithToken(authHandler);
+    });
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -330,6 +357,26 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                               onTap: () {
                                                 authHandler.signInWithGoogle();
+                                                Future.delayed(Duration(seconds: 1),(){
+                                                  FirebaseProfileStorage profile = FirebaseProfileStorage(
+                                                      authHandler
+                                                          .authHandler
+                                                          .currentUser!
+                                                          .uid);
+                                                  circleDatabaseHandler.getCircleList(
+                                                      authHandler.authHandler.currentUser!.uid);
+                                                  if (CircleDatabaseHandler.circleList.isNotEmpty) {
+                                                    CircleDatabaseHandler.currentCircleCode =
+                                                        CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                  }
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MainScreen(),
+                                                      )
+                                                  );
+                                                });
                                               },
                                             ),
                                             Flexible(

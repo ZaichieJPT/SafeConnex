@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_leavecircle_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_info_carousel.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
@@ -28,6 +29,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   int _memberIndex = 11;
   String memberName = '';
   bool _locationStatus = false;
+  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
 
   final List<Map<String, dynamic>> circleDataList = [
     {
@@ -54,7 +56,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   }
 
   void _nextCircle() {
-    if (_currentCircleIndex < circleDataList.length - 1) {
+    if (_currentCircleIndex < CircleDatabaseHandler.circleDataList.length - 1 ) {
       setState(() {
         _currentCircleIndex++;
         _memberIndex = 11;
@@ -64,7 +66,7 @@ class _CircleSettingsState extends State<CircleSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final currentCircleData = circleDataList[_currentCircleIndex];
+    final currentCircleData = CircleDatabaseHandler.circleDataList[_currentCircleIndex];
 
     return Container(
       height: widget.height,
@@ -101,7 +103,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                     onPressed: _currentCircleIndex == 0
                         ? () {
                             setState(() {
-                              _currentCircleIndex = circleDataList.length - 1;
+                              _currentCircleIndex = CircleDatabaseHandler.circleDataList.length - 1;
                             });
                           }
                         : _previousCircle,
@@ -608,6 +610,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                       height: widget.height,
                       width: widget.width,
                       circleName: currentCircleData['circleName'],
+                      circleCode: currentCircleData['circleCode'],
                     );
                   },
                 );

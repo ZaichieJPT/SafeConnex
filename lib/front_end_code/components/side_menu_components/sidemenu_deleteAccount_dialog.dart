@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
   final double height;
@@ -23,6 +24,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Dialog(
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
@@ -178,6 +180,8 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                                     reverseAnimation: StyledToastAnimation.fade,
                                     fullWidth: true,
                                   );
+                                  // Delete Function
+                                  authHandler.deleteUserAccount();
                                   Navigator.of(context).pop();
                                 },
                                 style: ButtonStyle(

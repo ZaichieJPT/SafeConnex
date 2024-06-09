@@ -208,7 +208,6 @@ class _EditCircleNameState extends State<EditCircleName> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          print("outsite");
                           if (_circleKey.currentState!.validate()) {
                             print("inside");
                             if (_circleNameController.text.length <= 25) {
