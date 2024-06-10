@@ -31,7 +31,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   bool _locationStatus = false;
   CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
 
-  final List<Map<String, dynamic>> circleDataList = [
+  final List<Map<String, dynamic>> circleDataList2 = [
     {
       'circleName': 'Office',
       'names': ['John', 'Joshua'],
@@ -46,6 +46,8 @@ class _CircleSettingsState extends State<CircleSettings> {
     },
   ];
 
+  final List<Map<String, dynamic>> circleDataList = CircleDatabaseHandler.circleDataList;
+
   void _previousCircle() {
     if (_currentCircleIndex > 0) {
       setState(() {
@@ -56,7 +58,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   }
 
   void _nextCircle() {
-    if (_currentCircleIndex < CircleDatabaseHandler.circleDataList.length - 1 ) {
+    if (_currentCircleIndex < circleDataList.length - 1 ) {
       setState(() {
         _currentCircleIndex++;
         _memberIndex = 11;
@@ -66,7 +68,7 @@ class _CircleSettingsState extends State<CircleSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final currentCircleData = CircleDatabaseHandler.circleDataList[_currentCircleIndex];
+    final currentCircleData = circleDataList[_currentCircleIndex];
 
     return Container(
       height: widget.height,
@@ -103,7 +105,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                     onPressed: _currentCircleIndex == 0
                         ? () {
                             setState(() {
-                              _currentCircleIndex = CircleDatabaseHandler.circleDataList.length - 1;
+                              _currentCircleIndex = circleDataList.length - 1;
                             });
                           }
                         : _previousCircle,

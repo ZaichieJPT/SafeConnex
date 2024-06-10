@@ -108,6 +108,7 @@ flutter:
     - assets/images/onboarding/
     - assets/images/side_menu/
     - assets/images/emergency_page/
+    - assets/images/change_to_agency/
     - assets/images/side_menu/circle_settings/
 
   # An image asset can refer to one or more resolution-specific "variants", see
