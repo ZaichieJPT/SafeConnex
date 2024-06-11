@@ -10,9 +10,11 @@ import 'package:safeconnex/front_end_code/pages/join_circle.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
+import 'package:safeconnex/front_end_code/pages/password_change_page.dart';
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'backend_code/firebase_scripts/firebase_options.dart';
+import 'controller/app_manager.dart';
 import 'front_end_code/pages/circle_pages/create_circle_page.dart';
 import 'package:flutter/services.dart';
 
@@ -69,6 +71,7 @@ class _MyAppState extends State<MyApp> {
         "/home": (context) => MainScreen(),
         "/create_circle": (context) => CirclePage(),
         "/join_circle": (context) => JoinCirclePage(),
+        "/changePassword": (context) => PasswordChange(),
         "/temp": (context) => NewMapProvider(),
         "/temp2": (context) => GeofencingPage(),
         "/temp3": (context) => CarouseSliderComponent(),

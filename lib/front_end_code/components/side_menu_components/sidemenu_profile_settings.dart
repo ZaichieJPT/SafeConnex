@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
@@ -43,7 +44,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   String? _phoneNumber = '000000000';
   String? _birthDate = 'January 15, 2001';
   bool _isProfileEditable = false;
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
 
   void _onMenuTapped(int index) {
     setState(() {
@@ -53,11 +53,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   Future<void> _onProfileTapped() async {
     FirebaseProfileStorage profileStorage =
-    FirebaseProfileStorage(authHandler.authHandler.currentUser!.uid);
+    FirebaseProfileStorage(AppManager.authHandler.authHandler.currentUser!.uid);
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     profileStorage.uploadProfilePic(
-        authHandler.authHandler.currentUser!.uid, image!.path);
+        AppManager.authHandler.authHandler.currentUser!.uid, image!.path);
     if (image == null) return;
   }
 
@@ -140,12 +140,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-    UserDatabaseHandler userDatabase = UserDatabaseHandler();
-    userDatabase.getRegularUser(authHandler.authHandler.currentUser!.uid);
+    AppManager.userDatabaseHandler.getRegularUser(AppManager.authHandler.authHandler.currentUser!.uid);
     Future.delayed(Duration(milliseconds: 500), () {
-      _phoneNumber = userDatabase.userData["phoneNumber"];
-      _birthDate = userDatabase.userData["birthday"];
+      _phoneNumber = AppManager.userDatabaseHandler.userData["phoneNumber"];
+      _birthDate = AppManager.userDatabaseHandler.userData["birthday"];
     });
     return Column(
       children: [
@@ -247,7 +245,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           horizontal: innerHeight * 0.05,
                                         ),
                                         child: Text(
-                                          '${authHandler.authHandler.currentUser!.displayName}',
+                                          '${AppManager.authHandler.authHandler.currentUser!.displayName}',
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: innerHeight * 0.11,
@@ -260,7 +258,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: FittedBox(
                                       child: Text(
-                                        'Email: ${authHandler.authHandler.currentUser!.email}',
+                                        'Email: ${AppManager.authHandler.authHandler.currentUser!.email}',
                                         style: TextStyle(
                                           fontFamily: 'OpunMai',
                                           fontSize: widget.height * 0.018,

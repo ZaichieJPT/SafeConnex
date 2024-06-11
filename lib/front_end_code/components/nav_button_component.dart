@@ -35,10 +35,6 @@ class _NavButtonComponentState extends State<NavButtonComponent> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          FirebaseAuthHandler firebaseAuthHandler = FirebaseAuthHandler();
-          print("user");
-          print(firebaseAuthHandler.authHandler.currentUser?.displayName!
-              .toString());
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => widget.route),

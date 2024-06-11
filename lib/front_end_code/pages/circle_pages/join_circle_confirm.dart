@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/controller/app_manager.dart';
+import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
 class ConfirmJoinCircle extends StatefulWidget {
   const ConfirmJoinCircle({super.key});
@@ -151,25 +153,7 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            circleDatabase.addCircleMember(
-                                CircleDatabaseHandler.circleToJoin["circle_code"]
-                                    .toString(),
-                                authHandler.authHandler.currentUser!.uid,
-                                authHandler.authHandler.currentUser!.displayName
-                                    .toString(),
-                                CircleDatabaseHandler.circleToJoin["circle_name"]
-                                    .toString(),
-                                authHandler.authHandler.currentUser!.email
-                                    .toString(),
-                                "1");
-                            userDatabase.addUserCircle(
-                                authHandler.authHandler.currentUser!.uid,
-                                CircleDatabaseHandler.circleToJoin["circle_code"]
-                                    .toString(),
-                                CircleDatabaseHandler.circleToJoin["circle_name"]
-                                    .toString());
-                            Navigator.of(context).popUntil(
-                                    (route) => route.settings.name == "/home");
+                            AppManager.circleDatabaseHandler.joinCircle(context, MainScreen());
                           },
                           child: FittedBox(
                             child: Text(

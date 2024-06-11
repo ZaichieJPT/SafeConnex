@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/login_textformfield.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
@@ -211,31 +212,7 @@ class _EditCircleNameState extends State<EditCircleName> {
                           if (_circleKey.currentState!.validate()) {
                             print("inside");
                             if (_circleNameController.text.length <= 25) {
-                              print("inside");
-                              //userDatabase.getRegularUser(authHandler.authHandler.currentUser?.uid);
-                              circleDatabase.createCircle(
-                                  authHandler.authHandler.currentUser?.uid,
-                                  authHandler
-                                      .authHandler.currentUser?.displayName!,
-                                  _circleNameController.text,
-                                  authHandler.authHandler.currentUser?.email,
-                                  "0");
-                              userDatabase.addUserCircle(
-                                  authHandler.authHandler.currentUser?.uid,
-                                  CircleDatabaseHandler.generatedCode,
-                                  _circleNameController.text);
-                              print("pass");
-                              Future.delayed(
-                                Duration(milliseconds: 1500),
-                                () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CircleResultsPage(),
-                                    ),
-                                  );
-                                },
-                              );
+                              AppManager.circleDatabaseHandler.createCircleWithName(_circleNameController.text, context, CircleResultsPage());
                             }
                           }
                         },

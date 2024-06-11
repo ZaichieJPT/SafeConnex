@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
+import 'package:safeconnex/controller/app_manager.dart';
 
 class LogoutDialog extends StatefulWidget {
   final double height;
@@ -24,7 +24,6 @@ class _LogoutDialogState extends State<LogoutDialog> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Dialog(
       backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
@@ -179,7 +178,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
                                     fullWidth: true,
                                   );
                                   // Logout Function
-                                  authHandler.signOutAccount();
+                                  AppManager.authHandler.signOutAccount();
                                   Navigator.of(context).popUntil(ModalRoute.withName("/login"));
                                 },
                                 style: ButtonStyle(

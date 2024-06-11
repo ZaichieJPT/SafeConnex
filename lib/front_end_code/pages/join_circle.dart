@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 
@@ -31,7 +32,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
 
   @override
   Widget build(BuildContext context) {
-    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+    //CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
     FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
@@ -165,7 +166,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                           validator: (value) {
                             print(value);
                             return provider.joinCodeValidator(context, height,
-                                width, value.toString(), circleDatabase);
+                                width, value.toString(), AppManager.circleDatabaseHandler);
                           },
                           textAlignVertical: TextAlignVertical.center,
                           textAlign: TextAlign.center,
@@ -236,18 +237,8 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          circleDatabase.getCircleToJoin(_joinCircleController.text, authHandler.authHandler.currentUser!.uid);
-                          circleDatabase.getCircleData(_joinCircleController.text);
-                          Future.delayed(Duration(milliseconds: 1500), () {
-                            if (_joinCircleKey.currentState!.validate()) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ConfirmJoinCircle(),
-                                ),
-                              );
-                            }
-                          });
+                          AppManager.circleDatabaseHandler.getJoinCircleData(_joinCircleController.text, _joinCircleKey, context, ConfirmJoinCircle());
+                          AppManager.circleDatabaseHandler.joinCircle(context, ConfirmJoinCircle());
                         },
                         child: Text(
                           "ENTER",

@@ -4,6 +4,7 @@ import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart";
+import "package:safeconnex/controller/app_manager.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
-  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
+  AppManager appController = AppManager();
   bool isTransferred = false;
 
   @override
@@ -42,44 +43,15 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-
-  _loginWithToken(FirebaseAuthHandler authHandler){
-    if(authHandler.authHandler.currentUser != null && isTransferred == false) {
-      print(ModalRoute.of(context)!.settings.name);
-      print("called");
-      FirebaseProfileStorage profile = FirebaseProfileStorage(
-          authHandler
-              .authHandler
-              .currentUser!
-              .uid);
-      circleDatabaseHandler.getCircleList(
-          authHandler.authHandler.currentUser!.uid);
-      if (CircleDatabaseHandler.circleList.isNotEmpty) {
-        CircleDatabaseHandler.currentCircleCode =
-            CircleDatabaseHandler.circleList[0]["circle_code"].toString();
-      }
-      isTransferred = true;
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                MainScreen(),
-          )
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 
-    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-
     SettingsProvider provider = SettingsProvider();
 
     Future.delayed(const Duration(milliseconds: 5), () {
-      _loginWithToken(authHandler);
+      AppManager.authHandler.loginWithToken(context, MainScreen());
     });
     return Container(
       decoration: BoxDecoration(
@@ -210,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   height,
                                                   width,
                                                   email,
-                                                  authHandler);
+                                                  AppManager.authHandler);
                                             },
                                             height: 60,
                                             verticalPadding: 0,
@@ -241,7 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   height,
                                                   width,
                                                   loginPass,
-                                                  authHandler);
+                                                  AppManager.authHandler);
                                             },
                                             isValidated: isPasswordValidated,
                                           ),
@@ -293,36 +265,7 @@ class _LoginPageState extends State<LoginPage> {
                                           fontSize: 15,
                                           formKey: _loginFormKey,
                                           continueClicked: () {
-                                            authHandler.loginEmailAccount(
-                                                _emailController.text,
-                                                _passController.text);
-
-                                            Future.delayed(Duration(seconds: 1),
-                                                    () {
-                                                  if (_loginFormKey.currentState!
-                                                      .validate()) {
-                                                    if (authHandler
-                                                        .firebaseLoginException ==
-                                                        null) {
-                                                      FirebaseProfileStorage(
-                                                          authHandler
-                                                              .authHandler
-                                                              .currentUser!
-                                                              .uid);
-                                                      circleDatabaseHandler.getCircleList(authHandler.authHandler.currentUser!.uid);
-                                                      if(CircleDatabaseHandler.circleList.isNotEmpty){
-                                                        CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
-                                                      }
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              MainScreen(),
-                                                        ),
-                                                      );
-                                                    }
-                                                  }
-                                                });
+                                            AppManager.authHandler.loginWithButton(_emailController.text, _passController.text, context, MainScreen(), _loginFormKey);
                                           },
                                         ),
                                       ),
@@ -356,26 +299,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 scale: 7,
                                               ),
                                               onTap: () {
-                                                authHandler.signInWithGoogle();
+                                                AppManager.authHandler.signInWithGoogle();
                                                 Future.delayed(Duration(seconds: 1),(){
-                                                  FirebaseProfileStorage profile = FirebaseProfileStorage(
-                                                      authHandler
-                                                          .authHandler
-                                                          .currentUser!
-                                                          .uid);
-                                                  circleDatabaseHandler.getCircleList(
-                                                      authHandler.authHandler.currentUser!.uid);
-                                                  if (CircleDatabaseHandler.circleList.isNotEmpty) {
-                                                    CircleDatabaseHandler.currentCircleCode =
-                                                        CircleDatabaseHandler.circleList[0]["circle_code"].toString();
-                                                  }
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MainScreen(),
-                                                      )
-                                                  );
+                                                  AppManager.authHandler.loginWithGoogle(context, MainScreen());
                                                 });
                                               },
                                             ),

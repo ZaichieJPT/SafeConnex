@@ -38,8 +38,6 @@ class _SignupPageState extends State<SignupPage> {
   bool isContinueClicked_2 = false;
   bool isContinueClicked_3 = false;
 
-  FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
-
   continueClicked() {
     setState(() {
       if (isContinueClicked_1) {

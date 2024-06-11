@@ -92,7 +92,8 @@ class SettingsProvider extends ChangeNotifier {
       print("Firebase Error: ${authHandler.firebaseLoginException},");
       showErrorMessage(
           context, authHandler.firebaseLoginException!, height, width);
-      //return authHandler.firebaseLoginException;
+      //causes problems for the UI;
+      authHandler.firebaseLoginException = null;
       return '';
     }
     return null;

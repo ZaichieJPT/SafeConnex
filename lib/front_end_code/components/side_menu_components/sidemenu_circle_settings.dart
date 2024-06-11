@@ -31,7 +31,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   bool _locationStatus = false;
   CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
 
-  final List<Map<String, dynamic>> circleDataList2 = [
+  final List<Map<String, dynamic>> circleDataList = [
     {
       'circleName': 'Office',
       'names': ['John', 'Joshua'],
@@ -45,8 +45,6 @@ class _CircleSettingsState extends State<CircleSettings> {
       'names': ['Garry', 'Alliah'],
     },
   ];
-
-  final List<Map<String, dynamic>> circleDataList = CircleDatabaseHandler.circleDataList;
 
   void _previousCircle() {
     if (_currentCircleIndex > 0) {

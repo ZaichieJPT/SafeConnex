@@ -1,6 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
+import 'package:safeconnex/controller/page_navigator.dart';
+import 'firebase_init.dart';
 import 'firebase_user.dart';
 import 'firebase_users_database.dart';
 
@@ -8,24 +13,32 @@ import 'firebase_users_database.dart';
 class FirebaseAuthHandler
 {
   FirebaseAuth authHandler = FirebaseAuth.instance; // Universal Authentication Handler
-  UserDatabaseHandler databaseHandler = UserDatabaseHandler();
+  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
+  DatabaseReference dbUserReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("users");
 
   String? firebaseLoginException;
   static String? firebaseSignUpException;
+  bool isTransferred = false;
 
   /// Registers an account to the Firebase Auth API
   /// using the [email] and [password] parameters
-  Future<void> registerEmailAccount(String email, String password, String firstName, String lastName, int phoneNumber, String date) async
+  Future<void> _registerEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String date) async
   {
     try
     {
       // Adds the output to the FirebaseUserCrendentials
       FirebaseUserCredentials.userCredential = await authHandler.createUserWithEmailAndPassword(email: email, password: password);
-      sendEmailVerification();
+      _sendEmailVerification();
       FirebaseUserCredentials.userCredential.user?.updateDisplayName("$firstName $lastName");
-      //FirebaseUserCredentials.userCredential.user?.updatePhotoURL();
       //FirebaseUserCredentials.userCredential.user?.updatePhoneNumber(phoneNumber as PhoneAuthCredential);
-      databaseHandler.addRegularUser(FirebaseUserCredentials.userCredential.user?.uid, date, "user");
+      await dbUserReference.child(authHandler.currentUser!.uid).set
+        ({
+        "birthday": date,
+        "role": "user"
+      });
       //<code>
       // Sets the users info and adds it to the FirebaseDatabaseHandler
       await authHandler.signOut();
@@ -136,7 +149,7 @@ class FirebaseAuthHandler
     }
   }
 
-  Future<void> phoneVerificationAndroid(String phoneNumbers) async 
+  Future<void> _phoneVerificationAndroid(String phoneNumbers) async
   {
     await authHandler.verifyPhoneNumber(
       phoneNumber: phoneNumbers,
@@ -172,7 +185,7 @@ class FirebaseAuthHandler
   }
 
   /// Handler for Email Verification
-  Future<void> sendEmailVerification() async 
+  Future<void> _sendEmailVerification() async
   {
     await FirebaseUserCredentials.userCredential.user?.sendEmailVerification();
   }
@@ -190,7 +203,7 @@ class FirebaseAuthHandler
   }
 
   /// Handler for Sign Out/Log out
-  Future<void> signOutAccount() async 
+  Future<void> signOutAccount() async
   {
     await authHandler.signOut();
   }
@@ -204,8 +217,70 @@ class FirebaseAuthHandler
         idToken: googleAuth?.idToken // this is the universal token used to auto login
     );
 
-    databaseHandler.addRegularUser(credential.idToken, "01-01-1999", "user");
+    await dbUserReference.child(credential.idToken!).set
+      ({
+      "birthday": "01-01-1999",
+      "role": "user"
+    });
 
     return await authHandler.signInWithCredential(credential);
+  }
+
+  void loginWithToken(BuildContext context, Widget screen){
+    if (authHandler.currentUser != null && isTransferred != true) {
+      FirebaseProfileStorage(authHandler.currentUser!.uid);
+      circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
+      if(CircleDatabaseHandler.circleList.isNotEmpty) {
+        CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+      }
+      isTransferred = true;
+      PageNavigator(context, screen);
+    }
+  }
+
+  void loginWithButton(String email, String password, BuildContext context, Widget MainScreen, GlobalKey<FormState> _loginFormKey){
+    loginEmailAccount(email, password);
+    Future.delayed(Duration(milliseconds: 1000), (){
+      if(_loginFormKey.currentState!.validate()){
+        print(firebaseLoginException);
+        if (firebaseLoginException == null || firebaseLoginException == "") {
+          FirebaseProfileStorage(authHandler.currentUser!.uid);
+          circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
+          if(CircleDatabaseHandler.circleList.isNotEmpty) {
+            CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+          }
+          PageNavigator(context, MainScreen);
+        }
+      }
+    });
+  }
+
+  void loginWithGoogle(BuildContext context, Widget MainScreen){
+    FirebaseProfileStorage(authHandler.currentUser!.uid);
+    circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
+    if (CircleDatabaseHandler.circleList.isNotEmpty) {
+      CircleDatabaseHandler.currentCircleCode =
+          CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+    }
+    PageNavigator(context, MainScreen);
+  }
+
+  void signUpWithEmail(String email, String password, String firstName, String lastName, String phoneNumber, String date, BuildContext context, Widget Screen, Function() backClicked){
+    _registerEmailAccount(
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
+        date
+    );
+    Future.delayed(Duration(seconds: 1), () {
+      if (firebaseSignUpException == null) {
+        signOutAccount();
+        PageNavigator(context, Screen);
+      } else {
+        backClicked();
+      }
+    });
   }
 }

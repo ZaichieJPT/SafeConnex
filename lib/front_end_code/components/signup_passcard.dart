@@ -2,6 +2,7 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/cupertino.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
+import "package:safeconnex/controller/app_manager.dart";
 import "package:safeconnex/front_end_code/components/signup_passfield.dart";
 import "package:safeconnex/front_end_code/components/signup_passvalidation.dart";
 import "package:safeconnex/front_end_code/pages/login_page.dart";
@@ -53,6 +54,7 @@ class _PassCardState extends State<PassCard> {
   int strengthCount = 0;
   final provider = SettingsProvider();
   final passFormKey = GlobalKey<FormState>();
+  AppManager appController = AppManager();
 
   onPasswordChanged(password) {
     final numericRegEx = RegExp(r'[0-9]');
@@ -401,26 +403,17 @@ class _PassCardState extends State<PassCard> {
             ),
             onPressed: () {
               if (passFormKey.currentState!.validate()) {
-                FirebaseAuthHandler firebaseAuth = FirebaseAuthHandler();
-                firebaseAuth.registerEmailAccount(
-                    widget.emailController.text,
-                    widget.passController.text,
-                    widget.firstNameController.text,
-                    widget.lastNameController.text,
-                    0101,
-                    widget.dateController.text);
-                print(FirebaseAuthHandler.firebaseSignUpException);
-                Future.delayed(Duration(seconds: 1), () {
-                  print("1 second");
-                  print(FirebaseAuthHandler.firebaseSignUpException);
-                  if (FirebaseAuthHandler.firebaseSignUpException == null) {
-                    firebaseAuth.signOutAccount();
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
-                  } else {
-                    widget.backClicked();
-                  }
-                });
+                AppManager.authHandler.signUpWithEmail(
+                  widget.emailController.text,
+                  widget.passController.text,
+                  widget.firstNameController.text,
+                  widget.lastNameController.text,
+                  "1",
+                  widget.dateController.text,
+                  context,
+                  LoginPage(),
+                  widget.backClicked
+                );
               }
             },
             child: FittedBox(
