@@ -103,6 +103,23 @@ class FirebaseAuthHandler
     }
   }
 
+  void loginWithButton(String email, String password, BuildContext context, Widget MainScreen, GlobalKey<FormState> _loginFormKey){
+    loginEmailAccount(email, password);
+    Future.delayed(Duration(milliseconds: 1000), (){
+      if(_loginFormKey.currentState!.validate()){
+        print(firebaseLoginException);
+        if (firebaseLoginException == null || firebaseLoginException == "") {
+          FirebaseProfileStorage(authHandler.currentUser!.uid);
+          circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
+          if(CircleDatabaseHandler.circleList.isNotEmpty) {
+            CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+          }
+          PageNavigator(context, MainScreen);
+        }
+      }
+    });
+  }
+
   /// Login to your account using [email] and [password] parameters
   Future<void> loginEmailAccount(String email, String password) async 
   {
@@ -196,6 +213,10 @@ class FirebaseAuthHandler
     print("Account Deleted");
   }
 
+  Future<void> changePassword (String newPassword) async {
+    await authHandler.currentUser!.updatePassword(newPassword);
+  }
+
   /// Handler for Password Reset
   Future<void> sendPasswordReset(String email) async 
   {
@@ -238,22 +259,7 @@ class FirebaseAuthHandler
     }
   }
 
-  void loginWithButton(String email, String password, BuildContext context, Widget MainScreen, GlobalKey<FormState> _loginFormKey){
-    loginEmailAccount(email, password);
-    Future.delayed(Duration(milliseconds: 1000), (){
-      if(_loginFormKey.currentState!.validate()){
-        print(firebaseLoginException);
-        if (firebaseLoginException == null || firebaseLoginException == "") {
-          FirebaseProfileStorage(authHandler.currentUser!.uid);
-          circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
-          if(CircleDatabaseHandler.circleList.isNotEmpty) {
-            CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
-          }
-          PageNavigator(context, MainScreen);
-        }
-      }
-    });
-  }
+
 
   void loginWithGoogle(BuildContext context, Widget MainScreen){
     FirebaseProfileStorage(authHandler.currentUser!.uid);

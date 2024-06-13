@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/controller/app_manager.dart';
 
@@ -22,6 +23,7 @@ class DeleteAccountDialog extends StatefulWidget {
 
 class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   final TextEditingController feedbackController = TextEditingController();
+  SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +183,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                                     fullWidth: true,
                                   );
                                   // Delete Function
-                                  AppManager.authHandler.deleteUserAccount();
+                                  authentication.deleteUserAccount("password");
                                   Navigator.of(context).pop();
                                 },
                                 style: ButtonStyle(

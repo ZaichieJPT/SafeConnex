@@ -211,21 +211,23 @@ class CircleDatabaseHandler{
   Future<void> getCircleList(String userId) async {
     DataSnapshot snapshot = await dbUserReference.child(userId).child("circle_list").get();
 
-    if(circleList.isEmpty){
-      for(var circles in snapshot.children){
-        circleList.add({
-          "circle_code": circles.key,
-          "circle_name": circles.child("circleName").value
-        });
+    if(snapshot.children.isNotEmpty){
+      if(circleList.isEmpty){
+        for(var circles in snapshot.children){
+          circleList.add({
+            "circle_code": circles.key,
+            "circle_name": circles.child("circleName").value
+          });
+        }
       }
-    }
-    else{
-      circleList.clear();
-      for(var circles in snapshot.children){
-        circleList.add({
-          "circle_code": circles.key,
-          "circle_name": circles.child("circleName").value
-        });
+      else{
+        circleList.clear();
+        for(var circles in snapshot.children){
+          circleList.add({
+            "circle_code": circles.key,
+            "circle_name": circles.child("circleName").value
+          });
+        }
       }
     }
   }
@@ -253,28 +255,30 @@ class CircleDatabaseHandler{
   Future<void> getCircleData(String circleCode) async
   {
     DataSnapshot snapshot = await dbCircleReference.child(circleCode).get();
-    if(circleDataValue.isEmpty){
-      for(var user in snapshot.child("members").children){
-        circleDataValue.add({
-          "id": user.child("id").value,
-          "email": user.child("email").value,
-          "name": user.child("name").value,
-          "phoneNumber": user.child("phone").value,
-          "role": user.child("role").value,
-          "image": user.child("image").value,
-        });
-      }
-    }else{
-      circleDataValue.clear();
-      for(var user in snapshot.child("members").children){
-        circleDataValue.add({
-          "id": user.child("id").value,
-          "email": user.child("email").value,
-          "name": user.child("name").value,
-          "phoneNumber": user.child("phone").value,
-          "role": user.child("role").value,
-          "image": user.child("image").value,
-        });
+    if(snapshot.children.isNotEmpty){
+      if(circleDataValue.isEmpty){
+        for(var user in snapshot.child("members").children){
+          circleDataValue.add({
+            "id": user.child("id").value,
+            "email": user.child("email").value,
+            "name": user.child("name").value,
+            "phoneNumber": user.child("phone").value,
+            "role": user.child("role").value,
+            "image": user.child("image").value,
+          });
+        }
+      }else{
+        circleDataValue.clear();
+        for(var user in snapshot.child("members").children){
+          circleDataValue.add({
+            "id": user.child("id").value,
+            "email": user.child("email").value,
+            "name": user.child("name").value,
+            "phoneNumber": user.child("phone").value,
+            "role": user.child("role").value,
+            "image": user.child("image").value,
+          });
+        }
       }
     }
 

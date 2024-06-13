@@ -6,6 +6,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
@@ -38,6 +40,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final _profileDateFormKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
+  SafeConnexCloudStorage profileStorage = SafeConnexCloudStorage();
   double innerHeight = 0;
   double innerWidth = 0;
   int _selectedMenuIndex = 4;
@@ -52,12 +55,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   }
 
   Future<void> _onProfileTapped() async {
-    FirebaseProfileStorage profileStorage =
-    FirebaseProfileStorage(AppManager.authHandler.authHandler.currentUser!.uid);
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     profileStorage.uploadProfilePic(
-        AppManager.authHandler.authHandler.currentUser!.uid, image!.path);
+        SafeConnexAuthentication.currentUser!.uid, image!.path);
     if (image == null) return;
   }
 
@@ -140,10 +141,10 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   Widget build(BuildContext context) {
-    AppManager.userDatabaseHandler.getRegularUser(AppManager.authHandler.authHandler.currentUser!.uid);
+    //AppManager.userDatabaseHandler.getRegularUser(AppManager.authHandler.authHandler.currentUser!.uid);
     Future.delayed(Duration(milliseconds: 500), () {
-      _phoneNumber = AppManager.userDatabaseHandler.userData["phoneNumber"];
-      _birthDate = AppManager.userDatabaseHandler.userData["birthday"];
+      _phoneNumber = "test";
+      _birthDate = "day";
     });
     return Column(
       children: [
@@ -245,7 +246,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           horizontal: innerHeight * 0.05,
                                         ),
                                         child: Text(
-                                          '${AppManager.authHandler.authHandler.currentUser!.displayName}',
+                                          '${SafeConnexAuthentication.currentUser!.displayName}',
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: innerHeight * 0.11,
@@ -258,7 +259,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: FittedBox(
                                       child: Text(
-                                        'Email: ${AppManager.authHandler.authHandler.currentUser!.email}',
+                                        'Email: ${SafeConnexAuthentication.currentUser!.email}',
                                         style: TextStyle(
                                           fontFamily: 'OpunMai',
                                           fontSize: widget.height * 0.018,
@@ -583,13 +584,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: FirebaseProfileStorage
-                                              .imageUrl !=
-                                              null
-                                              ? Image.network(
-                                              FirebaseProfileStorage
-                                                  .imageUrl!)
-                                              : Container(color: Colors.white),
+                                          child: SafeConnexCloudStorage.imageUrl != null ? Image.network(SafeConnexCloudStorage.imageUrl!) : Container(color: Colors.white),
                                         ),
                                       ),
                                     ),

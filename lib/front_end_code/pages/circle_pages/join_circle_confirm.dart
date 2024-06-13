@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
@@ -18,9 +19,7 @@ class ConfirmJoinCircle extends StatefulWidget {
 }
 
 class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
-  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-  UserDatabaseHandler userDatabase = UserDatabaseHandler();
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +99,7 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                       Container(
                         width: width * 0.75,
                         child: Text(
-                          "${CircleDatabaseHandler.circleToJoin['circle_name'].toString()}",
+                          SafeConnexCircleDatabase.circleToJoin['circle_name'].toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(
@@ -153,7 +152,9 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            AppManager.circleDatabaseHandler.joinCircle(context, MainScreen());
+                            circleDatabase.joinTheCircle().whenComplete((){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                            });
                           },
                           child: FittedBox(
                             child: Text(

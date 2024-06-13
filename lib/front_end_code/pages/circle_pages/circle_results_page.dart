@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/controller/page_navigator.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
@@ -18,8 +19,6 @@ class CircleResultsPage extends StatefulWidget {
 class _CircleResultsPageState extends State<CircleResultsPage> {
   @override
   Widget build(BuildContext context) {
-    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
     print(CircleDatabaseHandler.generatedCode);
@@ -75,7 +74,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                               ),
                               //CIRCLE CODE
                               SelectableText(
-                                '${CircleDatabaseHandler.generatedCode}',
+                                '${SafeConnexCircleDatabase.generatedCode}',
                                 style: TextStyle(
                                   fontSize: height * 0.05,
                                   fontFamily: "OpunMai",

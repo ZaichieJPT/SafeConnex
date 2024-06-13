@@ -4,6 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
 import '../../backend_code/firebase_scripts/firebase_coordinates_store.dart';
 
@@ -16,11 +18,10 @@ class CarouseSliderComponent extends StatefulWidget {
 }
 
 class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
+
 
   bool _checkIfProfileExist(){
-    for(var profile in CircleDatabaseHandler.circleDataValue){
+    for(var profile in SafeConnexCircleDatabase.circleDataValue){
       if(profile["image"] != null){
         return true;
       }
@@ -57,7 +58,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
           viewportFraction: 0.6,
           //aspectRatio: 0.1
         ),
-        items: CircleDatabaseHandler.circleDataValue.map((userData){
+        items: SafeConnexCircleDatabase.circleDataValue.map((userData){
           return Builder(
             builder: (BuildContext context){
               return Container(
@@ -104,7 +105,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                               )
                             ],
                           ),
-                          child: _checkIfProfileExist() ? Image.network(FirebaseProfileStorage.imageUrl!) : Container(color:Colors.white),
+                          child: _checkIfProfileExist() ? Image.network(SafeConnexCloudStorage.imageUrl!) : Container(color:Colors.white),
                         ),
                       ),
                       Positioned(

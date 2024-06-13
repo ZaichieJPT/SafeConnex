@@ -3,8 +3,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
+
+import 'home_mainscreen.dart';
 
 class PasswordChange extends StatefulWidget {
   const PasswordChange({super.key});
@@ -115,6 +119,8 @@ class _PasswordChangeState extends State<PasswordChange> {
   Widget build(BuildContext context) {
     height = MediaQuery.sizeOf(context).height;
     width = MediaQuery.sizeOf(context).width;
+
+    SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
     return Stack(
       children: [
@@ -441,7 +447,11 @@ class _PasswordChangeState extends State<PasswordChange> {
                                       vertical: height * 0.01),
                                   child: InkWell(
                                     onTap: () {
-                                      _newPassFormKey.currentState!.validate();
+                                      if(_newPassFormKey.currentState!.validate()){
+                                        authentication.changePassword("Old Password", _newPassController.text).whenComplete((){
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                        });
+                                      }
                                     },
                                     child: Container(
                                       width: width * 0.5,

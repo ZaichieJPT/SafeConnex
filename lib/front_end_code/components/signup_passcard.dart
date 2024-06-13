@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/cupertino.dart";
+import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/controller/app_manager.dart";
 import "package:safeconnex/front_end_code/components/signup_passfield.dart";
@@ -54,7 +55,8 @@ class _PassCardState extends State<PassCard> {
   int strengthCount = 0;
   final provider = SettingsProvider();
   final passFormKey = GlobalKey<FormState>();
-  AppManager appController = AppManager();
+  //AppManager appController = AppManager();
+  SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   onPasswordChanged(password) {
     final numericRegEx = RegExp(r'[0-9]');
@@ -403,17 +405,21 @@ class _PassCardState extends State<PassCard> {
             ),
             onPressed: () {
               if (passFormKey.currentState!.validate()) {
-                AppManager.authHandler.signUpWithEmail(
+                authentication.signUpWithEmailAccount(
                   widget.emailController.text,
                   widget.passController.text,
                   widget.firstNameController.text,
                   widget.lastNameController.text,
                   "1",
                   widget.dateController.text,
-                  context,
-                  LoginPage(),
-                  widget.backClicked
-                );
+                ).whenComplete((){
+                  if(SafeConnexAuthentication.signUpException == null){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                  }
+                  else{
+                    widget.backClicked();
+                  }
+                });
               }
             },
             child: FittedBox(

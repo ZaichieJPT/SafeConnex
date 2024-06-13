@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_feedback_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_news_database.dart';
@@ -20,9 +21,6 @@ class AppManager{
   static NewsDatabaseHandler newsDatabaseHandler = NewsDatabaseHandler();
   static SafetyScoringDatabaseHandler safetyScoringDatabaseHandler = SafetyScoringDatabaseHandler();
   static UserDatabaseHandler userDatabaseHandler = UserDatabaseHandler();
-
-
-
-
+  static FeedbackDatabase feedbackDatabase = FeedbackDatabase();
 
 }

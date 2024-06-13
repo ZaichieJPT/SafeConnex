@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
@@ -19,7 +21,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
   Widget build(BuildContext context) {
     TextEditingController _circleNameController = TextEditingController();
     final _circleKey = GlobalKey<FormState>();
-    AppManager appController = AppManager();
+    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
     return Container(
       decoration: BoxDecoration(
@@ -90,7 +92,6 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                        FocusManager.instance.primaryFocus?.unfocus();
                      },
                      validator: (value){
-                       print(value);
                        if(value!.isEmpty){
                          return "Please enter a Circle Name";
                        }
@@ -176,7 +177,9 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                       onPressed: () {
                         if(_circleKey.currentState!.validate()){
                           if(_circleNameController.text.length <= 25){
-                            AppManager.circleDatabaseHandler.createCircleWithName(_circleNameController.text, context, CircleResultsPage());
+                            circleDatabase.createCircle(_circleNameController.text).whenComplete((){
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => CircleResultsPage()));
+                            });
                           }
                         }
                       },

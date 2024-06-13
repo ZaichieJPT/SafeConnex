@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/front_end_code/components/carouse_slider.dart';
+import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 
 class HomeBottomNavBar extends StatefulWidget {
   final double height;

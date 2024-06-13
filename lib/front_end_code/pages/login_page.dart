@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import "package:firebase_auth/firebase_auth.dart";
 import "package:font_awesome_flutter/font_awesome_flutter.dart";
+import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
+import "package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
 import "package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart";
@@ -49,9 +51,15 @@ class _LoginPageState extends State<LoginPage> {
     double width = MediaQuery.sizeOf(context).width;
 
     SettingsProvider provider = SettingsProvider();
+    SafeConnexAuthentication authentication = SafeConnexAuthentication();
+    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
-    Future.delayed(const Duration(milliseconds: 5), () {
-      AppManager.authHandler.loginWithToken(context, MainScreen());
+    authentication.loginWithToken().whenComplete((){
+      if(SafeConnexAuthentication.currentUser != null && isTransferred == false){
+        print(SafeConnexCircleDatabase.currentCircleCode);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        isTransferred = true;
+      }
     });
     return Container(
       decoration: BoxDecoration(
@@ -181,8 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                                                   context,
                                                   height,
                                                   width,
-                                                  email,
-                                                  AppManager.authHandler);
+                                                  email);
                                             },
                                             height: 60,
                                             verticalPadding: 0,
@@ -265,7 +272,19 @@ class _LoginPageState extends State<LoginPage> {
                                           fontSize: 15,
                                           formKey: _loginFormKey,
                                           continueClicked: () {
-                                            AppManager.authHandler.loginWithButton(_emailController.text, _passController.text, context, MainScreen(), _loginFormKey);
+                                            authentication.loginWithEmailAccount(_emailController.text, _passController.text).whenComplete(() {
+                                              if(_loginFormKey.currentState!.validate()){
+                                                if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                  //FirebaseProfileStorage(authHandler.currentUser!.uid);
+                                                  circleDatabase.getCircleList(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
+                                                    if(CircleDatabaseHandler.circleList.isNotEmpty) {
+                                                      CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                    }
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                  });
+                                                }
+                                              }
+                                            });
                                           },
                                         ),
                                       ),
@@ -299,10 +318,20 @@ class _LoginPageState extends State<LoginPage> {
                                                 scale: 7,
                                               ),
                                               onTap: () {
-                                                AppManager.authHandler.signInWithGoogle();
-                                                Future.delayed(Duration(seconds: 1),(){
-                                                  AppManager.authHandler.loginWithGoogle(context, MainScreen());
-                                                });
+                                                authentication.phoneVerificationAndroid("+63 951 280 7552");
+                                                /*authentication.loginInWithGoogle().whenComplete((){
+                                                  if(_loginFormKey.currentState!.validate()){
+                                                    if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                      //FirebaseProfileStorage(authHandler.currentUser!.uid);
+                                                      circleDatabase.getCircleList(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
+                                                        if(CircleDatabaseHandler.circleList.isNotEmpty) {
+                                                          CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                        }
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                      });
+                                                    }
+                                                  }
+                                                });*/
                                               },
                                             ),
                                             Flexible(

@@ -1,3 +1,5 @@
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
@@ -18,21 +20,13 @@ class HomeAppBar extends StatefulWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   int currentCircleIndex = 0;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    AppManager.circleDatabaseHandler.getCircleData(CircleDatabaseHandler.circleList[currentCircleIndex]["circle_code"]);
-    CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[currentCircleIndex]["circle_code"];
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    print("Test ${SafeConnexCircleDatabase.currentCircleCode}");
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Column(
@@ -240,7 +234,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           collapsedIconColor:
                           const Color.fromARGB(255, 62, 73, 101),
                           title: Text(
-                            CircleDatabaseHandler.circleList.isEmpty ? "No Circle" : CircleDatabaseHandler.circleList[currentCircleIndex]["circle_name"],
+                            SafeConnexCircleDatabase.circleList.isEmpty ? "No Circle" : SafeConnexCircleDatabase.circleList[currentCircleIndex]["circle_name"],
                             textScaler: TextScaler.linear(0.9),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -268,15 +262,15 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: CircleDatabaseHandler.circleList.length,
+                                        itemCount: SafeConnexCircleDatabase.circleList.length,
                                         itemBuilder: (context, index) =>
                                             CircleListTile(
-                                              title: CircleDatabaseHandler.circleList[index]["circle_name"],
+                                              title: SafeConnexCircleDatabase.circleList[index]["circle_name"],
                                               onTap: (){
                                                 setState(() {
                                                   currentCircleIndex = index;
-                                                  AppManager.circleDatabaseHandler.getCircleData(CircleDatabaseHandler.circleList[index]["circle_code"]);
-                                                  CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[index]["circle_code"];
+                                                  circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
+                                                  SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
                                                 });
                                               },
                                             ),

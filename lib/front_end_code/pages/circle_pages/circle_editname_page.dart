@@ -210,9 +210,8 @@ class _EditCircleNameState extends State<EditCircleName> {
                       child: TextButton(
                         onPressed: () {
                           if (_circleKey.currentState!.validate()) {
-                            print("inside");
                             if (_circleNameController.text.length <= 25) {
-                              AppManager.circleDatabaseHandler.createCircleWithName(_circleNameController.text, context, CircleResultsPage());
+                              //AppManager.circleDatabaseHandler.createCircleWithName(_circleNameController.text, context, CircleResultsPage());
                             }
                           }
                         },

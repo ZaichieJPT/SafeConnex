@@ -29,50 +29,50 @@ class FlutterFireCoordinates {
     print("Data Added to Firestore");
   }
 
-  getCoordinates(){
+  getCoordinates() {
     final snapshot = dbReference.collection("geoCoordinates");
     _listener = snapshot.snapshots(includeMetadataChanges: true).listen(
-      (event) async {
-        //coordinatesData.add({"markerCount": event.docs.length});
+      (event){
         int index = 0;
-        circleDatabase.getCircleDataForLocation(CircleDatabaseHandler.currentCircleCode!);
-        if(coordinatesData.isEmpty){
-          for (var docs in event.docs){
-            for (var indx in CircleDatabaseHandler.locationCircleData){
-              if(indx["id"] == docs.id){
-                List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
-                coordinatesData.add(
-                    {
-                      "userId": docs.id,
-                      "latitude": docs.data()["latitude"],
-                      "longitude": docs.data()["longitude"],
-                      "geocoded": placemarks[0].street
-                    }
-                );
+        circleDatabase.getCircleDataForLocation(CircleDatabaseHandler.currentCircleCode!).whenComplete(() async {
+          if(coordinatesData.isEmpty){
+            for (var docs in event.docs){
+              for (var indx in CircleDatabaseHandler.locationCircleData){
+                if(indx["id"] == docs.id){
+                  List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
+                  coordinatesData.add(
+                      {
+                        "userId": docs.id,
+                        "latitude": docs.data()["latitude"],
+                        "longitude": docs.data()["longitude"],
+                        "geocoded": placemarks[0].street
+                      }
+                  );
+                }
               }
             }
-          }
 
-          print(coordinatesData.length);
-        }
-        else if(coordinatesData.isNotEmpty) {
-          coordinatesData.clear();
-          for (var docs in event.docs) {
-            for (var indx in CircleDatabaseHandler.locationCircleData){
-              if(indx["id"] == docs.id){
-                List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
-                coordinatesData.add(
-                  {
-                    "userId": docs.id,
-                    "latitude": docs.data()["latitude"],
-                    "longitude": docs.data()["longitude"],
-                    "geocoded": placemarks[0].street
-                  }
-                );
+            print(coordinatesData.length);
+          }
+          else if(coordinatesData.isNotEmpty) {
+            coordinatesData.clear();
+            for (var docs in event.docs) {
+              for (var indx in CircleDatabaseHandler.locationCircleData){
+                if(indx["id"] == docs.id){
+                  List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
+                  coordinatesData.add(
+                      {
+                        "userId": docs.id,
+                        "latitude": docs.data()["latitude"],
+                        "longitude": docs.data()["longitude"],
+                        "geocoded": placemarks[0].street
+                      }
+                  );
+                }
               }
             }
           }
-        }
+        });
       },
        onError: (error) => print(error),
     );

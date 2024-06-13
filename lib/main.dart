@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:safeconnex/front_end_code/components/carouse_slider.dart';
+import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
@@ -33,12 +33,19 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isFirstTimeOpen;
-  setPreferences() async {
+  Future<void> setPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     isFirstTimeOpen = preferences.getBool("isFirstTime");
-   if(isFirstTimeOpen == null || isFirstTimeOpen == true){
-     preferences.setBool("isFirstTime", false);
-   }
+    switch(isFirstTimeOpen){
+      case true:
+        preferences.setBool("isFirstTime", false);
+        break;
+      case false:
+        print("Do Nothing");
+      default:
+        preferences.setBool("isFirstTime", true);
+        break;
+    }
   }
 
   // This widget is the root of your application.
@@ -48,6 +55,7 @@ class _MyAppState extends State<MyApp> {
     setPreferences();
     precacheImage(AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
+
     if(isFirstTimeOpen == null){
       return Material(
         child: Container(
@@ -56,6 +64,7 @@ class _MyAppState extends State<MyApp> {
         ),
       );
     }
+
     return MaterialApp(
       title: 'Safe Connex',
       theme: ThemeData(
