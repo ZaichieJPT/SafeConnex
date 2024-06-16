@@ -226,7 +226,7 @@ class _PassCardState extends State<PassCard> {
                                 key: passFormKey,
                                 child: Column(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     //PASSWORD
                                     Expanded(
@@ -257,7 +257,7 @@ class _PassCardState extends State<PassCard> {
                                       child: LoginPassField(
                                         hintText: "Confirm Password",
                                         passController:
-                                        widget.confirmPassController,
+                                            widget.confirmPassController,
                                         validator: (confirmPass) {
                                           return provider.confirmPassMismatch(
                                             context,
@@ -265,6 +265,7 @@ class _PassCardState extends State<PassCard> {
                                             width,
                                             confirmPass,
                                             widget.passController.text,
+                                            strengthCount,
                                           );
                                         },
                                         isValidated: isConfirmPassValidated,
@@ -337,7 +338,7 @@ class _PassCardState extends State<PassCard> {
                                         ),
                                         PassCheck(
                                           checkText:
-                                          "At least 1 uppercase letter",
+                                              "At least 1 uppercase letter",
                                           isValid: hasUpperCase,
                                         ),
                                         SizedBox(
@@ -345,7 +346,7 @@ class _PassCardState extends State<PassCard> {
                                         ),
                                         PassCheck(
                                           checkText:
-                                          "At least 1 lowercase letter",
+                                              "At least 1 lowercase letter",
                                           isValid: hasLowerCase,
                                         ),
                                         SizedBox(
@@ -353,7 +354,7 @@ class _PassCardState extends State<PassCard> {
                                         ),
                                         PassCheck(
                                           checkText:
-                                          "At least 1 special character",
+                                              "At least 1 special character",
                                           isValid: hasSpecialChars,
                                         ),
                                       ],
@@ -405,18 +406,20 @@ class _PassCardState extends State<PassCard> {
             ),
             onPressed: () {
               if (passFormKey.currentState!.validate()) {
-                authentication.signUpWithEmailAccount(
+                authentication
+                    .signUpWithEmailAccount(
                   widget.emailController.text,
                   widget.passController.text,
                   widget.firstNameController.text,
                   widget.lastNameController.text,
                   "1",
                   widget.dateController.text,
-                ).whenComplete((){
-                  if(SafeConnexAuthentication.signUpException == null){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  }
-                  else{
+                )
+                    .whenComplete(() {
+                  if (SafeConnexAuthentication.signUpException == null) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  } else {
                     widget.backClicked();
                   }
                 });

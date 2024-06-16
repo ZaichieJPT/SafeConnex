@@ -50,8 +50,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 2))
-        .then((value) => FlutterNativeSplash.remove());
+    // Future.delayed(Duration(seconds: 2))
+    //     .then((value) => FlutterNativeSplash.remove());
   }
 
   @override
@@ -76,19 +76,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                   case 0:
                     overviewTitle = 'Stay Connected';
                     overviewSubtitle =
-                    'Stay connected with your family and\nmonitor their safety.';
+                        'Stay connected with your family and\nmonitor their safety.';
                     break;
 
                   case 1:
                     overviewTitle = 'Be Informed';
                     overviewSubtitle =
-                    'Be informed of the latest safety updates\ndirectly from local authorities.';
+                        'Be informed of the latest safety updates\ndirectly from local authorities.';
                     break;
 
                   case 2:
                     overviewTitle = 'Alert Your Circle';
                     overviewSubtitle =
-                    'Alert your family or local authorities in\ntimes of emergency.';
+                        'Alert your family or local authorities in\ntimes of emergency.';
                     break;
                 }
               });
@@ -96,21 +96,21 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             children: [
               OnBoardPage(
                 backgroundImage:
-                AssetImage("assets/images/onboarding/onboard-bg-1.jpg"),
+                    AssetImage("assets/images/onboarding/onboard-bg-1.jpg"),
                 pageImage:
-                Image.asset("assets/images/onboarding/onboard-image-1.png"),
+                    Image.asset("assets/images/onboarding/onboard-image-1.png"),
               ),
               OnBoardPage(
                 backgroundImage:
-                AssetImage("assets/images/onboarding/onboard-bg-2.jpg"),
+                    AssetImage("assets/images/onboarding/onboard-bg-2.jpg"),
                 pageImage:
-                Image.asset("assets/images/onboarding/onboard-image-2.png"),
+                    Image.asset("assets/images/onboarding/onboard-image-2.png"),
               ),
               OnBoardPage(
                 backgroundImage:
-                AssetImage("assets/images/onboarding/onboard-bg-3.jpg"),
+                    AssetImage("assets/images/onboarding/onboard-bg-3.jpg"),
                 pageImage:
-                Image.asset("assets/images/onboarding/onboard-image-3.png"),
+                    Image.asset("assets/images/onboarding/onboard-image-3.png"),
               ),
             ],
           ),
@@ -281,7 +281,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                                   child: BtnContinue(
                                     backgroundColor: Colors.white,
                                     borderColor:
-                                    Color.fromARGB(255, 188, 188, 188),
+                                        Color.fromARGB(255, 188, 188, 188),
                                     fontColor: Colors.black,
                                     borderRadius: width * 0.025,
                                     borderWidth: 0.5,

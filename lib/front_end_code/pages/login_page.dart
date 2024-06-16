@@ -54,10 +54,12 @@ class _LoginPageState extends State<LoginPage> {
     SafeConnexAuthentication authentication = SafeConnexAuthentication();
     SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
-    authentication.loginWithToken().whenComplete((){
-      if(SafeConnexAuthentication.currentUser != null && isTransferred == false){
+    authentication.loginWithToken().whenComplete(() {
+      if (SafeConnexAuthentication.currentUser != null &&
+          isTransferred == false) {
         print(SafeConnexCircleDatabase.currentCircleCode);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MainScreen()));
         isTransferred = true;
       }
     });
@@ -146,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                                   key: _loginFormKey,
                                   child: Column(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Flexible(
                                         child: SizedBox(
@@ -178,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Container(
                                           //color: Colors.black,
                                           alignment:
-                                          AlignmentDirectional.center,
+                                              AlignmentDirectional.center,
                                           //width: 300,
                                           child: LoginFormField(
                                             hintText: 'Email',
@@ -186,10 +188,11 @@ class _LoginPageState extends State<LoginPage> {
                                             textMargin: 10,
                                             validator: (email) {
                                               return provider.emailValidator(
-                                                  context,
-                                                  height,
-                                                  width,
-                                                  email);
+                                                context,
+                                                height,
+                                                width,
+                                                email,
+                                              );
                                             },
                                             height: 60,
                                             verticalPadding: 0,
@@ -204,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                                         child: Container(
                                           //color: Colors.black,
                                           alignment:
-                                          AlignmentDirectional.center,
+                                              AlignmentDirectional.center,
                                           //margin: EdgeInsets.only(right: 30, left: 20),
                                           width: 300,
                                           child: PassFormField(
@@ -216,11 +219,11 @@ class _LoginPageState extends State<LoginPage> {
                                             validator: (loginPass) {
                                               return provider
                                                   .loginPassValidatior(
-                                                  context,
-                                                  height,
-                                                  width,
-                                                  loginPass,
-                                                  AppManager.authHandler);
+                                                      context,
+                                                      height,
+                                                      width,
+                                                      loginPass,
+                                                      AppManager.authHandler);
                                             },
                                             isValidated: isPasswordValidated,
                                           ),
@@ -272,15 +275,40 @@ class _LoginPageState extends State<LoginPage> {
                                           fontSize: 15,
                                           formKey: _loginFormKey,
                                           continueClicked: () {
-                                            authentication.loginWithEmailAccount(_emailController.text, _passController.text).whenComplete(() {
-                                              if(_loginFormKey.currentState!.validate()){
-                                                if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                            authentication
+                                                .loginWithEmailAccount(
+                                                    _emailController.text,
+                                                    _passController.text)
+                                                .whenComplete(() {
+                                              if (_loginFormKey.currentState!
+                                                  .validate()) {
+                                                if (SafeConnexAuthentication
+                                                            .loginException ==
+                                                        null ||
+                                                    SafeConnexAuthentication
+                                                            .loginException ==
+                                                        "") {
                                                   //FirebaseProfileStorage(authHandler.currentUser!.uid);
-                                                  circleDatabase.getCircleList(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
-                                                    if(CircleDatabaseHandler.circleList.isNotEmpty) {
-                                                      CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                  circleDatabase
+                                                      .getCircleList(
+                                                          SafeConnexAuthentication
+                                                              .currentUser!.uid)
+                                                      .whenComplete(() {
+                                                    if (CircleDatabaseHandler
+                                                        .circleList
+                                                        .isNotEmpty) {
+                                                      CircleDatabaseHandler
+                                                              .currentCircleCode =
+                                                          CircleDatabaseHandler
+                                                              .circleList[0][
+                                                                  "circle_code"]
+                                                              .toString();
                                                     }
-                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                MainScreen()));
                                                   });
                                                 }
                                               }
@@ -293,7 +321,7 @@ class _LoginPageState extends State<LoginPage> {
                                         flex: 4,
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Flexible(
                                               child: Divider(
@@ -318,7 +346,9 @@ class _LoginPageState extends State<LoginPage> {
                                                 scale: 7,
                                               ),
                                               onTap: () {
-                                                authentication.phoneVerificationAndroid("+63 951 280 7552");
+                                                authentication
+                                                    .phoneVerificationAndroid(
+                                                        "+63 951 280 7552");
                                                 /*authentication.loginInWithGoogle().whenComplete((){
                                                   if(_loginFormKey.currentState!.validate()){
                                                     if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
@@ -351,7 +381,7 @@ class _LoginPageState extends State<LoginPage> {
                                         flex: 3,
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               "Don't have an account? ",

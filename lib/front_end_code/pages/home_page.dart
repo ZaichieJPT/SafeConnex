@@ -7,6 +7,7 @@ import 'package:safeconnex/front_end_code/components/home_components/emergency_m
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_initialpin_dialog.dart';
+import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_received_template.dart';
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -158,7 +159,7 @@ class _HomePageState extends State<HomePage> {
                       iconColor: Colors.white,
                       tooltip: 'CDRRMO',
                       countdownPageTitle:
-                      'NATURAL DISASTER AND\n ACCIDENTS SOS',
+                          'NATURAL DISASTER AND\n ACCIDENTS SOS',
                       SOSType: 'Disaster/Accident',
                       colorBG: Colors.green.shade300,
                     ),
@@ -187,51 +188,62 @@ class _HomePageState extends State<HomePage> {
                           });
                         },
                         onLongPressDown: (details) {
-                          double timeLeft = 1;
-                          _timer = Timer.periodic(
-                            Duration(milliseconds: 500),
-                                (timer) {
-                              setState(() {
-                                timeLeft -= 0.5;
-                                if (timeLeft > 0) {
-                                  buttonScale_2 += 5;
-                                  if (timeLeft == 3 ||
-                                      timeLeft == 2 ||
-                                      timeLeft == 1 ||
-                                      timeLeft == 0) {
-                                    print('time: ' + timeLeft.toString());
-                                  }
-                                } else {
-                                  timer.cancel();
+                          double timeLeft = 1.5;
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            _timer = Timer.periodic(
+                              Duration(milliseconds: 500),
+                              (timer) {
+                                setState(
+                                  () {
+                                    timeLeft -= 0.5;
+                                    if (timeLeft > 0) {
+                                      buttonScale_2 += 5;
+                                      if (timeLeft == 3 ||
+                                          timeLeft == 2 ||
+                                          timeLeft == 1 ||
+                                          timeLeft == 0) {
+                                        print('time: ' + timeLeft.toString());
+                                      }
+                                    } else {
+                                      timer.cancel();
 
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return InitialPinDialog();
-                                    },
-                                  );
+                                      // showDialog(
+                                      //   context: context,
+                                      //   builder: (BuildContext context) {
+                                      //     return InitialPinDialog();
+                                      //   },
+                                      // );
 
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => CountdownTemplate(
-                                  //       pageTitle: 'EMERGENCY SOS',
-                                  //       buttonColor: Colors.red.shade400,
-                                  //       fontColor: Colors.red.shade900,
-                                  //       PINColor: Colors.yellow,
-                                  //       colorBG: Colors.white,
-                                  //       SOSType: 'General',
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  buttonScale_2 = 0;
-                                }
-                              });
-                            },
-                          );
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return EmergencyReceivedDialog();
+                                        },
+                                      );
+
+                                      // Navigator.of(context).push(
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => CountdownTemplate(
+                                      //       pageTitle: 'EMERGENCY SOS',
+                                      //       buttonColor: Colors.red.shade400,
+                                      //       fontColor: Colors.red.shade900,
+                                      //       PINColor: Colors.yellow,
+                                      //       colorBG: Colors.white,
+                                      //       SOSType: 'General',
+                                      //     ),
+                                      //   ),
+                                      // );
+                                      buttonScale_2 = 0;
+                                    }
+                                  },
+                                );
+                              },
+                            );
+                          });
                         },
                         onLongPressEnd: (details) {
                           setState(
-                                () {
+                            () {
                               _timer!.cancel();
                               buttonScale_2 = 0;
                             },
@@ -239,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                         },
                         onLongPressCancel: () {
                           setState(
-                                () {
+                            () {
                               _timer!.cancel();
                               buttonScale_2 = 0;
                             },

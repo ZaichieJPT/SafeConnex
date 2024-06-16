@@ -162,7 +162,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           highlightColor: Colors.transparent,
                           child: Container(
                             padding:
-                            EdgeInsets.symmetric(vertical: height * 0.005),
+                                EdgeInsets.symmetric(vertical: height * 0.005),
                             decoration: BoxDecoration(
                               color: _selectedTabIndex == 0
                                   ? Color.fromARGB(255, 70, 85, 104)
@@ -200,7 +200,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           highlightColor: Colors.transparent,
                           child: Container(
                             padding:
-                            EdgeInsets.symmetric(vertical: height * 0.005),
+                                EdgeInsets.symmetric(vertical: height * 0.005),
                             decoration: BoxDecoration(
                               color: _selectedTabIndex == 1
                                   ? Color.fromARGB(255, 70, 85, 104)
@@ -265,33 +265,33 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                               right: width * 0.06),
                                           child: Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                             children: [
                                               //LOCATION ICON
                                               CircleAvatar(
                                                 backgroundColor:
-                                                _selectedPlaceIndex == index
-                                                    ? Color.fromARGB(
-                                                    255, 71, 82, 98)
-                                                    : Color.fromARGB(
-                                                    255, 232, 220, 206),
+                                                    _selectedPlaceIndex == index
+                                                        ? Color.fromARGB(
+                                                            255, 71, 82, 98)
+                                                        : Color.fromARGB(
+                                                            255, 232, 220, 206),
                                                 radius: width * 0.06,
                                                 child: FittedBox(
                                                   child: Image.asset(
                                                     'assets/images/geofence_location_icon.png',
                                                     color:
-                                                    _selectedPlaceIndex ==
-                                                        index
-                                                        ? Color.fromARGB(
-                                                        255,
-                                                        232,
-                                                        220,
-                                                        206)
-                                                        : Color.fromARGB(
-                                                        255,
-                                                        71,
-                                                        82,
-                                                        98),
+                                                        _selectedPlaceIndex ==
+                                                                index
+                                                            ? Color.fromARGB(
+                                                                255,
+                                                                232,
+                                                                220,
+                                                                206)
+                                                            : Color.fromARGB(
+                                                                255,
+                                                                71,
+                                                                82,
+                                                                98),
                                                     width: width * 0.08,
                                                     height: width * 0.085,
                                                   ),
@@ -305,7 +305,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                                 child: Text(
                                                   places[index],
                                                   overflow:
-                                                  TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontFamily: 'OpunMai',
                                                     fontSize: height * 0.026,
@@ -371,9 +371,9 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                         max: 3000,
                                         divisions: 100,
                                         activeColor:
-                                        Color.fromARGB(255, 70, 85, 104),
+                                            Color.fromARGB(255, 70, 85, 104),
                                         inactiveColor:
-                                        Color.fromARGB(255, 70, 85, 104),
+                                            Color.fromARGB(255, 70, 85, 104),
                                         thumbColor: Colors.deepPurple[400],
                                       ),
                                     ),
@@ -419,14 +419,14 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 key: _geofenceTextFieldsKey,
                                 child: Column(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     //LABEL TEXT
                                     Flexible(
                                       child: Container(
                                         alignment: Alignment.centerLeft,
                                         padding:
-                                        EdgeInsets.only(left: width * 0.05),
+                                            EdgeInsets.only(left: width * 0.05),
                                         child: Text(
                                           'Label',
                                           overflow: TextOverflow.ellipsis,
@@ -435,7 +435,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                             fontWeight: FontWeight.w700,
                                             fontSize: height * 0.022,
                                             color:
-                                            Color.fromARGB(255, 71, 82, 98),
+                                                Color.fromARGB(255, 71, 82, 98),
                                           ),
                                         ),
                                       ),
@@ -623,10 +623,13 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           });
                         }
                       } else {
-                        if (placeLabelName == '' && placeLocationName == '') {
+                        if (placeLabelName == '') {
+                          showErrorMessage(context,
+                              'Please enter name for the place', height, width);
                           //get the value of the textfields
 
                           //add the geofence, label, and location to database
+                        } else if (placeLocationName == '') {
                         } else {
                           //get the value of the texfields
                           //modify the selected place's value in the database

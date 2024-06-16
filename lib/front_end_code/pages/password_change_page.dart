@@ -176,9 +176,9 @@ class _PasswordChangeState extends State<PasswordChange> {
                                   padding: EdgeInsets.only(left: width * 0.02),
                                   backgroundColor: Colors.white,
                                   foregroundColor:
-                                  Color.fromARGB(255, 70, 85, 104),
+                                      Color.fromARGB(255, 70, 85, 104),
                                   shadowColor:
-                                  Color.fromARGB(255, 246, 242, 227),
+                                      Color.fromARGB(255, 246, 242, 227),
                                   elevation: 2,
                                   surfaceTintColor: Colors.white,
                                   shape: RoundedRectangleBorder(
@@ -294,7 +294,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                             controller: _newPassController,
                                             obscureText: obscureText,
                                             textAlignVertical:
-                                            TextAlignVertical.center,
+                                                TextAlignVertical.center,
                                             cursorColor: Color.fromARGB(
                                                 255, 70, 85, 104),
                                             onChanged: _onPasswordChanged,
@@ -307,14 +307,14 @@ class _PasswordChangeState extends State<PasswordChange> {
                                             ),
                                             decoration: InputDecoration(
                                               suffixIconConstraints:
-                                              BoxConstraints(
-                                                  maxHeight:
-                                                  height * 0.025),
+                                                  BoxConstraints(
+                                                      maxHeight:
+                                                          height * 0.025),
                                               suffixIcon: _getVisibleButton(),
                                               //contentPadding: EdgeInsets.zero,
                                               isDense: true,
                                               enabledBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: const Color.fromARGB(
                                                       180, 158, 158, 158),
@@ -322,7 +322,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                                 ),
                                               ),
                                               focusedBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: const Color.fromARGB(
                                                       255, 70, 85, 104),
@@ -384,7 +384,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                             controller: _confirmPassController,
                                             obscureText: obscureText,
                                             textAlignVertical:
-                                            TextAlignVertical.center,
+                                                TextAlignVertical.center,
                                             cursorColor: Color.fromARGB(
                                                 255, 70, 85, 104),
                                             style: TextStyle(
@@ -396,15 +396,15 @@ class _PasswordChangeState extends State<PasswordChange> {
                                             ),
                                             decoration: InputDecoration(
                                               suffixIconConstraints:
-                                              BoxConstraints(
-                                                  maxHeight:
-                                                  height * 0.025),
+                                                  BoxConstraints(
+                                                      maxHeight:
+                                                          height * 0.025),
                                               suffixIcon:
-                                              _confirmGetVisibleButton(),
+                                                  _confirmGetVisibleButton(),
                                               //contentPadding: EdgeInsets.zero,
                                               isDense: true,
                                               enabledBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: const Color.fromARGB(
                                                       180, 158, 158, 158),
@@ -412,7 +412,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                                 ),
                                               ),
                                               focusedBorder:
-                                              UnderlineInputBorder(
+                                                  UnderlineInputBorder(
                                                 borderSide: BorderSide(
                                                   color: const Color.fromARGB(
                                                       255, 70, 85, 104),
@@ -424,12 +424,13 @@ class _PasswordChangeState extends State<PasswordChange> {
                                               if (confirmPass!.length > 0) {
                                                 return provider
                                                     .confirmPassMismatch(
-                                                    context,
-                                                    height,
-                                                    width,
-                                                    confirmPass,
-                                                    _newPassController
-                                                        .text);
+                                                  context,
+                                                  height,
+                                                  width,
+                                                  confirmPass,
+                                                  _newPassController.text,
+                                                  strengthCount,
+                                                );
                                               }
                                               return null;
                                             },
@@ -447,9 +448,17 @@ class _PasswordChangeState extends State<PasswordChange> {
                                       vertical: height * 0.01),
                                   child: InkWell(
                                     onTap: () {
-                                      if(_newPassFormKey.currentState!.validate()){
-                                        authentication.changePassword("Old Password", _newPassController.text).whenComplete((){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                      if (_newPassFormKey.currentState!
+                                          .validate()) {
+                                        authentication
+                                            .changePassword("Old Password",
+                                                _newPassController.text)
+                                            .whenComplete(() {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MainScreen()));
                                         });
                                       }
                                     },
@@ -461,7 +470,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                           color: const Color.fromARGB(
                                               255, 232, 247, 240),
                                           borderRadius:
-                                          BorderRadius.circular(10),
+                                              BorderRadius.circular(10),
                                           boxShadow: const [
                                             BoxShadow(
                                               color: Color.fromARGB(
