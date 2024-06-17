@@ -424,12 +424,13 @@ class _PasswordChangeState extends State<PasswordChange> {
                                               if (confirmPass!.length > 0) {
                                                 return provider
                                                     .confirmPassMismatch(
-                                                    context,
-                                                    height,
-                                                    width,
-                                                    confirmPass,
-                                                    _newPassController
-                                                        .text);
+                                                  context,
+                                                  height,
+                                                  width,
+                                                  confirmPass,
+                                                  _newPassController.text,
+                                                  strengthCount,
+                                                );
                                               }
                                               return null;
                                             },
@@ -447,9 +448,17 @@ class _PasswordChangeState extends State<PasswordChange> {
                                       vertical: height * 0.01),
                                   child: InkWell(
                                     onTap: () {
-                                      if(_newPassFormKey.currentState!.validate()){
-                                        authentication.changePassword("Old Password", _newPassController.text).whenComplete((){
-                                          Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                      if (_newPassFormKey.currentState!
+                                          .validate()) {
+                                        authentication
+                                            .changePassword("Old Password",
+                                            _newPassController.text)
+                                            .whenComplete(() {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MainScreen()));
                                         });
                                       }
                                     },

@@ -265,6 +265,7 @@ class _PassCardState extends State<PassCard> {
                                             width,
                                             confirmPass,
                                             widget.passController.text,
+                                            strengthCount,
                                           );
                                         },
                                         isValidated: isConfirmPassValidated,
@@ -405,18 +406,20 @@ class _PassCardState extends State<PassCard> {
             ),
             onPressed: () {
               if (passFormKey.currentState!.validate()) {
-                authentication.signUpWithEmailAccount(
+                authentication
+                    .signUpWithEmailAccount(
                   widget.emailController.text,
                   widget.passController.text,
                   widget.firstNameController.text,
                   widget.lastNameController.text,
                   "1",
                   widget.dateController.text,
-                ).whenComplete((){
-                  if(SafeConnexAuthentication.signUpException == null){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
-                  }
-                  else{
+                )
+                    .whenComplete(() {
+                  if (SafeConnexAuthentication.signUpException == null) {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  } else {
                     widget.backClicked();
                   }
                 });

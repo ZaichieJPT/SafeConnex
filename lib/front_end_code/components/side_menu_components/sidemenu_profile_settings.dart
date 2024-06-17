@@ -12,6 +12,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import 'package:safeconnex/controller/app_manager.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/sidemenu_changetoagency_dialog.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
@@ -518,7 +519,17 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         widthFactor: 0.7,
                                         heightFactor: 0.45,
                                         child: ElevatedButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return ChangeToAgency(
+                                                  height: widget.height,
+                                                  width: widget.width,
+                                                );
+                                              },
+                                            );
+                                          },
                                           style: ButtonStyle(
                                             overlayColor:
                                             MaterialStateProperty.all(
@@ -584,7 +595,13 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: SafeConnexCloudStorage.imageUrl != null ? Image.network(SafeConnexCloudStorage.imageUrl!) : Container(color: Colors.white),
+                                          child: SafeConnexCloudStorage
+                                              .imageUrl !=
+                                              null
+                                              ? Image.network(
+                                              SafeConnexCloudStorage
+                                                  .imageUrl!)
+                                              : Container(color: Colors.white),
                                         ),
                                       ),
                                     ),

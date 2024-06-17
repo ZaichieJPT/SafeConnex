@@ -9,6 +9,7 @@ class HomeBottomNavBar extends StatefulWidget {
   final double width;
   final int selectedIndex;
   final Function onItemTapped;
+  final Function displayCard;
 
   const HomeBottomNavBar({
     super.key,
@@ -16,6 +17,7 @@ class HomeBottomNavBar extends StatefulWidget {
     required this.width,
     required this.selectedIndex,
     required this.onItemTapped,
+    required this.displayCard,
   });
 
   @override
@@ -23,19 +25,6 @@ class HomeBottomNavBar extends StatefulWidget {
 }
 
 class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
-
-  showCircleCards(BuildContext context){
-    showDialog(
-        context: context,
-        builder: (BuildContext context){
-          return GestureDetector(
-            child: CarouseSliderComponent(),
-            onTap: (){Navigator.pop(context);},
-          );
-        }
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -62,9 +51,9 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                               ? Color.fromRGBO(237, 237, 237, 1.0)
                               : Colors.transparent,
                           child: InkWell(
-                            onTap: (){
+                            onTap: () {
                               widget.onItemTapped(0);
-                              showCircleCards(context);
+                              widget.displayCard();
                             },
                             highlightColor: Colors.transparent,
                             splashColor: Colors.transparent,
@@ -152,12 +141,12 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color:
-                                        const Color.fromARGB(255, 234, 176, 50),
+                                    const Color.fromARGB(255, 234, 176, 50),
                                     borderRadius: BorderRadius.circular(9),
                                     boxShadow: const [
                                       BoxShadow(
                                         color:
-                                            Color.fromARGB(255, 234, 176, 50),
+                                        Color.fromARGB(255, 234, 176, 50),
                                         spreadRadius: 0.1,
                                         offset: Offset(0, 4),
                                       ),
@@ -238,7 +227,7 @@ class _HomeBottomNavBarState extends State<HomeBottomNavBar> {
                                     boxShadow: const [
                                       BoxShadow(
                                         color:
-                                            Color.fromARGB(255, 132, 151, 148),
+                                        Color.fromARGB(255, 132, 151, 148),
                                         spreadRadius: 0.1,
                                         offset: Offset(0, 4),
                                       ),

@@ -12,7 +12,6 @@ import 'package:safeconnex/front_end_code/components/home_components/error_snack
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
-
 class GeofencingPage extends StatefulWidget {
   const GeofencingPage({super.key});
 
@@ -38,18 +37,6 @@ class _GeofencingPageState extends State<GeofencingPage> {
   CircleMarker? circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
   LatLng? tapLocation;
 
-  List<String> places = [
-    'At Home',
-    'At School',
-    'At Luneta Park',
-    'Home Sweet Home',
-    'SM Mall of Asia',
-    'Pangasinan Solid North Bus Terminal',
-    'AMA College Pangasinan',
-    'Universidad de Dagupan',
-    'Bonifacio Global City',
-  ];
-
   saveEditChanges() {
     if (_geofenceTextFieldsKey.currentState!.validate()) {
       print('Edit Changes have been saved!');
@@ -67,7 +54,6 @@ class _GeofencingPageState extends State<GeofencingPage> {
     placesScrollControl.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +196,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                       //VIEW PLACES BUTTON
                       Expanded(
                         child: InkWell(
-                          onTap: () =>  _onTabTapped(0),
+                          onTap: () => _onTabTapped(0),
                           splashColor: Colors.transparent,
                           highlightColor: Colors.transparent,
                           child: Container(
@@ -446,8 +432,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                         value: _sliderValue,
                                         onChanged: (value) {
                                           setState(() {
-                                            _sliderValue = value;
-                                            addGeolocationMarker(tapLocation!, value);
+                                            this._sliderValue = value;
                                           });
                                         },
                                         min: 50,

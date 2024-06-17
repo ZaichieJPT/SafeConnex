@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
@@ -21,7 +23,10 @@ import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  print('initializing firebase...');
   await FirebaseInit.rootFirebase;
+  print(FirebaseInit.rootFirebase);
+  print('initialization complete');
   runApp(const MyApp());
 }
 
@@ -34,38 +39,54 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool? isFirstTimeOpen;
+
   Future<void> setPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    isFirstTimeOpen = preferences.getBool("isFirstTime");
-    switch(isFirstTimeOpen){
+    setState(() {
+      isFirstTimeOpen = preferences.getBool("isFirstTime");
+    });
+    switch (isFirstTimeOpen) {
       case true:
         preferences.setBool("isFirstTime", false);
+        print('First time!');
         break;
       case false:
         print("Do Nothing");
-      default:
+      case null:
+        print('initial: ${isFirstTimeOpen}');
         preferences.setBool("isFirstTime", true);
+        print('new: ${isFirstTimeOpen}');
         break;
     }
+  }
+
+  @override
+  void initState() {
+    setPreferences();
+    print('super init: ${isFirstTimeOpen}');
+    super.initState();
   }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    setPreferences();
-    precacheImage(AssetImage("assets/images/create_circle_background.png"), context);
+    //setPreferences();
+    print('init state: ${isFirstTimeOpen}');
+    precacheImage(
+        AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
-
-    if(isFirstTimeOpen == null){
+    if (isFirstTimeOpen == null) {
+      print('call preferences');
+      setPreferences();
+      print('done with preferences');
       return Material(
         child: Container(
           color: Colors.white,
-          child: MaterialApp(home: Icon(Icons.hourglass_bottom, size: 65,), debugShowCheckedModeBanner: false,),
+          child: CircularProgressIndicator(),
         ),
       );
     }
-
     return MaterialApp(
       title: 'Safe Connex',
       theme: ThemeData(
@@ -74,11 +95,11 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: isFirstTimeOpen! == true ? "/" :"/login",
+      initialRoute: isFirstTimeOpen! == true ? "/" : "/login",
       routes: {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),
-        "/home": (context) => MainScreen(),
+        "/home": (context) => AgencyMainScreen(),
         "/create_circle": (context) => CirclePage(),
         "/join_circle": (context) => JoinCirclePage(),
         "/changePassword": (context) => PasswordChange(),
@@ -86,7 +107,7 @@ class _MyAppState extends State<MyApp> {
         "/temp2": (context) => GeofencingPage(),
         "/temp3": (context) => CarouseSliderComponent(),
       },
-      //home: LoginPage(),
+      //home: MainScreen(),
     );
   }
 }

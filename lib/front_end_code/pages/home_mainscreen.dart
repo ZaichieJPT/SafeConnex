@@ -2,15 +2,19 @@
 
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/controller/app_manager.dart';
+import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_bottom_nav_bar.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_side_menu.dart';
+import 'package:safeconnex/front_end_code/components/home_profile_card.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
 import 'package:safeconnex/front_end_code/pages/home_page.dart';
 import 'package:safeconnex/front_end_code/pages/news_page.dart';
 
@@ -28,6 +32,7 @@ class _MainScreenState extends State<MainScreen> {
 
   int _selectedTabIndex = 1;
   int _selectedMenuIndex = 0;
+  bool _isOverlayDisplayed = true;
 
   _onTabTapped(int index) {
     setState(() {
@@ -47,6 +52,19 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  void displayCircleCard() {
+    setState(() {
+      _isOverlayDisplayed = true;
+    });
+  }
+
+  dismissOverlay() {
+    setState(() {
+      _isOverlayDisplayed = !_isOverlayDisplayed;
+      _selectedTabIndex = 1;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
@@ -61,22 +79,53 @@ class _MainScreenState extends State<MainScreen> {
         width: width,
         topPadding: topPadding,
       ),
-      body: _selectedTabIndex == 0
-          ? HomePage(
-              height: height,
-              width: width,
-            )
-          : _selectedTabIndex == 1
-              ? HomePage(
-                  height: height,
-                  width: width,
-                )
-              : NewsPage(),
+      body: _selectedTabIndex == 0 || _selectedTabIndex == 1
+          ? Stack(
+        alignment: Alignment.center,
+        children: [
+          HomePage(
+            height: height,
+            width: width,
+          ),
+          if (_selectedMenuIndex == 0 &&
+              _isOverlayDisplayed &&
+              _selectedTabIndex != 1) ...[
+            Opacity(
+              opacity: 0.4,
+              child: ModalBarrier(
+                dismissible: true,
+                onDismiss: dismissOverlay,
+                color: Colors.black,
+              ),
+            ),
+            //SLIDER
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Positioned(
+                  bottom: height * 0.15,
+                  child: Container(
+                    height: height * 0.53,
+                    width: width,
+                    alignment: Alignment.bottomCenter,
+                    //color: Colors.lightBlue,
+                    child: CarouseSliderComponent(),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ],
+      )
+          : _selectedTabIndex == 2
+          ? NewsPage()
+          : null,
       bottomNavigationBar: HomeBottomNavBar(
         height: height,
         width: width,
         selectedIndex: _selectedTabIndex,
         onItemTapped: _onTabTapped,
+        displayCard: displayCircleCard,
       ),
     );
   }

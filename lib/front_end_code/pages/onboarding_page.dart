@@ -50,8 +50,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(seconds: 2))
-        .then((value) => FlutterNativeSplash.remove());
+    // Future.delayed(Duration(seconds: 2))
+    //     .then((value) => FlutterNativeSplash.remove());
   }
 
   @override

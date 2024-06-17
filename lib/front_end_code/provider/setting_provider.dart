@@ -1,9 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -26,8 +24,10 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   confirmPassMismatch(BuildContext context, double height, double width,
-      String value, String passwordString) {
-    if (value.isEmpty) {
+      String value, String passwordString, int strengthCount) {
+    if (value.isEmpty && strengthCount < 5) {
+      return null;
+    } else if (value.isEmpty && strengthCount > 4) {
       showErrorMessage(context, "Please confirm your password.", height, width);
       return '';
     } else if (passwordString != value) {
@@ -82,27 +82,37 @@ class SettingsProvider extends ChangeNotifier {
     return null;
   }
 
-  emailValidator(BuildContext context, double height, double width,
-      String email) {
+  emailValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String email,
+      ) {
     if (email.isEmpty) {
       showErrorMessage(
           context, "Please enter your email address", height, width);
       return "";
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
-    } else if (SafeConnexAuthentication.loginException != null) {
-      print("Firebase Error: $SafeConnexAuthentication.loginException},");
-      showErrorMessage(
-          context, SafeConnexAuthentication.loginException!, height, width);
-      //causes problems for the UI;
-      SafeConnexAuthentication.loginException = null;
       return '';
+      // } else if (authHandler.firebaseLoginException != null) {
+      //   print("Firebase Error: ${authHandler.firebaseLoginException},");
+      //   showErrorMessage(
+      //       context, authHandler.firebaseLoginException!, height, width);
+      //   //causes problems for the UI;
+      //   authHandler.firebaseLoginException = null;
+      //   return null;
     }
     return null;
   }
 
-  emailSignupValidator(BuildContext context, double height, double width,
-      String email) {
+  emailSignupValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String email,
+      ) {
+    FirebaseAuthHandler authHandler;
     if (email.isEmpty) {
       showErrorMessage(
           context, "Your email address is required", height, width);
@@ -110,17 +120,20 @@ class SettingsProvider extends ChangeNotifier {
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
       return '';
-    } else if(SafeConnexAuthentication.signUpException != null){
-      showErrorMessage(context,
-          SafeConnexAuthentication.signUpException!, height, width);
-      SafeConnexAuthentication.signUpException == null;
+    } else if (FirebaseAuthHandler.firebaseSignUpException != null) {
+      showErrorMessage(
+          context, FirebaseAuthHandler.firebaseSignUpException!, height, width);
       return '';
     }
     return null;
   }
 
-  joinCodeValidator(BuildContext context, double height, double width,
-      String code) {
+  joinCodeValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String code,
+      ) {
     if (code.isEmpty) {
       showErrorMessage(context, "Please enter a Circle Code", height, width);
       return "";
@@ -128,23 +141,22 @@ class SettingsProvider extends ChangeNotifier {
       showErrorMessage(context,
           "Invalid Code. Check the Circle Code and try again.", height, width);
       return '';
-    } else {
-      if (SafeConnexCircleDatabase.circleToJoin['circle_code'] == null ||
-          SafeConnexCircleDatabase.circleToJoin['circle_name'] == null) {
-        showErrorMessage(
-          context,
-          "Circle does not exist. Check the Circle Code and try again.",
-          height,
-          width,
-        );
-        return "";
-      }
-      else if(SafeConnexCircleDatabase.circleToJoin['isAMember'] == true){
-        showErrorMessage(context, "You're already in the Circle", height, width);
-        return "";
-      }
-      return null;
+      // } else {
+      //   if (CircleDatabaseHandler.circleToJoin['circle_code'] == null ||
+      //       CircleDatabaseHandler.circleToJoin['circle_name'] == null) {
+      //     showErrorMessage(
+      //       context,
+      //       "Circle does not exist. Check the Circle Code and try again.",
+      //       height,
+      //       width,
+      //     );
+      //     return "";
+      //   } else if (CircleDatabaseHandler.circleToJoin['isAMember'] == true) {
+      //     showErrorMessage(
+      //         context, "You're already in the Circle", height, width);
+      //     return "";
     }
+    return null;
   }
 
   createCircleNameValidator(
@@ -154,6 +166,94 @@ class SettingsProvider extends ChangeNotifier {
       showErrorMessage(
           context, "Please enter name for your circle", height, width);
       return "";
+    }
+    return null;
+  }
+
+  agencyPhoneNumberValidator(
+      BuildContext context, double height, double width, String value) {
+    if (value.isEmpty) {
+      showErrorMessage(
+          context, "Please provide your phone number", height, width);
+      return "";
+    } else {
+      final regex_1 = RegExp(r'^[+]*[6]?[3][9][0-9]{9}$');
+      final regex_2 = RegExp(r'^[0][9][0-9]{9}$');
+      if (!regex_1.hasMatch(value)) {
+        if (!regex_2.hasMatch(value)) {
+          showErrorMessage(context,
+              "Please enter a valid Philippine\nmobile number.", height, width);
+          return '';
+        }
+      }
+      return null;
+    }
+  }
+
+  agencyTelephoneValidator(
+      BuildContext context, double height, double width, String value) {
+    final regex_1 =
+    RegExp(r'^(02|0[3-8]{1}[0-9]{1})-?([0-9]{3,4})-?([0-9]{4})$');
+    if (value.isEmpty) {
+      return null;
+    } else if (!regex_1.hasMatch(value)) {
+      showErrorMessage(context,
+          "Please enter a valid Philippine telephone number.", height, width);
+      return '';
+    }
+    return null;
+  }
+
+  agencyEmailValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String email,
+      ) {
+    if (email.isEmpty) {
+      return null;
+    } else if (!EmailValidator.validate(email)) {
+      showErrorMessage(context, "Please enter a valid email", height, width);
+      return '';
+    }
+    return null;
+  }
+
+  agencyFBValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String fb,
+      ) {
+    if (fb.isEmpty) {
+      return null;
+    } else {
+      final regex_1 =
+      RegExp(r'^(https?://)?(www.)?facebook.com/[a-zA-Z0-9.]+$');
+      if (!regex_1.hasMatch(fb)) {
+        showErrorMessage(
+            context, "Please enter a valid Facebook link.", height, width);
+        return '';
+      }
+      return null;
+    }
+  }
+
+  agencyWebsiteValidator(
+      BuildContext context,
+      double height,
+      double width,
+      String web,
+      ) {
+    final regex_1 = RegExp(
+        r'(?:http[s]?:\/\/.)?(?:www\.)?[-a-zA-Z0-9@%._\+~#=]{2,256}\.[a-z]{2,63}(?:\:[0-9]{1,5})?(?:[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)');
+
+    if (web.isEmpty) {
+      return null;
+    } else if (!regex_1.hasMatch(web)) {
+      showErrorMessage(
+          context, "Please enter a valid website URL.", height, width);
+      return '';
     }
     return null;
   }

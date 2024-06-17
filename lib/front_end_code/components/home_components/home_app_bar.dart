@@ -1,4 +1,8 @@
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:math';
+
+import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
@@ -22,13 +26,25 @@ class HomeAppBar extends StatefulWidget {
 
 class _HomeAppBarState extends State<HomeAppBar> {
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
+  late GlobalKey expansionTileKey = GlobalKey();
+
+  bool isExpanded = false;
 
   int currentCircleIndex = 0;
+
+  int? _key;
+
+  _collapse() {
+    int? newKey;
+    do {
+      _key = new Random().nextInt(10000);
+    } while (newKey == _key);
+  }
 
   @override
   Widget build(BuildContext context) {
     print("Test ${SafeConnexCircleDatabase.currentCircleCode}");
+    ExpansionTileController _expansionController = ExpansionTileController();
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: Column(
@@ -232,11 +248,18 @@ class _HomeAppBarState extends State<HomeAppBar> {
                         ),
                         //CIRCLE LIST DROPDOWN LIST
                         child: ExpansionTile(
+                          key: new Key(_key.toString()),
+                          initiallyExpanded: false,
+
                           iconColor: const Color.fromARGB(255, 62, 73, 101),
                           collapsedIconColor:
                           const Color.fromARGB(255, 62, 73, 101),
                           title: Text(
-                            SafeConnexCircleDatabase.circleList.isEmpty ? "No Circle" : SafeConnexCircleDatabase.circleList[currentCircleIndex]["circle_name"],
+                            SafeConnexCircleDatabase.circleList.isEmpty
+                                ? "No Circle"
+                                : SafeConnexCircleDatabase
+                                .circleList[currentCircleIndex]
+                            ["circle_name"],
                             textScaler: TextScaler.linear(0.9),
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -264,16 +287,28 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: SafeConnexCircleDatabase.circleList.length,
+                                        itemCount: SafeConnexCircleDatabase
+                                            .circleList.length,
                                         itemBuilder: (context, index) =>
                                             CircleListTile(
-                                              title: SafeConnexCircleDatabase.circleList[index]["circle_name"],
-                                              onTap: (){
+                                              title: SafeConnexCircleDatabase
+                                                  .circleList[index]["circle_name"],
+                                              onTap: () {
                                                 setState(() {
-                                                  currentCircleIndex = index;
-                                                  circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
-                                                  SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
-                                                  geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+                                                  _collapse();
+                                                  if (currentCircleIndex != index) {
+                                                    // Check if different circle is tapped
+                                                    currentCircleIndex = index;
+                                                    circleDatabase.getCircleData(
+                                                        SafeConnexCircleDatabase
+                                                            .circleList[index]
+                                                        ["circle_code"]);
+                                                    SafeConnexCircleDatabase
+                                                        .currentCircleCode =
+                                                    SafeConnexCircleDatabase
+                                                        .circleList[index]
+                                                    ["circle_code"];
+                                                  }
                                                 });
                                               },
                                             ),
