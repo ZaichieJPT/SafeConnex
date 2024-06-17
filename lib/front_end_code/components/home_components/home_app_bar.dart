@@ -1,3 +1,4 @@
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
@@ -21,6 +22,7 @@ class HomeAppBar extends StatefulWidget {
 
 class _HomeAppBarState extends State<HomeAppBar> {
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
 
   int currentCircleIndex = 0;
 
@@ -271,6 +273,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                                   currentCircleIndex = index;
                                                   circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
                                                   SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
+                                                  geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
                                                 });
                                               },
                                             ),

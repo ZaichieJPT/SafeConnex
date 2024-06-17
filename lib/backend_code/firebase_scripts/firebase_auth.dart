@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/controller/page_navigator.dart';
 import 'firebase_init.dart';
 import 'firebase_user.dart';
@@ -251,8 +252,8 @@ class FirebaseAuthHandler
     if (authHandler.currentUser != null && isTransferred != true) {
       FirebaseProfileStorage(authHandler.currentUser!.uid);
       circleDatabaseHandler.getCircleList(authHandler.currentUser!.uid);
-      if(CircleDatabaseHandler.circleList.isNotEmpty) {
-        CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+      if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
+        SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
       }
       isTransferred = true;
       PageNavigator(context, screen);

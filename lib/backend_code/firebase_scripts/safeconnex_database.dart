@@ -195,8 +195,8 @@ class SafeConnexCircleDatabase{
       if(circleList.isEmpty){
         for(var circles in snapshot.children){
           circleList.add({
-            "circle_code": circles.key,
-            "circle_name": circles.child("circleName").value
+            "circle_code": circles.key.toString(),
+            "circle_name": circles.child("circleName").value.toString()
           });
         }
       }
@@ -209,6 +209,8 @@ class SafeConnexCircleDatabase{
           });
         }
       }
+      currentCircleCode = circleList[0]["circle_code"].toString();
+      print(currentCircleCode);
     }else{
       currentCircleCode = "No Circle";
     }
@@ -294,5 +296,67 @@ class SafeConnexFeedbackDatabase{
     await _dbFeedbackReference.update(updates);
 
     print("Database Update Done");
+  }
+}
+
+class SafeConnexGeofenceDatabase{
+  DatabaseReference dbGeofenceReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("geofence");
+
+  static List<Map<String, dynamic>> geofenceData = [];
+  Map<String, dynamic> geofenceToUpdate = {};
+
+  addGeofence(double latitude, double longitude, String radiusId, double radiusSize, String circleCode, String addressLabel){
+    final geofence = <String, dynamic> {
+      "id": SafeConnexAuthentication.currentUser!.uid,
+      "latitude": latitude,
+      "longitude": longitude,
+      "radiusId": radiusId,
+      "radiusSize": radiusSize,
+      "addressLabel": addressLabel
+    };
+
+    deleteGeofence(geofenceToUpdate[circleCode]);
+    dbGeofenceReference.child(circleCode).child(radiusId).set(geofence);
+    print("Data Added on Geofence Collection");
+  }
+
+  deleteGeofence(String circleCode){
+    dbGeofenceReference.child(circleCode).child(geofenceToUpdate['radiusId']).remove();
+    print("Database Removed");
+  }
+
+  Future<void> getGeofence(String circleCode) async {
+    dbGeofenceReference.child(circleCode).onValue.listen((DatabaseEvent event){
+      final snapshot = event.snapshot;
+      if(geofenceData.isEmpty){
+        for(var data in snapshot.children)
+        {
+          geofenceData.add(<String, dynamic>{
+            "id": data.child("id").value,
+            "latitude":  data.child("latitude").value,
+            "longitude":  data.child("longitude").value,
+            "radiusId":  data.child("radiusId").value,
+            "radiusSize":  data.child("radiusSize").value,
+            "addressLabel":  data.child("addressLabel").value
+          });
+        }
+      }else if(geofenceData.isNotEmpty){
+        geofenceData.clear();
+        for(var data in snapshot.children)
+        {
+          geofenceData.add(<String, dynamic>{
+            "id": data.child("id").value,
+            "latitude":  data.child("latitude").value,
+            "longitude":  data.child("longitude").value,
+            "radiusId":  data.child("radiusId").value,
+            "radiusSize":  data.child("radiusSize").value,
+            "addressLabel":  data.child("addressLabel").value
+          });
+        }
+      }
+    });
   }
 }

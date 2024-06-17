@@ -56,11 +56,11 @@ class _LoginPageState extends State<LoginPage> {
 
     authentication.loginWithToken().whenComplete((){
       if(SafeConnexAuthentication.currentUser != null && isTransferred == false){
-        print(SafeConnexCircleDatabase.currentCircleCode);
         Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
         isTransferred = true;
       }
     });
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(

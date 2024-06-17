@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';

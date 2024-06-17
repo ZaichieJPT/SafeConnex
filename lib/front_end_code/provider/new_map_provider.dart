@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
 
 import 'package:geocoding/geocoding.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
@@ -12,6 +13,11 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class NewMapProvider extends StatefulWidget {
   const NewMapProvider({super.key});
@@ -21,7 +27,7 @@ class NewMapProvider extends StatefulWidget {
 }
 
 class _NewMapProviderState extends State<NewMapProvider> {
-  String currentAddress = 'My Address';
+  //String currentAddress = 'My Address';
   final _activityStreamController = StreamController<geofence.Activity>();
   final _geofenceStreamController = StreamController<geofence.Geofence>();
   Map<String, dynamic>? _location = {
@@ -29,12 +35,10 @@ class _NewMapProviderState extends State<NewMapProvider> {
     "longitude": -122.121930
   };
   MapController? _mapController;
-  FlutterFireCoordinates flutterFireMap = FlutterFireCoordinates();
-  GeofenceDatabase flutterFireGeofence = GeofenceDatabase();
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
   List<Marker> geolocationMarkers = [];
   int index = 0;
+
+  SafeConnexGeolocation geolocation = SafeConnexGeolocation();
 
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
@@ -110,7 +114,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    flutterFireMap.getCoordinates();
+    geolocation.getCoordinates();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
       _geofenceService.addLocationChangeListener(_onLocationChanged);
@@ -154,7 +158,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
   }
 
   bool _checkIfProfileExist(){
-    for(var profile in CircleDatabaseHandler.circleDataValue){
+    for(var profile in SafeConnexCircleDatabase.circleDataValue){
       if(profile["image"] != null){
         return true;
       }
@@ -168,7 +172,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
         width: 50,
         rotate: true,
         alignment: Alignment.topCenter,
-        point: LatLng(FlutterFireCoordinates.coordinatesData[index]['latitude'], FlutterFireCoordinates.coordinatesData[index]['longitude']),
+        point: LatLng(SafeConnexGeolocation.coordinatesData[index]['latitude'], SafeConnexGeolocation.coordinatesData[index]['longitude']),
         child: Stack(
           children: [
             Positioned(
@@ -183,24 +187,24 @@ class _NewMapProviderState extends State<NewMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: _checkIfProfileExist() ? Image.network(FirebaseProfileStorage.imageUrl!) : Container(color:Colors.white),
+                child: _checkIfProfileExist() ? Image.network(SafeConnexCloudStorage.imageUrl!) : Container(color:Colors.white),
               ),
             )
           ],
         )
     ));
-    print("Geocoded: ${FlutterFireCoordinates.coordinatesData[index]["geocoded"]}");
+    print("Geocoded: ${SafeConnexGeolocation.coordinatesData[index]["geocoded"]}");
     setState(() {});
   }
 
   Widget _buildMonitor() {
     geolocationMarkers.clear();
+    _mapController = MapController();
     index = 0;
     Future.delayed(Duration(milliseconds: 400), (){
-      flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], authHandler.authHandler.currentUser!.uid);
+      geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
     });
 
-    _mapController = MapController();
     for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
       addGeolocationMarker(index);
     }
@@ -225,11 +229,17 @@ class _NewMapProviderState extends State<NewMapProvider> {
                       options: MapOptions(
                         initialCenter: LatLng(37.44630, -122.121930),
                         initialZoom: 13.2,
+                        onMapReady: (){
+                          print("ready");
+                        }
                       ),
                       children: [
                         TileLayer(
                           urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                           userAgentPackageName: 'com.safeconnex.app',
+                          tileProvider: CachedTileProvider(
+                            store: MemCacheStore(),
+                          ),
                         ),
                         MarkerLayer(
                             markers: geolocationMarkers
@@ -243,11 +253,9 @@ class _NewMapProviderState extends State<NewMapProvider> {
                         onPressed: (){
                           setState(() {
                             _mapController!.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
-                            print("InClass" + FlutterFireCoordinates.coordinatesData[1]['userId']);
-                            print(FlutterFireCoordinates.coordinatesData[1]["location"]);
-                            //flutterFireMap.addCoordinates(_location!['latitude'], _location!['longitude'], "Andrea");
-                            //flutterFireGeofence.addGeofence("test", 37.9991, -122.0021, "100m", 100, "Great");
-                          });
+                            print("InClass" + SafeConnexGeolocation.coordinatesData[1]['userId']);
+                            print(SafeConnexGeolocation.coordinatesData[1]["location"]);
+                         });
                         },
                         style: IconButton.styleFrom(
                           fixedSize: Size(70, 70),

@@ -27,7 +27,7 @@ class GeofenceDatabase{
       "addressLabel": addressLabel
     };
 
-    deleteGeofence(geofenceToUpdate["circleName"]);
+    deleteGeofence(geofenceToUpdate[circleName]);
     dbGeofenceReference.child(circleName).child(radiusId).set(geofence);
     print("Data Added on Geofence Collection");
   }

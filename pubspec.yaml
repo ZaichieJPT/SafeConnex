@@ -64,6 +64,10 @@ dependencies:
   flutter_styled_toast: ^2.2.1
   animated_toggle_switch: ^0.8.2
   image_picker: ^1.1.1
+  firebase_messaging: ^14.9.4
+  rxdart: ^0.28.0
+  flutter_map_cache: ^1.5.1
+  percent_indicator: ^4.2.3
 
 dev_dependencies:
   flutter_test:
@@ -107,6 +111,8 @@ flutter:
     - assets/images/signup_page/
     - assets/images/onboarding/
     - assets/images/side_menu/
+    - assets/images/agency_app/
+    - assets/images/side_menu/emergency_mgmt/
     - assets/images/emergency_page/
     - assets/images/change_to_agency/
     - assets/images/side_menu/circle_settings/
@@ -135,6 +141,27 @@ flutter:
         - asset: assets/fonts/OpunMai-Oblique.ttf
         - asset: assets/fonts/OpunMai-SemiBold.ttf
         - asset: assets/fonts/OpunMai-Thin.ttf
+
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat/Montserrat-Black.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-BlackItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-BoldItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBold.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraBoldItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLight.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-ExtraLightItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Italic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Light.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-LightItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Medium.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-MediumItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBold.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
+        - asset: assets/fonts/Montserrat/Montserrat-ThinItalic.ttf
     #       - asset: fonts/Schyler-Italic.ttf
     #         style: italic
     #   - family: Trajan Pro

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
@@ -153,6 +154,7 @@ class SafeConnexAuthentication{
 
       if(currentCredential.user!.emailVerified == true){
         currentUser = currentCredential.user!;
+        await SafeconnexNotification().initializeNotification(currentUser!.uid);
         print("Login Successfull");
       }
       else{
@@ -197,21 +199,26 @@ class SafeConnexAuthentication{
       "role": "user"
     });
 
+
     UserCredential currentCredential = await _authHandler.signInWithCredential(credential);
     currentUser = currentCredential.user!;
+
+    await SafeconnexNotification().initializeNotification(currentUser!.uid);
   }
 
   Future<void> loginWithToken() async {
     if(_authHandler.currentUser != null){
       currentUser = _authHandler.currentUser!;
       print(currentUser!.displayName);
-      profileStorage.getProfilePicture(currentUser!.uid).whenComplete(() async {
-        await circleDatabase.getCircleList(currentUser!.uid).whenComplete((){
+      profileStorage.getProfilePicture(currentUser!.uid).whenComplete(() {
+        circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
           if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
+            print("Code:" + SafeConnexCircleDatabase.circleList[0]["circle_code"].toString());
             SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
           }
         });
       });
+      await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_databas
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
 import '../../backend_code/firebase_scripts/firebase_coordinates_store.dart';
@@ -30,7 +31,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
   }
 
   bool _checkIfGeocodeExist(){
-    for(var geocodes in FlutterFireCoordinates.coordinatesData){
+    for(var geocodes in SafeConnexGeolocation.coordinatesData){
       if(geocodes["geocoded"] != null){
         return true;
       }
@@ -39,12 +40,12 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
   }
 
   String _getGeocodeValue(String userId){
-    for(var geocodes in FlutterFireCoordinates.coordinatesData){
+    for(var geocodes in SafeConnexGeolocation.coordinatesData){
       if(geocodes["userId"] == userId){
         return geocodes["geocoded"];
       }
     }
-    return "No Name";
+    return "Unknown Location";
   }
 
   @override
