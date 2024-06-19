@@ -98,7 +98,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                             style: TextStyle(
                               fontFamily: 'OpunMai',
                               fontWeight: FontWeight.w700,
-                              fontSize: 30,
+                              fontSize: height * 0.035,
                               color: Color.fromARGB(255, 62, 73, 101),
                             ),
                           ),

@@ -23,6 +23,24 @@ class SettingsProvider extends ChangeNotifier {
     }
   }
 
+  changeNewPassValidator(BuildContext context, double height, double width,
+      value, int strengthCount) {
+    if (value.isEmpty) {
+      showErrorMessage(context, "Password is a required field.", height, width);
+
+      return '';
+    } else if (strengthCount < 5) {
+      showErrorMessage(
+          context,
+          "Your password should contain:\n  • Uppercase letter (A-Z)\n  • Lowercase letter (A-Z)\n  • Numbers (0-9)\n  • Special characters.",
+          height,
+          width);
+      return "";
+    } else {
+      return null;
+    }
+  }
+
   confirmPassMismatch(BuildContext context, double height, double width,
       String value, String passwordString, int strengthCount) {
     if (value.isEmpty && strengthCount < 5) {

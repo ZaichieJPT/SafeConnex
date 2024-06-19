@@ -308,7 +308,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontFamily: 'OpunMai',
-                                                    fontSize: height * 0.026,
+                                                    fontSize: height * 0.022,
                                                     color: Color.fromARGB(
                                                         255, 71, 82, 98),
                                                   ),

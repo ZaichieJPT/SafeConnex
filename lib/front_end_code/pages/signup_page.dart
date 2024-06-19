@@ -89,17 +89,6 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
-  void dispose() {
-    widget._firstNameController.dispose();
-    widget._lastNameController.dispose();
-    widget._emailController.dispose();
-    widget._dateController.dispose();
-    widget._passController.dispose();
-    widget._confirmPassController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
@@ -189,11 +178,11 @@ class _SignupPageState extends State<SignupPage> {
                         scale: (isKeyboardVisible && !isContinueClicked_1)
                             ? scaleFactor_1
                             : (isKeyboardVisible &&
-                            isContinueClicked_1 &&
-                            (!isContinueClicked_2 ||
-                                !isContinueClicked_3))
-                            ? 0
-                            : scaleFactor_1,
+                                    isContinueClicked_1 &&
+                                    (!isContinueClicked_2 ||
+                                        !isContinueClicked_3))
+                                ? 0
+                                : scaleFactor_1,
                         child: Column(
                           children: [
                             //NAME CARD
@@ -214,14 +203,14 @@ class _SignupPageState extends State<SignupPage> {
                         top: (isKeyboardVisible && !isContinueClicked_2)
                             ? height * 0.01
                             : (isKeyboardVisible && isContinueClicked_2)
-                            ? height * 0
-                            : positionTop_2,
+                                ? height * 0
+                                : positionTop_2,
                         left: 0,
                         right: 0,
                         child: Transform.scale(
                           scale: (isKeyboardVisible &&
-                              isContinueClicked_2 &&
-                              !isContinueClicked_3)
+                                  isContinueClicked_2 &&
+                                  !isContinueClicked_3)
                               ? height * 0.8
                               : scaleFactor_2,
                           child: Column(
@@ -235,7 +224,7 @@ class _SignupPageState extends State<SignupPage> {
                               Padding(
                                 padding: EdgeInsets.only(
                                   bottom:
-                                  MediaQuery.of(context).viewInsets.bottom,
+                                      MediaQuery.of(context).viewInsets.bottom,
                                 ),
                               ),
                             ],
@@ -249,8 +238,8 @@ class _SignupPageState extends State<SignupPage> {
                         bottom: (isKeyboardVisible && !isContinueClicked_2)
                             ? 0
                             : (isKeyboardVisible && isContinueClicked_2)
-                            ? MediaQuery.of(context).viewInsets.bottom
-                            : height * 0.05,
+                                ? MediaQuery.of(context).viewInsets.bottom
+                                : height * 0.05,
                         left: 0,
                         right: 0,
                         child: SingleChildScrollView(
@@ -262,7 +251,7 @@ class _SignupPageState extends State<SignupPage> {
                             dateController: widget._dateController,
                             passController: widget._passController,
                             confirmPassController:
-                            widget._confirmPassController,
+                                widget._confirmPassController,
                             backClicked: backClicked,
                           ),
                         ),

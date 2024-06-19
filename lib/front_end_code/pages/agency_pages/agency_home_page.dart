@@ -7,8 +7,10 @@ import 'package:safeconnex/front_end_code/components/home_components/home_app_ba
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 
 class AgencyHomePage extends StatefulWidget {
+  final Function onSafetyScoreSelected;
   const AgencyHomePage({
     super.key,
+    required this.onSafetyScoreSelected,
   });
 
   @override
@@ -40,7 +42,9 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
         //NewMapProvider(),
 
         //APP BAR
-        AgencyAppBar(),
+        AgencyAppBar(
+          onSafetyScoreSelected: widget.onSafetyScoreSelected,
+        ),
       ],
     );
   }

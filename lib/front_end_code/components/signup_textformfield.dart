@@ -47,23 +47,23 @@ class _SignupFormFieldState extends State<SignupFormField> {
               height: 25,
               child: widget.controller.text.isNotEmpty
                   ? Container(
-                alignment: AlignmentDirectional.center,
-                decoration: BoxDecoration(
-                  //color: Colors.amber,
-                  shape: BoxShape.circle,
-                  //color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-                child: FittedBox(
-                  child: IconButton(
-                    icon: Icon(Icons.cancel),
-                    iconSize: 70,
-                    alignment: AlignmentDirectional.center,
-                    onPressed: () {
-                      widget.controller.clear();
-                    },
-                  ),
-                ),
-              )
+                      alignment: AlignmentDirectional.center,
+                      decoration: BoxDecoration(
+                        //color: Colors.amber,
+                        shape: BoxShape.circle,
+                        //color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      child: FittedBox(
+                        child: IconButton(
+                          icon: Icon(Icons.cancel),
+                          iconSize: 70,
+                          alignment: AlignmentDirectional.center,
+                          onPressed: () {
+                            widget.controller.clear();
+                          },
+                        ),
+                      ),
+                    )
                   : null,
             ),
           ],
@@ -91,23 +91,23 @@ class _SignupFormFieldState extends State<SignupFormField> {
               height: 25,
               child: widget.controller.text.isNotEmpty
                   ? Container(
-                alignment: AlignmentDirectional.center,
-                decoration: BoxDecoration(
-                  //color: Colors.amber,
-                  shape: BoxShape.circle,
-                  //color: Theme.of(context).scaffoldBackgroundColor,
-                ),
-                child: FittedBox(
-                  child: IconButton(
-                    icon: Icon(Icons.cancel),
-                    iconSize: 70,
-                    alignment: AlignmentDirectional.center,
-                    onPressed: () {
-                      widget.controller.clear();
-                    },
-                  ),
-                ),
-              )
+                      alignment: AlignmentDirectional.center,
+                      decoration: BoxDecoration(
+                        //color: Colors.amber,
+                        shape: BoxShape.circle,
+                        //color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      child: FittedBox(
+                        child: IconButton(
+                          icon: Icon(Icons.cancel),
+                          iconSize: 70,
+                          alignment: AlignmentDirectional.center,
+                          onPressed: () {
+                            widget.controller.clear();
+                          },
+                        ),
+                      ),
+                    )
                   : null,
             ),
           ],
@@ -124,14 +124,6 @@ class _SignupFormFieldState extends State<SignupFormField> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.controller.addListener(_initializeListener);
     });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    widget.controller.dispose();
-    super.dispose();
-    widget.controller.removeListener(_initializeListener);
   }
 
   @override
@@ -190,12 +182,12 @@ class _SignupFormFieldState extends State<SignupFormField> {
             ),
             focusedErrorBorder: isValid
                 ? OutlineInputBorder(
-              borderRadius: BorderRadius.circular(7),
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 1,
-              ),
-            )
+                    borderRadius: BorderRadius.circular(7),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 1,
+                    ),
+                  )
                 : null,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(7),

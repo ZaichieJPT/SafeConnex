@@ -34,12 +34,6 @@ class _EmailCardState extends State<EmailCard> {
   SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
-  void dispose() {
-    widget.emailController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;
@@ -144,8 +138,8 @@ class _EmailCardState extends State<EmailCard> {
                                 controller: widget.emailController,
                                 textMargin: 0,
                                 validator: (email) {
-                                  return provider.emailSignupValidator(context,
-                                      height, width, email);
+                                  return provider.emailSignupValidator(
+                                      context, height, width, email);
                                 },
                               ),
                             ),
@@ -180,7 +174,9 @@ class _EmailCardState extends State<EmailCard> {
           btnName: "Continue",
           formKey: _emailCardFormKey,
           continueClicked: () {
-            authentication.verifyEmailAddress(widget.emailController.text).whenComplete((){
+            authentication
+                .verifyEmailAddress(widget.emailController.text)
+                .whenComplete(() {
               if (_emailCardFormKey.currentState!.validate()) {
                 widget.continueClicked();
               } else {}

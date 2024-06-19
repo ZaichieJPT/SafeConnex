@@ -8,7 +8,7 @@ void showErrorMessage(
       behavior: SnackBarBehavior.floating,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 3),
       margin: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
         left: width * 0.05,

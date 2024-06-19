@@ -176,9 +176,9 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                     _agencyEmailController.text.isEmpty &&
                                     _agencyFBController.text.isEmpty &&
                                     _agencyWebController.text.isEmpty) {
-                                  if (widget.agencyContactsList.isNotEmpty) {
-                                    widget.onAgencySelected(false);
-                                  }
+                                  // if (widget.agencyContactsList.isNotEmpty) {
+                                  //   widget.onAgencySelected(false);
+                                  // }
                                   widget.isAddContactPressed =
                                       !widget.isAddContactPressed;
                                   widget.onAddContactPressed(
@@ -206,7 +206,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                     Future.delayed(Duration(milliseconds: 500),
                                         () {
                                       _showEmptyContact = false;
-                                      widget.onAgencySelected(false);
+                                      //widget.onAgencySelected(false);
                                       _currentContactIndex =
                                           widget.agencyContactsList.length - 1;
                                       widget.onPageChanged(
@@ -258,15 +258,17 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                             if (widget.isAddContactPressed ||
                                 widget.isEditContactPressed) {
                               print('No delete');
-                            } else if (!widget.isContactTapped &&
-                                widget.agencyContactsList.isNotEmpty) {
-                              showErrorMessage(
-                                context,
-                                'Select a Safety Agency Emergency Contact to be deleted.',
-                                height,
-                                width,
-                              );
-                            } else if (widget.agencyContactsList.isEmpty) {
+                            }
+                            // else if (!widget.isContactTapped &&
+                            //     widget.agencyContactsList.isNotEmpty) {
+                            //   showErrorMessage(
+                            //     context,
+                            //     'Select a Safety Agency Emergency Contact to be deleted.',
+                            //     height,
+                            //     width,
+                            //   );
+                            // }
+                            else if (widget.agencyContactsList.isEmpty) {
                               showErrorMessage(
                                   context,
                                   'No Emergency Contact to be deleted.',
@@ -324,106 +326,102 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                           onTap: () {
                             if (widget.isAddContactPressed) {
                               print('you shall not click');
-                            } else if (!widget.isContactTapped &&
-                                widget.agencyContactsList.isNotEmpty) {
-                              showErrorMessage(
-                                context,
-                                'Select a Safety Agency Emergency Contact to be updated',
-                                height,
-                                width,
-                              );
-                            } else if (widget.agencyContactsList.isEmpty) {
+                            }
+                            // else if (!widget.isContactTapped &&
+                            //     widget.agencyContactsList.isNotEmpty) {
+                            //   showErrorMessage(
+                            //     context,
+                            //     'Select a Safety Agency Emergency Contact to be updated',
+                            //     height,
+                            //     width,
+                            //   );
+                            // }
+                            else if (widget.agencyContactsList.isEmpty) {
                               showErrorMessage(
                                 context,
                                 'No Emergency Contact to be updated',
                                 height,
                                 width,
                               );
-                            } else if (widget.isContactTapped) {
-                              if (widget.isEditContactPressed) {
-                                //IF NOTHING CHANGED, CANCEL EDIT
-                                if (_agencyNameController.text ==
-                                        widget.agencyName &&
-                                    _agencyLocationController.text ==
-                                        widget.agencyLocation &&
-                                    _agencyMobileController.text ==
-                                        widget.agencyMobile &&
-                                    _agencyTelephoneController.text ==
-                                        widget.agencyTelephone &&
-                                    _agencyEmailController.text ==
-                                        widget.agencyEmail &&
-                                    _agencyFBController.text ==
-                                        widget.agencyFB &&
-                                    _agencyWebController.text ==
-                                        widget.agencyWebsite) {
-                                  //UNSET TEXT EDITING CONTROLLERS
-                                  _agencyNameController.clear();
-                                  _agencyLocationController.clear();
-                                  _agencyMobileController.clear();
-                                  _agencyTelephoneController.clear();
-                                  _agencyEmailController.clear();
-                                  _agencyFBController.clear();
-                                  _agencyWebController.clear();
-                                  //CHANGE ISEDIT FLAG
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                  //IF ENTERED DATA HAS NO ERROR
-                                } else if (_agencyEditContactFormKey
-                                    .currentState!
-                                    .validate()) {
-                                  widget.editAgencyContactData(
-                                    _agencyNameController.text,
-                                    _agencyLocationController.text,
-                                    _agencyMobileController.text,
-                                    _agencyTelephoneController.text,
-                                    _agencyEmailController.text,
-                                    _agencyFBController.text,
-                                    _agencyWebController.text,
-                                  );
+                            } else if (widget.isEditContactPressed) {
+                              //IF NOTHING CHANGED, CANCEL EDIT
+                              if (_agencyNameController.text ==
+                                      widget.agencyName &&
+                                  _agencyLocationController.text ==
+                                      widget.agencyLocation &&
+                                  _agencyMobileController.text ==
+                                      widget.agencyMobile &&
+                                  _agencyTelephoneController.text ==
+                                      widget.agencyTelephone &&
+                                  _agencyEmailController.text ==
+                                      widget.agencyEmail &&
+                                  _agencyFBController.text == widget.agencyFB &&
+                                  _agencyWebController.text ==
+                                      widget.agencyWebsite) {
+                                //UNSET TEXT EDITING CONTROLLERS
+                                _agencyNameController.clear();
+                                _agencyLocationController.clear();
+                                _agencyMobileController.clear();
+                                _agencyTelephoneController.clear();
+                                _agencyEmailController.clear();
+                                _agencyFBController.clear();
+                                _agencyWebController.clear();
+                                //CHANGE ISEDIT FLAG
+                                widget.isEditContactPressed =
+                                    !widget.isEditContactPressed;
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                                //IF ENTERED DATA HAS NO ERROR
+                              } else if (_agencyEditContactFormKey.currentState!
+                                  .validate()) {
+                                widget.editAgencyContactData(
+                                  _agencyNameController.text,
+                                  _agencyLocationController.text,
+                                  _agencyMobileController.text,
+                                  _agencyTelephoneController.text,
+                                  _agencyEmailController.text,
+                                  _agencyFBController.text,
+                                  _agencyWebController.text,
+                                );
 
-                                  //UNSET TEXT EDITING CONTROLLERS
-                                  _agencyNameController.clear();
-                                  _agencyLocationController.clear();
-                                  _agencyMobileController.clear();
-                                  _agencyTelephoneController.clear();
-                                  _agencyEmailController.clear();
-                                  _agencyFBController.clear();
-                                  _agencyWebController.clear();
+                                //UNSET TEXT EDITING CONTROLLERS
+                                _agencyNameController.clear();
+                                _agencyLocationController.clear();
+                                _agencyMobileController.clear();
+                                _agencyTelephoneController.clear();
+                                _agencyEmailController.clear();
+                                _agencyFBController.clear();
+                                _agencyWebController.clear();
 
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                  widget.isContactTapped =
-                                      !widget.isContactTapped;
-                                  widget
-                                      .onAgencySelected(widget.isContactTapped);
-                                }
-                              } else {
-                                setState(() {
-                                  _agencyNameController.text =
-                                      widget.agencyName;
-                                  _agencyLocationController.text =
-                                      widget.agencyLocation;
-                                  _agencyMobileController.text =
-                                      widget.agencyMobile;
-                                  _agencyTelephoneController.text =
-                                      widget.agencyTelephone;
-                                  _agencyEmailController.text =
-                                      widget.agencyEmail;
-                                  _agencyFBController.text = widget.agencyFB;
-                                  _agencyWebController.text =
-                                      widget.agencyWebsite;
-
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                });
+                                widget.isEditContactPressed =
+                                    !widget.isEditContactPressed;
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                                widget.isContactTapped =
+                                    !widget.isContactTapped;
+                                widget.onAgencySelected(widget.isContactTapped);
                               }
+                            } else {
+                              setState(() {
+                                _agencyNameController.text = widget.agencyName;
+                                _agencyLocationController.text =
+                                    widget.agencyLocation;
+                                _agencyMobileController.text =
+                                    widget.agencyMobile;
+                                _agencyTelephoneController.text =
+                                    widget.agencyTelephone;
+                                _agencyEmailController.text =
+                                    widget.agencyEmail;
+                                _agencyFBController.text = widget.agencyFB;
+                                _agencyWebController.text =
+                                    widget.agencyWebsite;
+
+                                widget.isEditContactPressed =
+                                    !widget.isEditContactPressed;
+
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                              });
                             }
                           },
                           child: Container(
@@ -467,7 +465,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                               !widget.isAddContactPressed &&
                               !widget.isEditContactPressed) {
                             widget.agencyContactController.previousPage();
-                            widget.onAgencySelected(false);
+                            //widget.onAgencySelected(false);
                           } else if (_currentContactIndex == 0) {
                             //DO NOTHING IF THIS IS THE FIRST CONTACT/INDEX
                           }
@@ -614,6 +612,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                               _agencyFBController,
                                           agencyWebController:
                                               _agencyWebController,
+                                          isSelected: widget.isContactTapped,
                                         )
                                       : Stack(
                                           alignment: Alignment.topCenter,
@@ -1392,7 +1391,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                               !widget.isAddContactPressed &&
                               !widget.isEditContactPressed) {
                             widget.agencyContactController.nextPage();
-                            widget.onAgencySelected(false);
+                            //widget.onAgencySelected(false);
                           } else {}
                         });
                       },

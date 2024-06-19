@@ -3,10 +3,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/front_end_code/components/agency_components/agency_feed_createpost.dart';
+import 'package:safeconnex/front_end_code/components/agency_components/agency_feed_editpost.dart';
+import 'package:safeconnex/front_end_code/components/agency_components/agency_feed_post.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_feed_profile.dart';
 
 class AgencyFeedPage extends StatefulWidget {
-  const AgencyFeedPage({super.key});
+  final bool isSafetyScoreSelected;
+  const AgencyFeedPage({
+    super.key,
+    required this.isSafetyScoreSelected,
+  });
 
   @override
   State<AgencyFeedPage> createState() => _AgencyFeedPageState();
@@ -17,6 +24,9 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
   double _detailsProgress = 0;
   bool _isEditDetailsSelected = false;
   bool _isEditProfileSelected = false;
+  bool _isEditPostSelected = false;
+  String _postTitle = '';
+  String _postDescription = '';
 
   final List<TextEditingController> _agencyDataControllers = [];
   final TextEditingController _agencyNameController = TextEditingController();
@@ -40,17 +50,17 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
     });
   }
 
-  _onEditDetailsSelected(bool isEditDetailSelected) {
+  _onEditPostSelected(
+      bool isSelected, String postTitle, String postDescription) {
     setState(() {
-      _isEditDetailsSelected = isEditDetailSelected;
-      print('padding: ${MediaQuery.viewInsetsOf(context).bottom}');
-    });
-  }
-
-  _getDetailsProgress(int filled) {
-    setState(() {
-      _detailsProgress = filled / 6;
-      print(_detailsProgress);
+      _isEditPostSelected = isSelected;
+      if (_isEditPostSelected) {
+        _postTitle = postTitle;
+        _postDescription = postDescription;
+        _currentFeedIndex = -1;
+      } else {
+        _currentFeedIndex = 1;
+      }
     });
   }
 
@@ -72,10 +82,20 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
         body: SafeArea(
           bottom: false,
           child: _currentFeedIndex == 0
-              ? AgencyFeedProfile(
-                  onEditDetailsSelected: _onEditDetailsSelected,
-                )
-              : Container(),
+              ? AgencyFeedProfile()
+              : _currentFeedIndex == 1
+                  ? AgencyFeedPost(
+                      onEditPostSelected: _onEditPostSelected,
+                    )
+                  : _currentFeedIndex == 2
+                      ? AgencyCreatePost()
+                      : _isEditPostSelected
+                          ? AgencyEditPost(
+                              postTitle: _postTitle,
+                              postDescription: _postDescription,
+                              onEditPostSelected: _onEditPostSelected,
+                            )
+                          : Container(),
         ),
         bottomNavigationBar: Container(
           height: height * 0.075,

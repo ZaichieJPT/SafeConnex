@@ -47,12 +47,6 @@ class _LoginPassFieldState extends State<LoginPassField> {
   }
 
   @override
-  void dispose() {
-    widget.passController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;

@@ -29,12 +29,6 @@ class SignupDateField extends StatefulWidget {
 
 class _SignupDateFieldState extends State<SignupDateField> {
   @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;

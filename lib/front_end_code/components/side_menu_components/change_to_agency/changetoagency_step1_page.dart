@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class AgencyStep1 extends StatefulWidget {
   final Function() toNextStep;
@@ -58,6 +59,12 @@ class _AgencyStep1State extends State<AgencyStep1> {
                     onTap: () {
                       setState(() {
                         _isAgencySelected = !_isAgencySelected;
+
+                        if (_isAgencySelected) {
+                          _selectedAgencyType = agencyTypes[index];
+                        } else {
+                          _selectedAgencyType = '';
+                        }
                       });
                     },
                     child: Container(
@@ -119,9 +126,30 @@ class _AgencyStep1State extends State<AgencyStep1> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        _selectedAgencyType = agencyTypes[_currentAgencyIndex];
-                        print(_selectedAgencyType);
-                        widget.toNextStep();
+                        if (_selectedAgencyType.isEmpty) {
+                          showToast(
+                            'Select an option below',
+                            textStyle: TextStyle(
+                              fontFamily: 'OpunMai',
+                              fontWeight: FontWeight.w600,
+                              fontSize: height * 0.018,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                            context: context,
+                            backgroundColor: Colors.red[400],
+                            position: StyledToastPosition.center,
+                            borderRadius: BorderRadius.circular(10),
+                            duration: Duration(milliseconds: 4000),
+                            animation: StyledToastAnimation.fade,
+                            reverseAnimation: StyledToastAnimation.fade,
+                            fullWidth: true,
+                          );
+                        } else {
+                          print(_selectedAgencyType);
+                          widget.toNextStep();
+                        }
                       });
                     },
                     elevation: 2,

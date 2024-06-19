@@ -214,6 +214,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onFireContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedFireAgency.length; i++) {
+        isSelectedFireAgency[i] = false;
+      }
       isSelectedFireAgency[_currentFireAgencyIndex] = isSelected;
     });
   }
@@ -298,6 +301,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onCrimeContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedCrimeAgency.length; i++) {
+        isSelectedCrimeAgency[i] = false;
+      }
       isSelectedCrimeAgency[_currentCrimeAgencyIndex] = isSelected;
     });
   }
@@ -383,6 +389,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onMedicalContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedMedicalAgency.length; i++) {
+        isSelectedMedicalAgency[i] = false;
+      }
       isSelectedMedicalAgency[_currentMedicalAgencyIndex] = isSelected;
     });
   }
@@ -467,6 +476,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onNaturalContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedNaturalAgency.length; i++) {
+        isSelectedNaturalAgency[i] = false;
+      }
       isSelectedNaturalAgency[_currentNaturalAgencyIndex] = isSelected;
     });
   }
