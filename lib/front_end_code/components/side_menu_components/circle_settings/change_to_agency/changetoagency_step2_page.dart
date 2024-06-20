@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/agency_step2_textfields.dart';
 
@@ -29,6 +30,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
       TextEditingController();
 
   final _step2FormKey = GlobalKey<FormState>();
+  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   @override
   void dispose() {
@@ -345,7 +347,18 @@ class _AgencyStep2State extends State<AgencyStep2> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        if (_step2FormKey.currentState!.validate()) {}
+                        if (_step2FormKey.currentState!.validate()) {
+                          agencyDatabase.joinTheAgency(
+                              "Man in the Middle",
+                              _agencyNameController.text,
+                              _agencyLocationController.text,
+                              _agencyMobileController.text,
+                              _agencyTelephoneController.text,
+                              _agencyEmailController.text,
+                              _agencyFBController.text,
+                              _agencyWebsiteController.text
+                          );
+                        }
                         widget.toNextStep();
                       });
                     },

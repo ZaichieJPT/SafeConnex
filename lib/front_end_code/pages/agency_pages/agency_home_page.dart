@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_home_appbar.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
-import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
+import 'package:safeconnex/front_end_code/provider/agency_map_provider.dart';
+import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 
 class AgencyHomePage extends StatefulWidget {
   const AgencyHomePage({
@@ -23,7 +24,9 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        Container(
+        //AgencyMapProvider();
+
+        /*Container(
           color: Colors.blue[700],
           child: SingleChildScrollView(
             child: Center(
@@ -36,8 +39,7 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
               ),
             ),
           ),
-        ),
-        //NewMapProvider(),
+        ),*/
 
         //APP BAR
         AgencyAppBar(),

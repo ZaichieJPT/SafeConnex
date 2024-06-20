@@ -5,10 +5,8 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
 class AgencyFeedProfile extends StatefulWidget {
-  final Function onEditDetailsSelected;
   const AgencyFeedProfile({
     super.key,
-    required this.onEditDetailsSelected,
   });
 
   @override
@@ -464,8 +462,6 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                   print('i: ${_agencyDataControllers[i].text}');
                                 }
                                 _getDetailsProgress(filled);
-                                widget.onEditDetailsSelected(
-                                    _isEditDetailsSelected);
                               });
                             },
                             child: CircleAvatar(

@@ -41,7 +41,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final _profileDateFormKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
-  SafeConnexCloudStorage profileStorage = SafeConnexCloudStorage();
+  SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
   double innerHeight = 0;
   double innerWidth = 0;
   int _selectedMenuIndex = 4;
@@ -595,11 +595,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: SafeConnexCloudStorage
+                                          child: SafeConnexProfileStorage
                                               .imageUrl !=
                                               null
                                               ? Image.network(
-                                              SafeConnexCloudStorage
+                                              SafeConnexProfileStorage
                                                   .imageUrl!)
                                               : Container(color: Colors.white),
                                         ),

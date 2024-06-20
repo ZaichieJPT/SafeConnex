@@ -2,6 +2,8 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -38,15 +40,15 @@ class SettingsProvider extends ChangeNotifier {
     }
   }
 
-  loginPassValidatior(BuildContext context, double height, double width,
-      String loginPass, FirebaseAuthHandler authHandler) {
+  loginPassValidator(BuildContext context, double height, double width,
+      String loginPass) {
     if (loginPass.isEmpty) {
       showErrorMessage(context, "Please enter your password", height, width);
 
       return '';
-    } else if (authHandler.firebaseLoginException != null) {
+    } else if (SafeConnexAuthentication.loginException != null) {
       showErrorMessage(
-          context, authHandler.firebaseLoginException!, height, width);
+          context, SafeConnexAuthentication.loginException!, height, width);
       return '';
     } else {
       return null;
@@ -82,37 +84,28 @@ class SettingsProvider extends ChangeNotifier {
     return null;
   }
 
-  emailValidator(
-      BuildContext context,
-      double height,
-      double width,
-      String email,
-      ) {
+  emailValidator(BuildContext context, double height, double width,
+      String email) {
     if (email.isEmpty) {
       showErrorMessage(
           context, "Please enter your email address", height, width);
       return "";
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
+    } else if (SafeConnexAuthentication.loginException != null) {
+      print("Firebase Error: $SafeConnexAuthentication.loginException},");
+      showErrorMessage(
+          context, SafeConnexAuthentication.loginException!, height, width);
+      //causes problems for the UI;
+      SafeConnexAuthentication.loginException = null;
       return '';
-      // } else if (authHandler.firebaseLoginException != null) {
-      //   print("Firebase Error: ${authHandler.firebaseLoginException},");
-      //   showErrorMessage(
-      //       context, authHandler.firebaseLoginException!, height, width);
-      //   //causes problems for the UI;
-      //   authHandler.firebaseLoginException = null;
-      //   return null;
     }
     return null;
   }
 
-  emailSignupValidator(
-      BuildContext context,
-      double height,
-      double width,
-      String email,
-      ) {
-    FirebaseAuthHandler authHandler;
+
+  emailSignupValidator(BuildContext context, double height, double width,
+      String email) {
     if (email.isEmpty) {
       showErrorMessage(
           context, "Your email address is required", height, width);
@@ -120,20 +113,17 @@ class SettingsProvider extends ChangeNotifier {
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
       return '';
-    } else if (FirebaseAuthHandler.firebaseSignUpException != null) {
-      showErrorMessage(
-          context, FirebaseAuthHandler.firebaseSignUpException!, height, width);
+    } else if(SafeConnexAuthentication.signUpException != null){
+      showErrorMessage(context,
+          SafeConnexAuthentication.signUpException!, height, width);
+      SafeConnexAuthentication.signUpException == null;
       return '';
     }
     return null;
   }
 
-  joinCodeValidator(
-      BuildContext context,
-      double height,
-      double width,
-      String code,
-      ) {
+  joinCodeValidator(BuildContext context, double height, double width,
+      String code) {
     if (code.isEmpty) {
       showErrorMessage(context, "Please enter a Circle Code", height, width);
       return "";
@@ -141,22 +131,23 @@ class SettingsProvider extends ChangeNotifier {
       showErrorMessage(context,
           "Invalid Code. Check the Circle Code and try again.", height, width);
       return '';
-      // } else {
-      //   if (CircleDatabaseHandler.circleToJoin['circle_code'] == null ||
-      //       CircleDatabaseHandler.circleToJoin['circle_name'] == null) {
-      //     showErrorMessage(
-      //       context,
-      //       "Circle does not exist. Check the Circle Code and try again.",
-      //       height,
-      //       width,
-      //     );
-      //     return "";
-      //   } else if (CircleDatabaseHandler.circleToJoin['isAMember'] == true) {
-      //     showErrorMessage(
-      //         context, "You're already in the Circle", height, width);
-      //     return "";
+    } else {
+      if (SafeConnexCircleDatabase.circleToJoin['circle_code'] == null ||
+          SafeConnexCircleDatabase.circleToJoin['circle_name'] == null) {
+        showErrorMessage(
+          context,
+          "Circle does not exist. Check the Circle Code and try again.",
+          height,
+          width,
+        );
+        return "";
+      }
+      else if(SafeConnexCircleDatabase.circleToJoin['isAMember'] == true){
+        showErrorMessage(context, "You're already in the Circle", height, width);
+        return "";
+      }
+      return null;
     }
-    return null;
   }
 
   createCircleNameValidator(

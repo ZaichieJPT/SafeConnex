@@ -3,11 +3,15 @@
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency%20_floodscore_page.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_notification_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 
 class AgencyAppBar extends StatefulWidget {
+  final Function onSafetyScoreSelected;
   const AgencyAppBar({
     super.key,
+    required this.onSafetyScoreSelected,
   });
 
   @override
@@ -15,10 +19,13 @@ class AgencyAppBar extends StatefulWidget {
 }
 
 class _AgencyAppBarState extends State<AgencyAppBar> {
+  bool _isSafetyScoreSelected = false;
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
+
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Column(
@@ -125,29 +132,39 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                             //CIRCLE LIST EXPANSION TILE PLACEHOLDER
                             Flexible(
                               flex: 1,
-                              child: FractionallySizedBox(
-                                widthFactor: 0.9,
-                                heightFactor: 0.9,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: width * 0.02),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      width: 0.5,
-                                      color: Colors.grey,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AgencyNotificationPage(),
                                     ),
-                                    boxShadow: const [
-                                      BoxShadow(
+                                  );
+                                },
+                                child: FractionallySizedBox(
+                                  widthFactor: 0.9,
+                                  heightFactor: 0.9,
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: width * 0.02),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: Colors.white,
+                                      border: Border.all(
+                                        width: 0.5,
                                         color: Colors.grey,
-                                        spreadRadius: 0.5,
-                                        offset: Offset(-2, 3),
                                       ),
-                                    ],
-                                  ),
-                                  child: Image.asset(
-                                    'assets/images/agency_app/agency_notification.png',
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          spreadRadius: 0.5,
+                                          offset: Offset(-2, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Image.asset(
+                                      'assets/images/agency_app/agency_notification.png',
+                                    ),
                                   ),
                                 ),
                               ),
@@ -195,11 +212,14 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                   ),
                                   child: IconButton(
                                     onPressed: () {
-                                      // Navigator.push(
-                                      //     context,
-                                      //     MaterialPageRoute(
-                                      //         builder: (context) =>
-                                      //             GeofencingPage()));
+                                      widget.onSafetyScoreSelected(true);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AgencyFloodScore(),
+                                        ),
+                                      );
                                     },
                                     icon: Image.asset(
                                       'assets/images/agency_app/agency_safety_score.png',

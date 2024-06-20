@@ -451,7 +451,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                       if (_newPassFormKey.currentState!
                                           .validate()) {
                                         authentication
-                                            .changePassword("Old Password",
+                                            .changePassword("",
                                             _newPassController.text)
                                             .whenComplete(() {
                                           Navigator.push(

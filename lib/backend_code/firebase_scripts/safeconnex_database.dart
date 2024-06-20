@@ -360,3 +360,80 @@ class SafeConnexGeofenceDatabase{
     });
   }
 }
+
+class SafeConnexAgencyDatabase{
+  DatabaseReference _dbAgencyReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("agency");
+
+  DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("user");
+
+  static String? selectedAgencyType;
+  static Map<String, String> agencyData = {};
+
+  Future<void> joinTheAgency(String role, String agencyName, String locationOfAgency,
+      String phoneNumber, String telephoneNumber, String emailAddress, String facebookLink,
+      String agencyWebsite) async {
+
+    if(selectedAgencyType != null){
+      await _dbAgencyReference.child(selectedAgencyType!).child(agencyName).set({
+        "agencyLocation": locationOfAgency,
+        "agencyPhoneNumber": phoneNumber,
+        "agencyTelephoneNumber": telephoneNumber,
+        "agencyEmailAddress": emailAddress,
+        "facebookLink": facebookLink,
+        "agencyWebsite": agencyWebsite
+      });
+
+      await _dbAgencyReference.child(selectedAgencyType!).child(agencyName)
+          .child(SafeConnexAuthentication.currentUser!.uid).set({
+        "role": role
+      });
+
+      await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).set({
+        "agencyType": selectedAgencyType!
+      });
+
+    }else if(selectedAgencyType == null){
+      print("selectedAgency is null");
+    }
+  }
+
+  Future<void> getMyAgencyData(String agencyName) async {
+    DataSnapshot userSnapshot = await _dbUserReference.child("agencyType").get();
+    selectedAgencyType = userSnapshot.value.toString();
+
+    DataSnapshot agencySnapshot = await _dbAgencyReference.child(selectedAgencyType!).child(agencyName).get();
+
+    if(agencySnapshot.exists){
+      if(agencyData.isEmpty){
+        agencyData = {
+          "agencyLocation": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyLocation").value.toString(),
+          "agencyPhoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyPhoneNumber").value.toString(),
+          "agencyTelephoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyTelephoneNumber").value.toString(),
+          "agencyEmailAddress": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyEmailAddress").value.toString(),
+          "facebookLink": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("facebookLink").value.toString(),
+          "agencyWebsite": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyWebsite").value.toString()
+        };
+      }else if(agencyData.isNotEmpty){
+        agencyData.clear();
+        agencyData = {
+          "agencyLocation": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyLocation").value.toString(),
+          "agencyPhoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyPhoneNumber").value.toString(),
+          "agencyTelephoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyTelephoneNumber").value.toString(),
+          "agencyEmailAddress": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyEmailAddress").value.toString(),
+          "facebookLink": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("facebookLink").value.toString(),
+          "agencyWebsite": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyWebsite").value.toString()
+        };
+      }
+    }else{
+      print("Agency does not exist");
+    }
+
+
+  }
+}

@@ -310,7 +310,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                       ],
                     ),
                     child: _checkIfProfileExist()
-                        ? Image.network(SafeConnexCloudStorage.imageUrl!)
+                        ? Image.network(SafeConnexProfileStorage.imageUrl!)
                         : null,
                   ),
                 ),

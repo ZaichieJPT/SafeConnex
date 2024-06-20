@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 
-class SafeConnexCloudStorage{
+class SafeConnexProfileStorage{
   final _profileRefs = FirebaseStorage.instance.ref().child("profile_pics");
   static String? imageUrl;
 
@@ -28,3 +28,29 @@ class SafeConnexCloudStorage{
     print("File Uploaded");
   }
 }
+
+class SafeConnexIDDatabase{
+  final _idRefs = FirebaseStorage.instance.ref().child("identification");
+
+  Future<void> uploadFrontPicture(String userId, String path) async {
+    final front_id = _idRefs.child(userId).child("${userId}_front.png");
+    final file = File(path);
+    await front_id.putFile(file);
+    print("Front Uploaded");
+  }
+
+  Future<void> uploadBackPicture(String userId, String path) async {
+    final back_id = _idRefs.child(userId).child("${userId}_back.png");
+    final file = File(path);
+    await back_id.putFile(file);
+    print("Back Uploaded");
+  }
+
+  Future<void> uploadSelfiePicture(String userId, String path) async {
+    final selfie_pic = _idRefs.child(userId).child("${userId}_selfie.png");
+    final file = File(path);
+    await selfie_pic.putFile(file);
+    print("Selfie Uploaded");
+  }
+}
+

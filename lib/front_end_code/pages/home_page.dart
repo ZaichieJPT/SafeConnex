@@ -3,12 +3,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_initialpin_dialog.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_received_template.dart';
-import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
+import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 
 class HomePage extends StatefulWidget {
   final double height;
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   Alignment alignment2 = Alignment(0.0, 1.0);
   Alignment alignment3 = Alignment(0.0, 1.0);
   Alignment alignment4 = Alignment(0.0, 1.0);
+
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   toggleButtons() {
     setState(() {
@@ -61,6 +64,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    circleDatabase.getCircleData(SafeConnexCircleDatabase.currentCircleCode!);
     super.initState();
   }
 

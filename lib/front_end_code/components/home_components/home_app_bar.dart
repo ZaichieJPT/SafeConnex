@@ -299,15 +299,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                                   if (currentCircleIndex != index) {
                                                     // Check if different circle is tapped
                                                     currentCircleIndex = index;
-                                                    circleDatabase.getCircleData(
-                                                        SafeConnexCircleDatabase
-                                                            .circleList[index]
-                                                        ["circle_code"]);
-                                                    SafeConnexCircleDatabase
-                                                        .currentCircleCode =
-                                                    SafeConnexCircleDatabase
-                                                        .circleList[index]
-                                                    ["circle_code"];
+                                                    circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
+                                                    SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
+                                                    print(SafeConnexCircleDatabase.currentCircleCode);
                                                   }
                                                 });
                                               },

@@ -32,7 +32,7 @@ class SafeConnexAuthentication{
   static String? loginException;
 
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-  SafeConnexCloudStorage profileStorage = SafeConnexCloudStorage();
+  SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
 
   /// Register an account to SafeConnex using [email] and [password]
   Future<void> signUpWithEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String birthdate) async {
@@ -113,47 +113,13 @@ class SafeConnexAuthentication{
     }
   }
 
-  Future<void> phoneVerificationAndroid(String phoneNumbers) async
-  {
-    await _authHandler.verifyPhoneNumber(
-        phoneNumber: phoneNumbers,
-        verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async
-        {
-          print("Verification Success");
-          await _authHandler.signInWithCredential(phoneAuthCredential);
-        },
-        verificationFailed: (FirebaseAuthException exception) async
-        {
-          if(exception.code == "invalid-phone-number")
-          {
-            print("Invalid Phone Number");
-          }else if(exception.code == "quota-exceeded")
-          {
-            print("Limit is reached");
-          }
-        },
-        codeSent: (String verificationId, int? forceResendingToken) async
-        {
-          PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: "123456");
-
-          await _authHandler.signInWithCredential(credential);
-
-          print("it Works");
-
-        },
-        timeout: const Duration(seconds: 60),
-        codeAutoRetrievalTimeout: (String verificationId) async
-        {
-          print("Time out");
-        });
-  }
-
   Future<void> loginWithEmailAccount(String email, String password) async {
     try{
       UserCredential currentCredential = await _authHandler.signInWithEmailAndPassword(email: email, password: password);
 
       if(currentCredential.user!.emailVerified == true){
         currentUser = currentCredential.user!;
+        await profileStorage.getProfilePicture(currentUser!.uid);
         await SafeconnexNotification().initializeNotification(currentUser!.uid);
         print("Login Successfull");
       }
@@ -203,17 +169,16 @@ class SafeConnexAuthentication{
     UserCredential currentCredential = await _authHandler.signInWithCredential(credential);
     currentUser = currentCredential.user!;
 
+    await profileStorage.getProfilePicture(currentUser!.uid);
     await SafeconnexNotification().initializeNotification(currentUser!.uid);
   }
 
   Future<void> loginWithToken() async {
     if(_authHandler.currentUser != null){
       currentUser = _authHandler.currentUser!;
-      print(currentUser!.displayName);
       profileStorage.getProfilePicture(currentUser!.uid).whenComplete(() {
         circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
           if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
-            print("Code:" + SafeConnexCircleDatabase.circleList[0]["circle_code"].toString());
             SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
           }
         });

@@ -8,6 +8,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_circle_settings.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_emergency_contacts.dart';
 import 'package:safeconnex/front_end_code/components//side_menu_components/sidemenu_profile_settings.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_emergency_management.dart';
 
 class HomeSideMenu extends StatefulWidget {
   final double height;
@@ -154,18 +155,18 @@ class _HomeSideMenuState extends State<HomeSideMenu> {
             Flexible(
               child: _selectedTabIndex == 0
                   ? ProfileSettings(
-                      height: widget.height,
-                      width: widget.width,
-                    )
+                height: widget.height,
+                width: widget.width,
+              )
                   : _selectedTabIndex == 1
-                      ? CircleSettings(
-                          height: widget.height,
-                          width: widget.width,
-                        )
-                      : EmergencyContacts(
-                          height: widget.height,
-                          width: widget.width,
-                        ),
+                  ? CircleSettings(
+                height: widget.height,
+                width: widget.width,
+              )
+                  : EmergencyManagement(
+                height: widget.height,
+                width: widget.width,
+              ),
             ),
           ],
         ),

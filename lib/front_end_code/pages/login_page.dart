@@ -34,8 +34,9 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
-  AppManager appController = AppManager();
   bool isTransferred = false;
+
+  SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   void dispose() {
@@ -54,15 +55,23 @@ class _LoginPageState extends State<LoginPage> {
     SafeConnexAuthentication authentication = SafeConnexAuthentication();
     SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
+    // Fix this the delay is too early make it accurate
     authentication.loginWithToken().whenComplete(() {
-      if (SafeConnexAuthentication.currentUser != null &&
-          isTransferred == false) {
-        print(SafeConnexCircleDatabase.currentCircleCode);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
-        isTransferred = true;
+      if (SafeConnexAuthentication.currentUser != null && isTransferred == false) {
+        Future.delayed(Duration(milliseconds: 500), (){
+          if(SafeConnexCircleDatabase.currentCircleCode == null){
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => CirclePage()));
+          }
+          else if(SafeConnexCircleDatabase.currentCircleCode != null){
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainScreen()));
+          }
+          isTransferred = true;
+        });
       }
     });
+
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -218,12 +227,11 @@ class _LoginPageState extends State<LoginPage> {
                                             verticalPadding: 0,
                                             validator: (loginPass) {
                                               return provider
-                                                  .loginPassValidatior(
+                                                  .loginPassValidator(
                                                   context,
                                                   height,
                                                   width,
-                                                  loginPass,
-                                                  AppManager.authHandler);
+                                                  loginPass);
                                             },
                                             isValidated: isPasswordValidated,
                                           ),
@@ -282,33 +290,17 @@ class _LoginPageState extends State<LoginPage> {
                                                 .whenComplete(() {
                                               if (_loginFormKey.currentState!
                                                   .validate()) {
-                                                if (SafeConnexAuthentication
-                                                    .loginException ==
-                                                    null ||
-                                                    SafeConnexAuthentication
-                                                        .loginException ==
-                                                        "") {
-                                                  //FirebaseProfileStorage(authHandler.currentUser!.uid);
-                                                  circleDatabase
-                                                      .getCircleList(
-                                                      SafeConnexAuthentication
-                                                          .currentUser!.uid)
-                                                      .whenComplete(() {
-                                                    if (CircleDatabaseHandler
-                                                        .circleList
-                                                        .isNotEmpty) {
-                                                      CircleDatabaseHandler
-                                                          .currentCircleCode =
-                                                          CircleDatabaseHandler
-                                                              .circleList[0][
-                                                          "circle_code"]
-                                                              .toString();
+                                                if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                  Future.delayed(Duration(milliseconds: 500), (){
+                                                    if(SafeConnexCircleDatabase.currentCircleCode == null){
+                                                      Navigator.push(
+                                                          context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                     }
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                MainScreen()));
+                                                    else if(SafeConnexCircleDatabase.currentCircleCode != null){
+                                                      Navigator.push(
+                                                          context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                    }
+                                                    isTransferred = true;
                                                   });
                                                 }
                                               }
@@ -346,22 +338,23 @@ class _LoginPageState extends State<LoginPage> {
                                                 scale: 7,
                                               ),
                                               onTap: () {
-                                                authentication
-                                                    .phoneVerificationAndroid(
-                                                    "+63 951 280 7552");
-                                                /*authentication.loginInWithGoogle().whenComplete((){
+                                                authentication.loginInWithGoogle().whenComplete((){
                                                   if(_loginFormKey.currentState!.validate()){
                                                     if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
-                                                      //FirebaseProfileStorage(authHandler.currentUser!.uid);
-                                                      circleDatabase.getCircleList(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
-                                                        if(CircleDatabaseHandler.circleList.isNotEmpty) {
-                                                          CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
+                                                      Future.delayed(Duration(milliseconds: 500), (){
+                                                        if(SafeConnexCircleDatabase.currentCircleCode == null){
+                                                          Navigator.push(
+                                                              context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                         }
-                                                        Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                        else if(SafeConnexCircleDatabase.currentCircleCode != null){
+                                                          Navigator.push(
+                                                              context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                        }
+                                                        isTransferred = true;
                                                       });
                                                     }
                                                   }
-                                                });*/
+                                                });
                                               },
                                             ),
                                             Flexible(

@@ -19,14 +19,14 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.da
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
-class NewMapProvider extends StatefulWidget {
-  const NewMapProvider({super.key});
+class UserMapProvider extends StatefulWidget {
+  const UserMapProvider({super.key});
 
   @override
-  State<NewMapProvider> createState() => _NewMapProviderState();
+  State<UserMapProvider> createState() => _UserMapProviderState();
 }
 
-class _NewMapProviderState extends State<NewMapProvider> {
+class _UserMapProviderState extends State<UserMapProvider> {
   //String currentAddress = 'My Address';
   final _activityStreamController = StreamController<geofence.Activity>();
   final _geofenceStreamController = StreamController<geofence.Geofence>();
@@ -187,7 +187,7 @@ class _NewMapProviderState extends State<NewMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: _checkIfProfileExist() ? Image.network(SafeConnexCloudStorage.imageUrl!) : Container(color:Colors.white),
+                child: _checkIfProfileExist() ? Image.network(SafeConnexProfileStorage.imageUrl!) : Container(color:Colors.white),
               ),
             )
           ],

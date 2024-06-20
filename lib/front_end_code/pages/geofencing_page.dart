@@ -9,7 +9,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
-import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
+import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class GeofencingPage extends StatefulWidget {
@@ -695,12 +695,12 @@ class _GeofencingPageState extends State<GeofencingPage> {
                       } else {
                         if (placeLabelName == '' && placeLocationName == '') {
                           //get the value of the textfields
-                          geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
+                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
                           //add the geofence, label, and location to database
                         } else {
                           //get the value of the texfields
                           //modify the selected place's value in the database
-                          geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, placeLabelName!, _sliderValue, "circleName", placeLocationName!);
+                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, placeLabelName!, _sliderValue, "circleName", placeLocationName!);
                         }
                       }
                     },

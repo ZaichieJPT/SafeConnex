@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 
 class AgencyStep1 extends StatefulWidget {
   final Function() toNextStep;
@@ -119,6 +120,7 @@ class _AgencyStep1State extends State<AgencyStep1> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
+                        SafeConnexAgencyDatabase.selectedAgencyType = agencyTypes[_currentAgencyIndex];
                         _selectedAgencyType = agencyTypes[_currentAgencyIndex];
                         print(_selectedAgencyType);
                         widget.toNextStep();
