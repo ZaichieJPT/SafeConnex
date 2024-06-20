@@ -138,6 +138,18 @@ flutter:
         - asset: assets/fonts/OpunMai-Oblique.ttf
         - asset: assets/fonts/OpunMai-SemiBold.ttf
         - asset: assets/fonts/OpunMai-Thin.ttf
+    
+    - family: Merriweather
+      fonts:
+        - asset: assets/fonts/Merriweather/Merriweather-Regular.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Black.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Bold.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Italic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Light.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-BlackItalic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-BoldItalic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-LightItalic.ttf
+
 
     - family: Montserrat
       fonts:
@@ -159,6 +171,46 @@ flutter:
         - asset: assets/fonts/Montserrat/Montserrat-SemiBoldItalic.ttf
         - asset: assets/fonts/Montserrat/Montserrat-Thin.ttf
         - asset: assets/fonts/Montserrat/Montserrat-ThinItalic.ttf
+
+    - family: GrandCru
+      fonts:
+        - asset: assets/fonts/GrandCru/GrandCru-BoldL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-BoldLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-BoldM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-BoldMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-BoldS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-BoldSItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtraboldSItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-ExtralightSItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-LightSItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-MediumSItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularL.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularLItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularM.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularMItalic.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularS.ttf
+        - asset: assets/fonts/GrandCru/GrandCru-RegularSItalic.ttf
+
     #       - asset: fonts/Schyler-Italic.ttf
     #         style: italic
     #   - family: Trajan Pro
