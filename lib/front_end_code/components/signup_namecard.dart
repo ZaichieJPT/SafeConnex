@@ -32,14 +32,6 @@ class _NameCardState extends State<NameCard> {
   final _nameCardFormKey = GlobalKey<FormState>();
 
   @override
-  void dispose() {
-    widget.firstNameController.dispose();
-    widget.lastNameController.dispose();
-    widget.dateController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;

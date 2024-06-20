@@ -34,9 +34,8 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
+  AppManager appController = AppManager();
   bool isTransferred = false;
-
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   void dispose() {
@@ -218,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                           alignment:
                                           AlignmentDirectional.center,
                                           //margin: EdgeInsets.only(right: 30, left: 20),
-                                          width: 300,
+                                          //width: 300,
                                           child: PassFormField(
                                             hintText: 'Password',
                                             passController: _passController,
@@ -278,8 +277,8 @@ class _LoginPageState extends State<LoginPage> {
                                           btnName: 'Login',
                                           height: height * 0.055,
                                           topMargin: 0,
-                                          leftMargin: 10,
-                                          rightMargin: 10,
+                                          leftMargin: width * 0.05,
+                                          rightMargin: width * 0.05,
                                           fontSize: 15,
                                           formKey: _loginFormKey,
                                           continueClicked: () {

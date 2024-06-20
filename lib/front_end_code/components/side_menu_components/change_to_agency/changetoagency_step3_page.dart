@@ -18,7 +18,6 @@ class AgencyStep3 extends StatefulWidget {
 }
 
 class _AgencyStep3State extends State<AgencyStep3> {
-
   SafeConnexIDDatabase idStorage = SafeConnexIDDatabase();
 
   Future<void> _onFrontIDTapped() async {
@@ -44,6 +43,7 @@ class _AgencyStep3State extends State<AgencyStep3> {
         SafeConnexAuthentication.currentUser!.uid, image!.path);
     if (image == null) return;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,6 @@ class _AgencyStep3State extends State<AgencyStep3> {
                 ),
                 //FRONT PART UPLOAD BUTTON
                 Flexible(
-                  // Make it inkwell and Upload the Files from the storage one by one upon pressing
                   child: Image.asset(
                     'assets/images/change_to_agency/agency_step3_icon.png',
                     width: width * 0.2,
@@ -116,7 +115,6 @@ class _AgencyStep3State extends State<AgencyStep3> {
                   ),
                 ),
                 //BACK PART UPLOAD BUTTON
-                //Make it inkwell and Upload the Files from the storage one by one upon pressing
                 Flexible(
                   child: Image.asset(
                     'assets/images/change_to_agency/agency_step3_icon.png',

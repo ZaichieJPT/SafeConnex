@@ -19,15 +19,31 @@ class PasswordChange extends StatefulWidget {
 
 class _PasswordChangeState extends State<PasswordChange> {
   final _newPassFormKey = GlobalKey<FormState>();
+  final TextEditingController _oldPassController = TextEditingController();
   final TextEditingController _newPassController = TextEditingController();
   final TextEditingController _confirmPassController = TextEditingController();
   final provider = SettingsProvider();
   double height = 0;
   double width = 0;
   bool obscureText = false;
+  bool oldObscureText = false;
   bool confirmObscureText = false;
   double strengthValue = 0;
   int strengthCount = 0;
+
+  _oldGetVisibleButton() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          oldObscureText = !oldObscureText;
+        });
+      },
+      child: Icon(
+        oldObscureText ? Icons.visibility_off : Icons.visibility,
+        size: height * 0.025,
+      ),
+    );
+  }
 
   _getVisibleButton() {
     return InkWell(
@@ -237,7 +253,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                               ),
                               Flexible(
                                 child: Container(
-                                  height: height * 0.1,
+                                  height: height * 0.085,
                                   alignment: Alignment.center,
                                   //color: Colors.blue,
                                   child: FittedBox(
@@ -252,6 +268,100 @@ class _PasswordChangeState extends State<PasswordChange> {
                                         fontSize: height * 0.018,
                                       ),
                                     ),
+                                  ),
+                                ),
+                              ),
+                              //OLD PASSWORD
+                              Flexible(
+                                flex: 2,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  height: height * 0.1,
+                                  width: width * 0.65,
+                                  //color: const Color.fromARGB(139, 158, 158, 158),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      //CURRENT PASS TEXT
+                                      Flexible(
+                                        child: Container(
+                                          width: width,
+                                          //color: Colors.amber,
+                                          child: Text(
+                                            'Current Password',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize: height * 0.015,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      //OLD PASS TEXTFIELD
+                                      Flexible(
+                                        flex: 2,
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.03,
+                                          ),
+                                          child: TextFormField(
+                                            controller: _oldPassController,
+                                            obscureText: oldObscureText,
+                                            textAlignVertical:
+                                            TextAlignVertical.center,
+                                            cursorColor: Color.fromARGB(
+                                                255, 70, 85, 104),
+                                            onChanged: _onPasswordChanged,
+                                            style: TextStyle(
+                                              fontFamily: 'OpunMai',
+                                              fontSize: height * 0.015,
+                                              fontWeight: FontWeight.w500,
+                                              color: Color.fromARGB(
+                                                  255, 70, 85, 104),
+                                            ),
+                                            decoration: InputDecoration(
+                                              suffixIconConstraints:
+                                              BoxConstraints(
+                                                  maxHeight:
+                                                  height * 0.025),
+                                              suffixIcon:
+                                              _oldGetVisibleButton(),
+                                              //contentPadding: EdgeInsets.zero,
+                                              isDense: true,
+                                              enabledBorder:
+                                              UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: const Color.fromARGB(
+                                                      180, 158, 158, 158),
+                                                  width: 2.5,
+                                                ),
+                                              ),
+                                              focusedBorder:
+                                              UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  color: const Color.fromARGB(
+                                                      255, 70, 85, 104),
+                                                  width: 2.5,
+                                                ),
+                                              ),
+                                            ),
+                                            validator: (value) {
+                                              if (value.toString().isEmpty) {
+                                                showErrorMessage(
+                                                    context,
+                                                    'Please enter your current password',
+                                                    height,
+                                                    width);
+                                                return '';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -331,7 +441,8 @@ class _PasswordChangeState extends State<PasswordChange> {
                                               ),
                                             ),
                                             validator: (value) {
-                                              return provider.passValidator(
+                                              return provider
+                                                  .changeNewPassValidator(
                                                   context,
                                                   height,
                                                   width,
@@ -451,7 +562,7 @@ class _PasswordChangeState extends State<PasswordChange> {
                                       if (_newPassFormKey.currentState!
                                           .validate()) {
                                         authentication
-                                            .changePassword("",
+                                            .changePassword(_oldPassController.text,
                                             _newPassController.text)
                                             .whenComplete(() {
                                           Navigator.push(

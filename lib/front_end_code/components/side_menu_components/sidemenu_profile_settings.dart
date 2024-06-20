@@ -12,7 +12,8 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import 'package:safeconnex/controller/app_manager.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/sidemenu_changetoagency_dialog.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/sidemenu_changetoagency_dialog.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_passdialog.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
@@ -87,8 +88,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
-  void _onDeleteAccount() {
-    showDialog(
+  void _onDeleteAccount() async {
+    final isConfirmed = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
         return DeleteAccountDialog(
@@ -97,6 +98,25 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         );
       },
     );
+
+    if (isConfirmed == true && context.mounted) {
+      final password = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return DeleteDialogPassField(
+            height: widget.height,
+            width: widget.width,
+          );
+        },
+      );
+
+      if (password != null && password.isNotEmpty) {
+        // Perform account deletion logic using password
+        // ... your account deletion code here
+      } else {
+        // Handle case where user cancels password dialog or enters empty password
+      }
+    }
   }
 
   bool validatePhilippineMobileNumber(String value) {

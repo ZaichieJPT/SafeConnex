@@ -72,18 +72,13 @@ class _PassFormFieldState extends State<PassFormField> {
   }
 
   @override
-  void dispose() {
-    widget.passController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         //color: Colors.blue,
-        margin: EdgeInsets.only(right: widget.textMargin ?? 10),
+
+        margin: EdgeInsets.only(right: widget.textMargin ?? 0),
         alignment: AlignmentDirectional.center,
         //height: widget.height.toString().isEmpty ? 30 : widget.height,
         child: TextFormField(

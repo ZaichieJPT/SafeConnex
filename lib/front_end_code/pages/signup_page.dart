@@ -89,17 +89,6 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   @override
-  void dispose() {
-    widget._firstNameController.dispose();
-    widget._lastNameController.dispose();
-    widget._emailController.dispose();
-    widget._dateController.dispose();
-    widget._passController.dispose();
-    widget._confirmPassController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;

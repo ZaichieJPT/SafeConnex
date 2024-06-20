@@ -16,9 +16,14 @@ import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 
 class HomeAppBar extends StatefulWidget {
   final double height;
+  final double width;
   final ScrollController scrollController;
-  const HomeAppBar(
-      {super.key, required this.height, required this.scrollController});
+  const HomeAppBar({
+    super.key,
+    required this.height,
+    required this.scrollController,
+    required this.width,
+  });
 
   @override
   State<HomeAppBar> createState() => _HomeAppBarState();
@@ -94,7 +99,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                           Scaffold.of(context).openDrawer(),
                                       icon: Image.asset(
                                         'assets/images/home_settings_icon.png',
-                                        scale: 3,
                                       ),
                                     );
                                   }),
@@ -133,7 +137,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                     heightFactor: 0.7,
                                     child: Image.asset(
                                       'assets/images/home_add_icon.png',
-                                      scale: 7,
+                                      scale: widget.width * 0.015,
                                     ),
                                   ),
                                 ),
@@ -195,7 +199,6 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                     },
                                     icon: Image.asset(
                                       'assets/images/home_location_icon.png',
-                                      scale: 3,
                                     ),
                                   ),
                                 ),
@@ -299,9 +302,15 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                                   if (currentCircleIndex != index) {
                                                     // Check if different circle is tapped
                                                     currentCircleIndex = index;
-                                                    circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
-                                                    SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
-                                                    print(SafeConnexCircleDatabase.currentCircleCode);
+                                                    circleDatabase.getCircleData(
+                                                        SafeConnexCircleDatabase
+                                                            .circleList[index]
+                                                        ["circle_code"]);
+                                                    SafeConnexCircleDatabase
+                                                        .currentCircleCode =
+                                                    SafeConnexCircleDatabase
+                                                        .circleList[index]
+                                                    ["circle_code"];
                                                   }
                                                 });
                                               },

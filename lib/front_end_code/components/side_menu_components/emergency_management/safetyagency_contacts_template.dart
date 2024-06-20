@@ -88,13 +88,13 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
   }
 
   Future deleteDialog() => showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return DeleteDialog(
-            onDeleteTapped: _onDeleteConfirmed,
-          );
-        },
+    context: context,
+    builder: (BuildContext context) {
+      return DeleteDialog(
+        onDeleteTapped: _onDeleteConfirmed,
       );
+    },
+  );
 
   @override
   void dispose() {
@@ -176,11 +176,11 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                     _agencyEmailController.text.isEmpty &&
                                     _agencyFBController.text.isEmpty &&
                                     _agencyWebController.text.isEmpty) {
-                                  if (widget.agencyContactsList.isNotEmpty) {
-                                    widget.onAgencySelected(false);
-                                  }
+                                  // if (widget.agencyContactsList.isNotEmpty) {
+                                  //   widget.onAgencySelected(false);
+                                  // }
                                   widget.isAddContactPressed =
-                                      !widget.isAddContactPressed;
+                                  !widget.isAddContactPressed;
                                   widget.onAddContactPressed(
                                       widget.isAddContactPressed);
                                 } else if (_agencyAddContactFormKey
@@ -189,7 +189,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                   setState(() {
                                     //CHANGE BOOLEAN FLAG AND PASS NEW VALUE TO MAIN PARENT
                                     widget.isAddContactPressed =
-                                        !widget.isAddContactPressed;
+                                    !widget.isAddContactPressed;
                                     widget.onAddContactPressed(
                                         widget.isAddContactPressed);
                                     //PASS NEW CONTACT DATA TO MAIN PARENT
@@ -204,31 +204,31 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                     );
 
                                     Future.delayed(Duration(milliseconds: 500),
-                                        () {
-                                      _showEmptyContact = false;
-                                      widget.onAgencySelected(false);
-                                      _currentContactIndex =
-                                          widget.agencyContactsList.length - 1;
-                                      widget.onPageChanged(
-                                          widget.agencyContactsList.length - 1);
-                                      widget.agencyContactController.jumpToPage(
-                                          widget.agencyContactsList.length - 1);
+                                            () {
+                                          _showEmptyContact = false;
+                                          //widget.onAgencySelected(false);
+                                          _currentContactIndex =
+                                              widget.agencyContactsList.length - 1;
+                                          widget.onPageChanged(
+                                              widget.agencyContactsList.length - 1);
+                                          widget.agencyContactController.jumpToPage(
+                                              widget.agencyContactsList.length - 1);
 
-                                      //UNSET TEXT EDITING CONTROLLERS
-                                      _agencyNameController.clear();
-                                      _agencyLocationController.clear();
-                                      _agencyMobileController.clear();
-                                      _agencyTelephoneController.clear();
-                                      _agencyEmailController.clear();
-                                      _agencyFBController.clear();
-                                      _agencyWebController.clear();
-                                    });
+                                          //UNSET TEXT EDITING CONTROLLERS
+                                          _agencyNameController.clear();
+                                          _agencyLocationController.clear();
+                                          _agencyMobileController.clear();
+                                          _agencyTelephoneController.clear();
+                                          _agencyEmailController.clear();
+                                          _agencyFBController.clear();
+                                          _agencyWebController.clear();
+                                        });
                                   });
                                 }
                               } else if (!widget.isAddContactPressed &&
                                   !widget.isEditContactPressed) {
                                 widget.isAddContactPressed =
-                                    !widget.isAddContactPressed;
+                                !widget.isAddContactPressed;
                                 widget.onAddContactPressed(
                                     widget.isAddContactPressed);
                               } else {
@@ -258,15 +258,17 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                             if (widget.isAddContactPressed ||
                                 widget.isEditContactPressed) {
                               print('No delete');
-                            } else if (!widget.isContactTapped &&
-                                widget.agencyContactsList.isNotEmpty) {
-                              showErrorMessage(
-                                context,
-                                'Select a Safety Agency Emergency Contact to be deleted.',
-                                height,
-                                width,
-                              );
-                            } else if (widget.agencyContactsList.isEmpty) {
+                            }
+                            // else if (!widget.isContactTapped &&
+                            //     widget.agencyContactsList.isNotEmpty) {
+                            //   showErrorMessage(
+                            //     context,
+                            //     'Select a Safety Agency Emergency Contact to be deleted.',
+                            //     height,
+                            //     width,
+                            //   );
+                            // }
+                            else if (widget.agencyContactsList.isEmpty) {
                               showErrorMessage(
                                   context,
                                   'No Emergency Contact to be deleted.',
@@ -280,11 +282,11 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                   if (widget.agencyCount > 1 &&
                                       _currentContactIndex == 0) {
                                     Future.delayed(Duration(milliseconds: 500),
-                                        () {
-                                      widget.agencyContactController.jumpToPage(
-                                        _currentContactIndex,
-                                      );
-                                    });
+                                            () {
+                                          widget.agencyContactController.jumpToPage(
+                                            _currentContactIndex,
+                                          );
+                                        });
 
                                     // widget.deleteAgencyContactData(
                                     //     _currentContactIndex);
@@ -324,106 +326,102 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                           onTap: () {
                             if (widget.isAddContactPressed) {
                               print('you shall not click');
-                            } else if (!widget.isContactTapped &&
-                                widget.agencyContactsList.isNotEmpty) {
-                              showErrorMessage(
-                                context,
-                                'Select a Safety Agency Emergency Contact to be updated',
-                                height,
-                                width,
-                              );
-                            } else if (widget.agencyContactsList.isEmpty) {
+                            }
+                            // else if (!widget.isContactTapped &&
+                            //     widget.agencyContactsList.isNotEmpty) {
+                            //   showErrorMessage(
+                            //     context,
+                            //     'Select a Safety Agency Emergency Contact to be updated',
+                            //     height,
+                            //     width,
+                            //   );
+                            // }
+                            else if (widget.agencyContactsList.isEmpty) {
                               showErrorMessage(
                                 context,
                                 'No Emergency Contact to be updated',
                                 height,
                                 width,
                               );
-                            } else if (widget.isContactTapped) {
-                              if (widget.isEditContactPressed) {
-                                //IF NOTHING CHANGED, CANCEL EDIT
-                                if (_agencyNameController.text ==
-                                        widget.agencyName &&
-                                    _agencyLocationController.text ==
-                                        widget.agencyLocation &&
-                                    _agencyMobileController.text ==
-                                        widget.agencyMobile &&
-                                    _agencyTelephoneController.text ==
-                                        widget.agencyTelephone &&
-                                    _agencyEmailController.text ==
-                                        widget.agencyEmail &&
-                                    _agencyFBController.text ==
-                                        widget.agencyFB &&
-                                    _agencyWebController.text ==
-                                        widget.agencyWebsite) {
-                                  //UNSET TEXT EDITING CONTROLLERS
-                                  _agencyNameController.clear();
-                                  _agencyLocationController.clear();
-                                  _agencyMobileController.clear();
-                                  _agencyTelephoneController.clear();
-                                  _agencyEmailController.clear();
-                                  _agencyFBController.clear();
-                                  _agencyWebController.clear();
-                                  //CHANGE ISEDIT FLAG
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                  //IF ENTERED DATA HAS NO ERROR
-                                } else if (_agencyEditContactFormKey
-                                    .currentState!
-                                    .validate()) {
-                                  widget.editAgencyContactData(
-                                    _agencyNameController.text,
-                                    _agencyLocationController.text,
-                                    _agencyMobileController.text,
-                                    _agencyTelephoneController.text,
-                                    _agencyEmailController.text,
-                                    _agencyFBController.text,
-                                    _agencyWebController.text,
-                                  );
+                            } else if (widget.isEditContactPressed) {
+                              //IF NOTHING CHANGED, CANCEL EDIT
+                              if (_agencyNameController.text ==
+                                  widget.agencyName &&
+                                  _agencyLocationController.text ==
+                                      widget.agencyLocation &&
+                                  _agencyMobileController.text ==
+                                      widget.agencyMobile &&
+                                  _agencyTelephoneController.text ==
+                                      widget.agencyTelephone &&
+                                  _agencyEmailController.text ==
+                                      widget.agencyEmail &&
+                                  _agencyFBController.text == widget.agencyFB &&
+                                  _agencyWebController.text ==
+                                      widget.agencyWebsite) {
+                                //UNSET TEXT EDITING CONTROLLERS
+                                _agencyNameController.clear();
+                                _agencyLocationController.clear();
+                                _agencyMobileController.clear();
+                                _agencyTelephoneController.clear();
+                                _agencyEmailController.clear();
+                                _agencyFBController.clear();
+                                _agencyWebController.clear();
+                                //CHANGE ISEDIT FLAG
+                                widget.isEditContactPressed =
+                                !widget.isEditContactPressed;
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                                //IF ENTERED DATA HAS NO ERROR
+                              } else if (_agencyEditContactFormKey.currentState!
+                                  .validate()) {
+                                widget.editAgencyContactData(
+                                  _agencyNameController.text,
+                                  _agencyLocationController.text,
+                                  _agencyMobileController.text,
+                                  _agencyTelephoneController.text,
+                                  _agencyEmailController.text,
+                                  _agencyFBController.text,
+                                  _agencyWebController.text,
+                                );
 
-                                  //UNSET TEXT EDITING CONTROLLERS
-                                  _agencyNameController.clear();
-                                  _agencyLocationController.clear();
-                                  _agencyMobileController.clear();
-                                  _agencyTelephoneController.clear();
-                                  _agencyEmailController.clear();
-                                  _agencyFBController.clear();
-                                  _agencyWebController.clear();
+                                //UNSET TEXT EDITING CONTROLLERS
+                                _agencyNameController.clear();
+                                _agencyLocationController.clear();
+                                _agencyMobileController.clear();
+                                _agencyTelephoneController.clear();
+                                _agencyEmailController.clear();
+                                _agencyFBController.clear();
+                                _agencyWebController.clear();
 
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                  widget.isContactTapped =
-                                      !widget.isContactTapped;
-                                  widget
-                                      .onAgencySelected(widget.isContactTapped);
-                                }
-                              } else {
-                                setState(() {
-                                  _agencyNameController.text =
-                                      widget.agencyName;
-                                  _agencyLocationController.text =
-                                      widget.agencyLocation;
-                                  _agencyMobileController.text =
-                                      widget.agencyMobile;
-                                  _agencyTelephoneController.text =
-                                      widget.agencyTelephone;
-                                  _agencyEmailController.text =
-                                      widget.agencyEmail;
-                                  _agencyFBController.text = widget.agencyFB;
-                                  _agencyWebController.text =
-                                      widget.agencyWebsite;
-
-                                  widget.isEditContactPressed =
-                                      !widget.isEditContactPressed;
-
-                                  widget.onEditContactPressed(
-                                      widget.isEditContactPressed);
-                                });
+                                widget.isEditContactPressed =
+                                !widget.isEditContactPressed;
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                                widget.isContactTapped =
+                                !widget.isContactTapped;
+                                widget.onAgencySelected(widget.isContactTapped);
                               }
+                            } else {
+                              setState(() {
+                                _agencyNameController.text = widget.agencyName;
+                                _agencyLocationController.text =
+                                    widget.agencyLocation;
+                                _agencyMobileController.text =
+                                    widget.agencyMobile;
+                                _agencyTelephoneController.text =
+                                    widget.agencyTelephone;
+                                _agencyEmailController.text =
+                                    widget.agencyEmail;
+                                _agencyFBController.text = widget.agencyFB;
+                                _agencyWebController.text =
+                                    widget.agencyWebsite;
+
+                                widget.isEditContactPressed =
+                                !widget.isEditContactPressed;
+
+                                widget.onEditContactPressed(
+                                    widget.isEditContactPressed);
+                              });
                             }
                           },
                           child: Container(
@@ -467,7 +465,7 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                               !widget.isAddContactPressed &&
                               !widget.isEditContactPressed) {
                             widget.agencyContactController.previousPage();
-                            widget.onAgencySelected(false);
+                            //widget.onAgencySelected(false);
                           } else if (_currentContactIndex == 0) {
                             //DO NOTHING IF THIS IS THE FIRST CONTACT/INDEX
                           }
@@ -498,870 +496,871 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                         carouselController: widget.agencyContactController,
                         itemBuilder: ((context, carouselPageIndex, realIndex) {
                           return _showEmptyContact &&
-                                  !widget.isAddContactPressed
+                              !widget.isAddContactPressed
                               ? Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: width * 0.08,
-                                        right: width * 0.08,
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: width * 0.08,
+                                  right: width * 0.08,
+                                ),
+                                child: Container(
+                                  height: height,
+                                  //color: Colors.deepPurple[200],
+                                ),
+                              ),
+                              //MAIN AGENCY CONTACT CONTAINER
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: width * 0.08,
+                                  right: width * 0.08,
+                                  top: height * 0.0125,
+                                  bottom: height * 0.01,
+                                ),
+                                child: Container(
+                                  height: height,
+                                  width: width,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromARGB(
+                                        255, 244, 244, 244),
+                                    borderRadius: BorderRadius.circular(
+                                        width * 0.03),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color.fromARGB(
+                                            255, 205, 206, 204),
+                                        offset: Offset(0, 5),
                                       ),
-                                      child: Container(
-                                        height: height,
-                                        //color: Colors.deepPurple[200],
-                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      top: height * 0.013,
+                                      bottom: height * 0.008,
                                     ),
-                                    //MAIN AGENCY CONTACT CONTAINER
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        left: width * 0.08,
-                                        right: width * 0.08,
-                                        top: height * 0.0125,
-                                        bottom: height * 0.01,
-                                      ),
-                                      child: Container(
-                                        height: height,
-                                        width: width,
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.center,
+                                      children: [
+                                        //INFO ICON
+                                        Icon(
+                                          Icons.info_outline,
                                           color: Color.fromARGB(
-                                              255, 244, 244, 244),
-                                          borderRadius: BorderRadius.circular(
-                                              width * 0.03),
-                                          boxShadow: const [
-                                            BoxShadow(
-                                              color: Color.fromARGB(
-                                                  255, 205, 206, 204),
-                                              offset: Offset(0, 5),
-                                            ),
-                                          ],
+                                              133, 14, 46, 67)
+                                              .withOpacity(0.5),
+                                          size: width * 0.1,
                                         ),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            top: height * 0.013,
-                                            bottom: height * 0.008,
+                                        SizedBox(
+                                          height: height * 0.01,
+                                        ),
+                                        //EMPTY TEXT
+                                        Text(
+                                          'No safety agency emergency contacts saved.',
+                                          textAlign: TextAlign.center,
+                                          overflow: TextOverflow.clip,
+                                          style: TextStyle(
+                                            fontFamily: 'OpunMai',
+                                            fontWeight: FontWeight.w500,
+                                            //fontStyle: FontStyle.italic,
+                                            fontSize: height * 0.0155,
+                                            color: Color.fromARGB(
+                                                255, 14, 46, 67)
+                                                .withOpacity(0.5),
                                           ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              //INFO ICON
-                                              Icon(
-                                                Icons.info_outline,
-                                                color: Color.fromARGB(
-                                                        133, 14, 46, 67)
-                                                    .withOpacity(0.5),
-                                                size: width * 0.1,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                              : widget.isAddContactPressed
+                              ? AddContact(
+                            agencyContactFormKey:
+                            _agencyAddContactFormKey,
+                            agencyNameController:
+                            _agencyNameController,
+                            agencyLocationController:
+                            _agencyLocationController,
+                            agencyMobileController:
+                            _agencyMobileController,
+                            agencyTelephoneController:
+                            _agencyTelephoneController,
+                            agencyEmailController:
+                            _agencyEmailController,
+                            agencyFBController: _agencyFBController,
+                            agencyWebController: _agencyWebController,
+                          )
+                              : widget.isEditContactPressed
+                              ? EditContact(
+                            agencyContactFormKey:
+                            _agencyEditContactFormKey,
+                            agencyNameController:
+                            _agencyNameController,
+                            agencyLocationController:
+                            _agencyLocationController,
+                            agencyMobileController:
+                            _agencyMobileController,
+                            agencyTelephoneController:
+                            _agencyTelephoneController,
+                            agencyEmailController:
+                            _agencyEmailController,
+                            agencyFBController:
+                            _agencyFBController,
+                            agencyWebController:
+                            _agencyWebController,
+                            isSelected: widget.isContactTapped,
+                          )
+                              : Stack(
+                            alignment: Alignment.topCenter,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: width * 0.08,
+                                  right: width * 0.08,
+                                ),
+                                child: Container(
+                                  height: height,
+                                  //color: Colors.deepPurple[200],
+                                ),
+                              ),
+                              //MAIN AGENCY CONTACT CONTAINER
+                              GestureDetector(
+                                onPanUpdate: (details) {
+                                  setState(() {
+                                    dragGesturePosition =
+                                        details.localPosition;
+                                    _showMagnifier = true;
+                                  });
+                                },
+                                onPanEnd: (details) {
+                                  setState(() {
+                                    _showMagnifier = false;
+                                  });
+                                },
+                                onTap: () {
+                                  setState(() {
+                                    widget.isContactTapped =
+                                    !widget.isContactTapped;
+                                    widget.onAgencySelected(
+                                        widget.isContactTapped);
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    left: width * 0.08,
+                                    right: width * 0.08,
+                                    top: height * 0.007,
+                                    bottom: height * 0.0075,
+                                  ),
+                                  child: Container(
+                                    height: height,
+                                    width: width,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromARGB(
+                                          255, 244, 244, 244),
+                                      borderRadius:
+                                      BorderRadius.circular(
+                                          width * 0.03),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Color.fromARGB(
+                                              255, 205, 206, 204),
+                                          offset: Offset(0, 5),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        top: height * 0.01,
+                                        bottom: height * 0.0015,
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceEvenly,
+                                        children: [
+                                          //CONTACT TITLE
+                                          Container(
+                                            alignment: Alignment
+                                                .centerLeft,
+                                            padding:
+                                            EdgeInsets.only(
+                                              left: width * 0.04,
+                                              right: width * 0.04,
+                                            ),
+                                            child: Tooltip(
+                                              textAlign: TextAlign
+                                                  .center,
+                                              preferBelow: false,
+                                              textStyle:
+                                              TextStyle(
+                                                fontFamily:
+                                                'OpunMai',
+                                                fontWeight:
+                                                FontWeight
+                                                    .w600,
+                                                fontSize: height *
+                                                    0.015,
+                                                color: Color
+                                                    .fromARGB(
+                                                    255,
+                                                    14,
+                                                    46,
+                                                    67),
                                               ),
-                                              SizedBox(
-                                                height: height * 0.01,
+                                              decoration:
+                                              BoxDecoration(
+                                                color: Colors.grey
+                                                    .shade100,
+                                                borderRadius:
+                                                BorderRadius
+                                                    .circular(
+                                                    width *
+                                                        0.025),
                                               ),
-                                              //EMPTY TEXT
-                                              Text(
-                                                'No safety agency emergency contacts saved.',
-                                                textAlign: TextAlign.center,
-                                                overflow: TextOverflow.clip,
+                                              message: widget
+                                                  .agencyName,
+                                              child: Text(
+                                                widget.agencyName,
+                                                overflow:
+                                                TextOverflow
+                                                    .ellipsis,
+                                                textAlign:
+                                                TextAlign
+                                                    .left,
                                                 style: TextStyle(
-                                                  fontFamily: 'OpunMai',
-                                                  fontWeight: FontWeight.w500,
-                                                  //fontStyle: FontStyle.italic,
-                                                  fontSize: height * 0.0155,
-                                                  color: Color.fromARGB(
-                                                          255, 14, 46, 67)
-                                                      .withOpacity(0.5),
+                                                  fontFamily:
+                                                  'OpunMai',
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w700,
+                                                  fontSize:
+                                                  height *
+                                                      0.013,
+                                                  color: Color
+                                                      .fromARGB(
+                                                      255,
+                                                      14,
+                                                      46,
+                                                      67),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          //AGENCY LOCATION
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_location_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyLocation,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyLocation,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ],
                                           ),
+                                          //AGENCY MOBILE
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_mobile_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyMobile,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyMobile,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //AGENCY TELEPHONE
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_telephone_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyTelephone,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyTelephone,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //AGENCY EMAIL
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_email_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyEmail,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyEmail,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //AGENCY FACEBOOK
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_fb_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyFB,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyFB,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          //AGENCY WEBSITE
+                                          Row(
+                                            children: [
+                                              Container(
+                                                //color: Colors.grey,
+                                                padding:
+                                                EdgeInsets
+                                                    .only(
+                                                  left: width *
+                                                      0.025,
+                                                  right: width *
+                                                      0.01,
+                                                ),
+
+                                                child:
+                                                Image.asset(
+                                                  'assets/images/side_menu/emergency_mgmt/safetyagency_web_icon.png',
+                                                  width: width *
+                                                      0.035,
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: Container(
+                                                  // color:
+                                                  //     Colors.brown,
+                                                  child: Tooltip(
+                                                    textAlign:
+                                                    TextAlign
+                                                        .center,
+                                                    preferBelow:
+                                                    false,
+                                                    textStyle:
+                                                    TextStyle(
+                                                      fontFamily:
+                                                      'OpunMai',
+                                                      fontWeight:
+                                                      FontWeight
+                                                          .w600,
+                                                      fontSize:
+                                                      height *
+                                                          0.015,
+                                                      color: Color
+                                                          .fromARGB(
+                                                          255,
+                                                          14,
+                                                          46,
+                                                          67),
+                                                    ),
+                                                    decoration:
+                                                    BoxDecoration(
+                                                      color: Colors
+                                                          .grey
+                                                          .shade100,
+                                                      borderRadius:
+                                                      BorderRadius.circular(width *
+                                                          0.025),
+                                                    ),
+                                                    message: widget
+                                                        .agencyWebsite,
+                                                    child: Text(
+                                                      widget
+                                                          .agencyWebsite,
+                                                      textAlign:
+                                                      TextAlign
+                                                          .left,
+                                                      overflow:
+                                                      TextOverflow
+                                                          .ellipsis,
+                                                      style:
+                                                      TextStyle(
+                                                        fontFamily:
+                                                        'OpunMai',
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .w400,
+                                                        fontSize:
+                                                        height *
+                                                            0.01,
+                                                        color: Color.fromARGB(
+                                                            255,
+                                                            14,
+                                                            46,
+                                                            67),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              //SELECTED TOP CONTAINER
+                              Positioned(
+                                top: 0,
+                                right: width * 0.12,
+                                child: Container(
+                                  height: height * 0.02,
+                                  width: width * 0.2,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius:
+                                    BorderRadius.circular(
+                                        width * 0.01),
+                                    border: Border.all(
+                                      color: Color.fromARGB(
+                                          255, 217, 217, 217),
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    widget.isContactTapped
+                                        ? 'selected'
+                                        : 'unselected',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: 'OpunMai',
+                                      fontSize: height * 0.013,
+                                      fontWeight: FontWeight.w700,
+                                      color: widget
+                                          .isContactTapped
+                                          ? Color.fromARGB(
+                                          255, 142, 230, 0)
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              if (_showMagnifier) ...[
+                                Positioned(
+                                  left: dragGesturePosition.dx -
+                                      (width * 0.5) / 2,
+                                  top: dragGesturePosition.dy -
+                                      (width * 0.5) * 1.15,
+                                  child: RawMagnifier(
+                                    focalPointOffset: Offset.zero,
+                                    magnificationScale: 2,
+                                    size: Size(width * 0.5,
+                                        height * 0.5),
+                                    decoration:
+                                    MagnifierDecoration(
+                                      shape: CircleBorder(
+                                        side: BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 14, 46, 67),
+                                          width: 1.5,
                                         ),
                                       ),
                                     ),
-                                  ],
-                                )
-                              : widget.isAddContactPressed
-                                  ? AddContact(
-                                      agencyContactFormKey:
-                                          _agencyAddContactFormKey,
-                                      agencyNameController:
-                                          _agencyNameController,
-                                      agencyLocationController:
-                                          _agencyLocationController,
-                                      agencyMobileController:
-                                          _agencyMobileController,
-                                      agencyTelephoneController:
-                                          _agencyTelephoneController,
-                                      agencyEmailController:
-                                          _agencyEmailController,
-                                      agencyFBController: _agencyFBController,
-                                      agencyWebController: _agencyWebController,
-                                    )
-                                  : widget.isEditContactPressed
-                                      ? EditContact(
-                                          agencyContactFormKey:
-                                              _agencyEditContactFormKey,
-                                          agencyNameController:
-                                              _agencyNameController,
-                                          agencyLocationController:
-                                              _agencyLocationController,
-                                          agencyMobileController:
-                                              _agencyMobileController,
-                                          agencyTelephoneController:
-                                              _agencyTelephoneController,
-                                          agencyEmailController:
-                                              _agencyEmailController,
-                                          agencyFBController:
-                                              _agencyFBController,
-                                          agencyWebController:
-                                              _agencyWebController,
-                                        )
-                                      : Stack(
-                                          alignment: Alignment.topCenter,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                left: width * 0.08,
-                                                right: width * 0.08,
-                                              ),
-                                              child: Container(
-                                                height: height,
-                                                //color: Colors.deepPurple[200],
-                                              ),
-                                            ),
-                                            //MAIN AGENCY CONTACT CONTAINER
-                                            GestureDetector(
-                                              onPanUpdate: (details) {
-                                                setState(() {
-                                                  dragGesturePosition =
-                                                      details.localPosition;
-                                                  _showMagnifier = true;
-                                                });
-                                              },
-                                              onPanEnd: (details) {
-                                                setState(() {
-                                                  _showMagnifier = false;
-                                                });
-                                              },
-                                              onTap: () {
-                                                setState(() {
-                                                  widget.isContactTapped =
-                                                      !widget.isContactTapped;
-                                                  widget.onAgencySelected(
-                                                      widget.isContactTapped);
-                                                });
-                                              },
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  left: width * 0.08,
-                                                  right: width * 0.08,
-                                                  top: height * 0.007,
-                                                  bottom: height * 0.0075,
-                                                ),
-                                                child: Container(
-                                                  height: height,
-                                                  width: width,
-                                                  alignment: Alignment.center,
-                                                  decoration: BoxDecoration(
-                                                    color: Color.fromARGB(
-                                                        255, 244, 244, 244),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            width * 0.03),
-                                                    boxShadow: const [
-                                                      BoxShadow(
-                                                        color: Color.fromARGB(
-                                                            255, 205, 206, 204),
-                                                        offset: Offset(0, 5),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  child: Padding(
-                                                    padding: EdgeInsets.only(
-                                                      top: height * 0.01,
-                                                      bottom: height * 0.0015,
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceEvenly,
-                                                      children: [
-                                                        //CONTACT TITLE
-                                                        Container(
-                                                          alignment: Alignment
-                                                              .centerLeft,
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                            left: width * 0.04,
-                                                            right: width * 0.04,
-                                                          ),
-                                                          child: Tooltip(
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            preferBelow: false,
-                                                            textStyle:
-                                                                TextStyle(
-                                                              fontFamily:
-                                                                  'OpunMai',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600,
-                                                              fontSize: height *
-                                                                  0.015,
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      14,
-                                                                      46,
-                                                                      67),
-                                                            ),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          width *
-                                                                              0.025),
-                                                            ),
-                                                            message: widget
-                                                                .agencyName,
-                                                            child: Text(
-                                                              widget.agencyName,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .left,
-                                                              style: TextStyle(
-                                                                fontFamily:
-                                                                    'OpunMai',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                fontSize:
-                                                                    height *
-                                                                        0.013,
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        14,
-                                                                        46,
-                                                                        67),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        //AGENCY LOCATION
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_location_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyLocation,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyLocation,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //AGENCY MOBILE
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_mobile_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyMobile,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyMobile,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //AGENCY TELEPHONE
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_telephone_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyTelephone,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyTelephone,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //AGENCY EMAIL
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_email_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyEmail,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyEmail,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //AGENCY FACEBOOK
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_fb_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyFB,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyFB,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        //AGENCY WEBSITE
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              //color: Colors.grey,
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .only(
-                                                                left: width *
-                                                                    0.025,
-                                                                right: width *
-                                                                    0.01,
-                                                              ),
-
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/side_menu/emergency_mgmt/safetyagency_web_icon.png',
-                                                                width: width *
-                                                                    0.035,
-                                                              ),
-                                                            ),
-                                                            Expanded(
-                                                              child: Container(
-                                                                // color:
-                                                                //     Colors.brown,
-                                                                child: Tooltip(
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  preferBelow:
-                                                                      false,
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'OpunMai',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        height *
-                                                                            0.015,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                            255,
-                                                                            14,
-                                                                            46,
-                                                                            67),
-                                                                  ),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: Colors
-                                                                        .grey
-                                                                        .shade100,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(width *
-                                                                            0.025),
-                                                                  ),
-                                                                  message: widget
-                                                                      .agencyWebsite,
-                                                                  child: Text(
-                                                                    widget
-                                                                        .agencyWebsite,
-                                                                    textAlign:
-                                                                        TextAlign
-                                                                            .left,
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'OpunMai',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400,
-                                                                      fontSize:
-                                                                          height *
-                                                                              0.01,
-                                                                      color: Color.fromARGB(
-                                                                          255,
-                                                                          14,
-                                                                          46,
-                                                                          67),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            //SELECTED TOP CONTAINER
-                                            Positioned(
-                                              top: 0,
-                                              right: width * 0.12,
-                                              child: Container(
-                                                height: height * 0.02,
-                                                width: width * 0.2,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          width * 0.01),
-                                                  border: Border.all(
-                                                    color: Color.fromARGB(
-                                                        255, 217, 217, 217),
-                                                    width: 1.5,
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  widget.isContactTapped
-                                                      ? 'selected'
-                                                      : 'unselected',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontFamily: 'OpunMai',
-                                                    fontSize: height * 0.013,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: widget
-                                                            .isContactTapped
-                                                        ? Color.fromARGB(
-                                                            255, 142, 230, 0)
-                                                        : Colors.red,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            if (_showMagnifier) ...[
-                                              Positioned(
-                                                left: dragGesturePosition.dx -
-                                                    (width * 0.5) / 2,
-                                                top: dragGesturePosition.dy -
-                                                    (width * 0.5) * 1.15,
-                                                child: RawMagnifier(
-                                                  focalPointOffset: Offset.zero,
-                                                  magnificationScale: 2,
-                                                  size: Size(width * 0.5,
-                                                      height * 0.5),
-                                                  decoration:
-                                                      MagnifierDecoration(
-                                                    shape: CircleBorder(
-                                                      side: BorderSide(
-                                                        color: Color.fromARGB(
-                                                            255, 14, 46, 67),
-                                                        width: 1.5,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ],
-                                        );
+                                  ),
+                                ),
+                              ],
+                            ],
+                          );
                         }),
                         options: CarouselOptions(
                             initialPage: 0,
@@ -1392,12 +1391,12 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                               !widget.isAddContactPressed &&
                               !widget.isEditContactPressed) {
                             widget.agencyContactController.nextPage();
-                            widget.onAgencySelected(false);
+                            //widget.onAgencySelected(false);
                           } else {}
                         });
                       },
                       overlayColor:
-                          MaterialStatePropertyAll(Colors.transparent),
+                      MaterialStatePropertyAll(Colors.transparent),
                       child: Text(
                         String.fromCharCode(Icons.chevron_right.codePoint),
                         textAlign: TextAlign.start,

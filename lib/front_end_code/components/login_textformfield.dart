@@ -49,23 +49,23 @@ class _LoginFormFieldState extends State<LoginFormField> {
               height: 25,
               child: widget.controller.text.isNotEmpty
                   ? Container(
-                      alignment: AlignmentDirectional.center,
-                      decoration: BoxDecoration(
-                        //color: Colors.amber,
-                        shape: BoxShape.circle,
-                        //color: Theme.of(context).scaffoldBackgroundColor,
-                      ),
-                      child: FittedBox(
-                        child: IconButton(
-                          icon: Icon(Icons.cancel),
-                          iconSize: 70,
-                          alignment: AlignmentDirectional.center,
-                          onPressed: () {
-                            widget.controller.clear();
-                          },
-                        ),
-                      ),
-                    )
+                alignment: AlignmentDirectional.center,
+                decoration: BoxDecoration(
+                  //color: Colors.amber,
+                  shape: BoxShape.circle,
+                  //color: Theme.of(context).scaffoldBackgroundColor,
+                ),
+                child: FittedBox(
+                  child: IconButton(
+                    icon: Icon(Icons.cancel),
+                    iconSize: 70,
+                    alignment: AlignmentDirectional.center,
+                    onPressed: () {
+                      widget.controller.clear();
+                    },
+                  ),
+                ),
+              )
                   : null,
             ),
           ],
@@ -73,12 +73,6 @@ class _LoginFormFieldState extends State<LoginFormField> {
       );
     }
     return null;
-  }
-
-  @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -136,12 +130,12 @@ class _LoginFormFieldState extends State<LoginFormField> {
             ),
             focusedErrorBorder: isValid
                 ? OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(widget.borderRadius),
-                    borderSide: BorderSide(
-                      color: Colors.red,
-                      width: 1,
-                    ),
-                  )
+              borderRadius: BorderRadius.circular(widget.borderRadius),
+              borderSide: BorderSide(
+                color: Colors.red,
+                width: 1,
+              ),
+            )
                 : null,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),

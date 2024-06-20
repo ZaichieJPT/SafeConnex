@@ -4,11 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/changetoagency_step1_page.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/changetoagency_step2_page.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/changetoagency_step3_page.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/changetoagency_step4_page.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/change_to_agency/changetoagency_step5_page.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/changetoagency_step1_page.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/changetoagency_step2_page.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/changetoagency_step3_page.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/changetoagency_step4_page.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/changetoagency_step5_page.dart';
 
 class ChangeToAgency extends StatefulWidget {
   final double height;

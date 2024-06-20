@@ -36,8 +36,6 @@ class _HomePageState extends State<HomePage> {
   Alignment alignment3 = Alignment(0.0, 1.0);
   Alignment alignment4 = Alignment(0.0, 1.0);
 
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-
   toggleButtons() {
     setState(() {
       _toggle = !_toggle;
@@ -55,6 +53,8 @@ class _HomePageState extends State<HomePage> {
       //print(_toggle);
     });
   }
+
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   @override
   void dispose() {
@@ -78,7 +78,58 @@ class _HomePageState extends State<HomePage> {
         //APP BAR
         HomeAppBar(
           height: widget.height,
+          width: widget.width,
           scrollController: _scrollController,
+        ),
+        Positioned(
+          top: (widget.height * 0.19) + 30,
+          left: 15,
+          child: SizedBox(
+            width: widget.width,
+            height: widget.height * 0.075,
+            child: Row(
+              children: [
+                //FOCUS BUTTON
+                Flexible(
+                  flex: 1,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.88,
+                    heightFactor: 0.9,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.white,
+                        border: Border.all(
+                          width: 0.5,
+                          color: Colors.grey,
+                        ),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 0.5,
+                            offset: Offset(-3, 4),
+                          ),
+                        ],
+                      ),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Image.asset(
+                          'assets/images/home_focus_icon.png',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                //PLACEHOLDER
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    //color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         if (_toggle)
           Opacity(

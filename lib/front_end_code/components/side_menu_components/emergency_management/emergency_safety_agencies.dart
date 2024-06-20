@@ -135,14 +135,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //FIRE EMERGENCY CONTACTS
   //USED TO PASS THE DATA FROM THE TEXTFORMFIELDS TO THE MAIN SAFETY AGENCY PAGE (THIS PAGE)
   _passFireContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       fireAgencyContacts.add({
         'agencyName': name,
@@ -158,14 +158,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   }
 
   _editFireContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       final editFireAgencyData = {
         'agencyName': name,
@@ -214,6 +214,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onFireContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedFireAgency.length; i++) {
+        isSelectedFireAgency[i] = false;
+      }
       isSelectedFireAgency[_currentFireAgencyIndex] = isSelected;
     });
   }
@@ -221,14 +224,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //CRIME EMERGENCY CONTACTS
   //USED TO PASS THE DATA FROM THE TEXTFORMFIELDS TO THE MAIN SAFETY AGENCY PAGE (THIS PAGE)
   _passCrimeContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       crimeAgencyContacts.add({
         'agencyName': name,
@@ -244,14 +247,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   }
 
   _editCrimeContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       final editCrimeAgencyData = {
         'agencyName': name,
@@ -298,6 +301,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onCrimeContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedCrimeAgency.length; i++) {
+        isSelectedCrimeAgency[i] = false;
+      }
       isSelectedCrimeAgency[_currentCrimeAgencyIndex] = isSelected;
     });
   }
@@ -306,14 +312,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //CRIME EMERGENCY CONTACTS
   //USED TO PASS THE DATA FROM THE TEXTFORMFIELDS TO THE MAIN SAFETY AGENCY PAGE (THIS PAGE)
   _passMedicalContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       medicalAgencyContacts.add({
         'agencyName': name,
@@ -329,14 +335,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   }
 
   _editMedicalContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       final editMedicalAgencyData = {
         'agencyName': name,
@@ -383,6 +389,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onMedicalContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedMedicalAgency.length; i++) {
+        isSelectedMedicalAgency[i] = false;
+      }
       isSelectedMedicalAgency[_currentMedicalAgencyIndex] = isSelected;
     });
   }
@@ -390,14 +399,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //NATURAL EMERGENCY CONTACTS
   //USED TO PASS THE DATA FROM THE TEXTFORMFIELDS TO THE MAIN SAFETY AGENCY PAGE (THIS PAGE)
   _passNaturalContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       naturalAgencyContacts.add({
         'agencyName': name,
@@ -413,14 +422,14 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   }
 
   _editNaturalContactData(
-    String name,
-    String location,
-    String mobile,
-    String telephone,
-    String email,
-    String fb,
-    String web,
-  ) {
+      String name,
+      String location,
+      String mobile,
+      String telephone,
+      String email,
+      String fb,
+      String web,
+      ) {
     setState(() {
       final editNaturalAgencyData = {
         'agencyName': name,
@@ -467,6 +476,9 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   //USED TO CHECK IF CONTACT IS SELECTED
   _onNaturalContactTapped(bool isSelected) {
     setState(() {
+      for (int i = 0; i < isSelectedNaturalAgency.length; i++) {
+        isSelectedNaturalAgency[i] = false;
+      }
       isSelectedNaturalAgency[_currentNaturalAgencyIndex] = isSelected;
     });
   }
@@ -594,13 +606,13 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                         alignment: Alignment.center,
                         child: Padding(
                           padding:
-                              EdgeInsets.symmetric(horizontal: width * 0.05),
+                          EdgeInsets.symmetric(horizontal: width * 0.05),
                           child: RichText(
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.clip,
                             text: TextSpan(
                               text:
-                                  'In case of a general emergency, all the safety agencies you\'ve',
+                              'In case of a general emergency, all the safety agencies you\'ve',
                               style: TextStyle(
                                 fontFamily: 'OpunMai',
                                 fontSize: height * 0.013,
@@ -617,7 +629,7 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                                 ),
                                 TextSpan(
                                   text:
-                                      'in the categories below will receive your SOS alert. If you prefer not to notify them, you can adjust your preferences in the Emergency Contacts settings.',
+                                  'in the categories below will receive your SOS alert. If you prefer not to notify them, you can adjust your preferences in the Emergency Contacts settings.',
                                 ),
                               ],
                             ),
@@ -652,41 +664,41 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                                     agencyTypeHeading: 'Fire Emergency',
                                     agencyHeadingFontColor: Colors.yellow,
                                     agencyContactController:
-                                        _fireContactController,
+                                    _fireContactController,
                                     agencyCount: fireAgencyContacts.length,
                                     agencyName:
-                                        currentFireAgencyData['agencyName'] ??
-                                            '',
+                                    currentFireAgencyData['agencyName'] ??
+                                        '',
                                     agencyLocation:
-                                        currentFireAgencyData['location'] ?? '',
+                                    currentFireAgencyData['location'] ?? '',
                                     agencyMobile:
-                                        currentFireAgencyData['mobile'] ?? '',
+                                    currentFireAgencyData['mobile'] ?? '',
                                     agencyTelephone:
-                                        currentFireAgencyData['telephone'] ??
-                                            '',
+                                    currentFireAgencyData['telephone'] ??
+                                        '',
                                     agencyEmail:
-                                        currentFireAgencyData['email'] ?? '',
+                                    currentFireAgencyData['email'] ?? '',
                                     agencyFB: currentFireAgencyData['fb'] ?? '',
                                     agencyWebsite:
-                                        currentFireAgencyData['website'] ?? '',
+                                    currentFireAgencyData['website'] ?? '',
                                     onPageChanged: _onFireContactChange,
                                     onAgencySelected: _onFireContactTapped,
                                     isAddContactPressed:
-                                        _isFireAddContactPressed,
+                                    _isFireAddContactPressed,
                                     onAddContactPressed:
-                                        _onFireAddContactTapped,
+                                    _onFireAddContactTapped,
                                     isEditContactPressed:
-                                        _isFireEditContactPressed,
+                                    _isFireEditContactPressed,
                                     onEditContactPressed:
-                                        _onFireEditContactTapped,
+                                    _onFireEditContactTapped,
                                     isContactTapped:
-                                        isSelectedFireAgency.isEmpty
-                                            ? false
-                                            : isSelectedFireAgency[
-                                                _currentFireAgencyIndex],
+                                    isSelectedFireAgency.isEmpty
+                                        ? false
+                                        : isSelectedFireAgency[
+                                    _currentFireAgencyIndex],
                                     passAgencyContactData: _passFireContactData,
                                     deleteAgencyContactData:
-                                        _deleteFireContactData,
+                                    _deleteFireContactData,
                                     editAgencyContactData: _editFireContactData,
                                     agencyContactsList: fireAgencyContacts,
                                   ),
@@ -695,50 +707,50 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                                 Expanded(
                                   child: ContactsTemplate(
                                     agencyTypeHeading:
-                                        'Crime and Safety Incident',
+                                    'Crime and Safety Incident',
                                     agencyHeadingFontColor:
-                                        Colors.grey.shade200,
+                                    Colors.grey.shade200,
                                     agencyContactController:
-                                        _crimeContactController,
+                                    _crimeContactController,
                                     agencyCount: crimeAgencyContacts.length,
                                     agencyName:
-                                        currentCrimeAgencyData['agencyName'] ??
-                                            '',
+                                    currentCrimeAgencyData['agencyName'] ??
+                                        '',
                                     agencyLocation:
-                                        currentCrimeAgencyData['location'] ??
-                                            '',
+                                    currentCrimeAgencyData['location'] ??
+                                        '',
                                     agencyMobile:
-                                        currentCrimeAgencyData['mobile'] ?? '',
+                                    currentCrimeAgencyData['mobile'] ?? '',
                                     agencyTelephone:
-                                        currentCrimeAgencyData['telephone'] ??
-                                            '',
+                                    currentCrimeAgencyData['telephone'] ??
+                                        '',
                                     agencyEmail:
-                                        currentCrimeAgencyData['email'] ?? '',
+                                    currentCrimeAgencyData['email'] ?? '',
                                     agencyFB:
-                                        currentCrimeAgencyData['fb'] ?? '',
+                                    currentCrimeAgencyData['fb'] ?? '',
                                     agencyWebsite:
-                                        currentCrimeAgencyData['website'] ?? '',
+                                    currentCrimeAgencyData['website'] ?? '',
                                     onPageChanged: _onCrimeContactChange,
                                     onAgencySelected: _onCrimeContactTapped,
                                     isAddContactPressed:
-                                        _isCrimeAddContactPressed,
+                                    _isCrimeAddContactPressed,
                                     onAddContactPressed:
-                                        _onCrimeAddContactTapped,
+                                    _onCrimeAddContactTapped,
                                     isEditContactPressed:
-                                        _isCrimeEditContactPressed,
+                                    _isCrimeEditContactPressed,
                                     onEditContactPressed:
-                                        _onCrimeEditContactTapped,
+                                    _onCrimeEditContactTapped,
                                     isContactTapped:
-                                        isSelectedCrimeAgency.isEmpty
-                                            ? false
-                                            : isSelectedCrimeAgency[
-                                                _currentCrimeAgencyIndex],
+                                    isSelectedCrimeAgency.isEmpty
+                                        ? false
+                                        : isSelectedCrimeAgency[
+                                    _currentCrimeAgencyIndex],
                                     passAgencyContactData:
-                                        _passCrimeContactData,
+                                    _passCrimeContactData,
                                     deleteAgencyContactData:
-                                        _deleteCrimeContactData,
+                                    _deleteCrimeContactData,
                                     editAgencyContactData:
-                                        _editCrimeContactData,
+                                    _editCrimeContactData,
                                     agencyContactsList: crimeAgencyContacts,
                                   ),
                                 ),
@@ -747,50 +759,50 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                                   child: ContactsTemplate(
                                     agencyTypeHeading: 'Medical Emergency',
                                     agencyHeadingFontColor:
-                                        Colors.cyan.shade300,
+                                    Colors.cyan.shade300,
                                     agencyContactController:
-                                        _medicalContactController,
+                                    _medicalContactController,
                                     agencyCount: medicalAgencyContacts.length,
                                     agencyName: currentMedicalAgencyData[
-                                            'agencyName'] ??
+                                    'agencyName'] ??
                                         '',
                                     agencyLocation:
-                                        currentMedicalAgencyData['location'] ??
-                                            '',
+                                    currentMedicalAgencyData['location'] ??
+                                        '',
                                     agencyMobile:
-                                        currentMedicalAgencyData['mobile'] ??
-                                            '',
+                                    currentMedicalAgencyData['mobile'] ??
+                                        '',
                                     agencyTelephone:
-                                        currentMedicalAgencyData['telephone'] ??
-                                            '',
+                                    currentMedicalAgencyData['telephone'] ??
+                                        '',
                                     agencyEmail:
-                                        currentMedicalAgencyData['email'] ?? '',
+                                    currentMedicalAgencyData['email'] ?? '',
                                     agencyFB:
-                                        currentMedicalAgencyData['fb'] ?? '',
+                                    currentMedicalAgencyData['fb'] ?? '',
                                     agencyWebsite:
-                                        currentMedicalAgencyData['website'] ??
-                                            '',
+                                    currentMedicalAgencyData['website'] ??
+                                        '',
                                     onPageChanged: _onMedicalContactChange,
                                     onAgencySelected: _onMedicalContactTapped,
                                     isAddContactPressed:
-                                        _isMedicalAddContactPressed,
+                                    _isMedicalAddContactPressed,
                                     onAddContactPressed:
-                                        _onMedicalAddContactTapped,
+                                    _onMedicalAddContactTapped,
                                     isEditContactPressed:
-                                        _isMedicalEditContactPressed,
+                                    _isMedicalEditContactPressed,
                                     onEditContactPressed:
-                                        _onMedicalEditContactTapped,
+                                    _onMedicalEditContactTapped,
                                     isContactTapped:
-                                        isSelectedMedicalAgency.isEmpty
-                                            ? false
-                                            : isSelectedMedicalAgency[
-                                                _currentMedicalAgencyIndex],
+                                    isSelectedMedicalAgency.isEmpty
+                                        ? false
+                                        : isSelectedMedicalAgency[
+                                    _currentMedicalAgencyIndex],
                                     passAgencyContactData:
-                                        _passMedicalContactData,
+                                    _passMedicalContactData,
                                     deleteAgencyContactData:
-                                        _deleteMedicalContactData,
+                                    _deleteMedicalContactData,
                                     editAgencyContactData:
-                                        _editMedicalContactData,
+                                    _editMedicalContactData,
                                     agencyContactsList: medicalAgencyContacts,
                                   ),
                                 ),
@@ -798,52 +810,52 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
                                 Expanded(
                                   child: ContactsTemplate(
                                     agencyTypeHeading:
-                                        'Accident and Natural Disaster',
+                                    'Accident and Natural Disaster',
                                     agencyHeadingFontColor:
-                                        Colors.lightGreen.shade300,
+                                    Colors.lightGreen.shade300,
                                     agencyContactController:
-                                        _naturalContactController,
+                                    _naturalContactController,
                                     agencyCount: naturalAgencyContacts.length,
                                     agencyName: currentNaturalAgencyData[
-                                            'agencyName'] ??
+                                    'agencyName'] ??
                                         '',
                                     agencyLocation:
-                                        currentNaturalAgencyData['location'] ??
-                                            '',
+                                    currentNaturalAgencyData['location'] ??
+                                        '',
                                     agencyMobile:
-                                        currentNaturalAgencyData['mobile'] ??
-                                            '',
+                                    currentNaturalAgencyData['mobile'] ??
+                                        '',
                                     agencyTelephone:
-                                        currentNaturalAgencyData['telephone'] ??
-                                            '',
+                                    currentNaturalAgencyData['telephone'] ??
+                                        '',
                                     agencyEmail:
-                                        currentNaturalAgencyData['email'] ?? '',
+                                    currentNaturalAgencyData['email'] ?? '',
                                     agencyFB:
-                                        currentNaturalAgencyData['fb'] ?? '',
+                                    currentNaturalAgencyData['fb'] ?? '',
                                     agencyWebsite:
-                                        currentNaturalAgencyData['website'] ??
-                                            '',
+                                    currentNaturalAgencyData['website'] ??
+                                        '',
                                     onPageChanged: _onNaturalContactChange,
                                     onAgencySelected: _onNaturalContactTapped,
                                     isAddContactPressed:
-                                        _isNaturalAddContactPressed,
+                                    _isNaturalAddContactPressed,
                                     onAddContactPressed:
-                                        _onNaturalAddContactTapped,
+                                    _onNaturalAddContactTapped,
                                     isEditContactPressed:
-                                        _isNaturalEditContactPressed,
+                                    _isNaturalEditContactPressed,
                                     onEditContactPressed:
-                                        _onNaturalEditContactTapped,
+                                    _onNaturalEditContactTapped,
                                     isContactTapped:
-                                        isSelectedNaturalAgency.isEmpty
-                                            ? false
-                                            : isSelectedNaturalAgency[
-                                                _currentNaturalAgencyIndex],
+                                    isSelectedNaturalAgency.isEmpty
+                                        ? false
+                                        : isSelectedNaturalAgency[
+                                    _currentNaturalAgencyIndex],
                                     passAgencyContactData:
-                                        _passNaturalContactData,
+                                    _passNaturalContactData,
                                     deleteAgencyContactData:
-                                        _deleteNaturalContactData,
+                                    _deleteNaturalContactData,
                                     editAgencyContactData:
-                                        _editNaturalContactData,
+                                    _editNaturalContactData,
                                     agencyContactsList: naturalAgencyContacts,
                                   ),
                                 ),

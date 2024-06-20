@@ -127,14 +127,6 @@ class _SignupFormFieldState extends State<SignupFormField> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    widget.controller.dispose();
-    super.dispose();
-    widget.controller.removeListener(_initializeListener);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height;
     final width = MediaQuery.sizeOf(context).width;

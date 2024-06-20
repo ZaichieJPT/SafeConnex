@@ -54,7 +54,7 @@ class _AgencyStep2TextFieldState extends State<AgencyStep2TextField> {
 
     return TextFormField(
       controller: widget.controller,
-      //validator: widget.validator,
+      validator: widget.validator,
       cursorColor: Colors.grey,
       style: TextStyle(
         fontFamily: 'OpunMai',
@@ -64,6 +64,7 @@ class _AgencyStep2TextFieldState extends State<AgencyStep2TextField> {
       ),
       decoration: InputDecoration(
         isDense: true,
+        isCollapsed: true,
         hintText: widget.hintText,
         hintStyle: TextStyle(
           fontFamily: 'OpunMai',
@@ -71,6 +72,7 @@ class _AgencyStep2TextFieldState extends State<AgencyStep2TextField> {
           fontSize: height * 0.015,
           color: Colors.grey,
         ),
+        errorStyle: TextStyle(fontSize: 0),
         suffixIconConstraints: BoxConstraints(
           maxHeight: height,
         ),

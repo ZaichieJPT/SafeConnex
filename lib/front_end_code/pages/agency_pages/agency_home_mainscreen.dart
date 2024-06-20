@@ -30,6 +30,13 @@ class _AgencyMainScreenState extends State<AgencyMainScreen> {
   Set<String> _selected = {'Profile'};
 
   int _selectedTabIndex = 0;
+  bool _isSafetyScoreSelected = false;
+
+  _onSafetyScoreSelected(bool isSelected) {
+    setState(() {
+      _isSafetyScoreSelected = isSelected;
+    });
+  }
 
   _onTabTapped(int index) {
     setState(() {
@@ -53,7 +60,13 @@ class _AgencyMainScreenState extends State<AgencyMainScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Color.fromARGB(255, 244, 244, 244),
       drawer: AgencySideMenu(),
-      body: _selectedTabIndex == 0 ? AgencyHomePage() : AgencyFeedPage(),
+      body: _selectedTabIndex == 0
+          ? AgencyHomePage(
+              onSafetyScoreSelected: _onSafetyScoreSelected,
+            )
+          : AgencyFeedPage(
+              isSafetyScoreSelected: _isSafetyScoreSelected,
+            ),
       bottomNavigationBar: MediaQuery.viewInsetsOf(context).bottom > 0
           ? null
           : AgencyNavBar(

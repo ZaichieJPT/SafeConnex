@@ -5,11 +5,12 @@ import 'package:safeconnex/front_end_code/components/agency_components/agency_ho
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/provider/agency_map_provider.dart';
-import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 
 class AgencyHomePage extends StatefulWidget {
+  final Function onSafetyScoreSelected;
   const AgencyHomePage({
     super.key,
+    required this.onSafetyScoreSelected,
   });
 
   @override
@@ -24,9 +25,7 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        //AgencyMapProvider();
-
-        /*Container(
+        Container(
           color: Colors.blue[700],
           child: SingleChildScrollView(
             child: Center(
@@ -39,10 +38,13 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
               ),
             ),
           ),
-        ),*/
+        ),
+        //NewMapProvider(),
 
         //APP BAR
-        AgencyAppBar(),
+        AgencyAppBar(
+          onSafetyScoreSelected: widget.onSafetyScoreSelected,
+        ),
       ],
     );
   }

@@ -12,6 +12,7 @@ class EditContact extends StatefulWidget {
   final TextEditingController agencyEmailController;
   final TextEditingController agencyFBController;
   final TextEditingController agencyWebController;
+  final bool isSelected;
 
   final agencyContactFormKey;
 
@@ -25,6 +26,7 @@ class EditContact extends StatefulWidget {
     required this.agencyEmailController,
     required this.agencyFBController,
     required this.agencyWebController,
+    required this.isSelected,
   });
 
   @override
@@ -546,13 +548,15 @@ class _EditContactState extends State<EditContact> {
               ),
             ),
             child: Text(
-              'selected',
+              widget.isSelected ? 'selected' : 'unselected',
               textAlign: TextAlign.left,
               style: TextStyle(
                 fontFamily: 'OpunMai',
                 fontSize: height * 0.013,
                 fontWeight: FontWeight.w700,
-                color: Color.fromARGB(255, 142, 230, 0),
+                color: widget.isSelected
+                    ? Color.fromARGB(255, 142, 230, 0)
+                    : Colors.red,
               ),
             ),
           ),

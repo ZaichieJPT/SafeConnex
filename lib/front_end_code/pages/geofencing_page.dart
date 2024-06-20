@@ -7,7 +7,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -36,6 +35,18 @@ class _GeofencingPageState extends State<GeofencingPage> {
   Marker? geolocationMarker = Marker(point: LatLng(0, 0), child: Container());
   CircleMarker? circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
   LatLng? tapLocation;
+
+  List<String> places = [
+    'At Home',
+    'At School',
+    'At Luneta Park',
+    'Home Sweet Home',
+    'SM Mall of Asia',
+    'Pangasinan Solid North Bus Terminal',
+    'AMA College Pangasinan',
+    'Universidad de Dagupan',
+    'Bonifacio Global City',
+  ];
 
   saveEditChanges() {
     if (_geofenceTextFieldsKey.currentState!.validate()) {
@@ -119,6 +130,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
       );
       setState(() {});
     }
+
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -288,7 +300,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 radius: Radius.circular(15),
                                 child: ListView.builder(
                                   controller: placesScrollControl,
-                                  itemCount: SafeConnexGeofenceDatabase.geofenceData.length,
+                                  itemCount: places.length,
                                   itemBuilder: ((context, index) {
                                     return InkWell(
                                       onTap: () => _onPlaceTapped(index),
@@ -342,12 +354,12 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                               //PLACE NAME
                                               Expanded(
                                                 child: Text(
-                                                  SafeConnexGeofenceDatabase.geofenceData[index]["radiusId"].toString(),
+                                                  places[index],
                                                   overflow:
                                                   TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontFamily: 'OpunMai',
-                                                    fontSize: height * 0.026,
+                                                    fontSize: height * 0.022,
                                                     color: Color.fromARGB(
                                                         255, 71, 82, 98),
                                                   ),
@@ -378,7 +390,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                   ),
                                 ),
                               ),
-                              child: FlutterMap(
+                              child:FlutterMap(
                                 options: MapOptions(
                                   initialCenter: LatLng(16.0265, 120.3363),
                                   initialZoom: 13.2,
@@ -688,19 +700,19 @@ class _GeofencingPageState extends State<GeofencingPage> {
                             _selectedTabIndex = 1;
                             //set placeLabelName to the name of the selected index
                             //set placeLocationName to the the location name of the selected index
-                            _placeNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["radiusId"].toString();
-                            _locationNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["addressLabel"].toString();
                           });
                         }
                       } else {
-                        if (placeLabelName == '' && placeLocationName == '') {
+                        if (placeLabelName == '') {
+                          showErrorMessage(context,
+                              'Please enter name for the place', height, width);
                           //get the value of the textfields
-                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
+
                           //add the geofence, label, and location to database
+                        } else if (placeLocationName == '') {
                         } else {
                           //get the value of the texfields
                           //modify the selected place's value in the database
-                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, placeLabelName!, _sliderValue, "circleName", placeLocationName!);
                         }
                       }
                     },
