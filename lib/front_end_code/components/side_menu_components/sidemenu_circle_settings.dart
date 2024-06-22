@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_leavecircle_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_info_carousel.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_editname_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_viewcode_page.dart';
 
 class CircleSettings extends StatefulWidget {
@@ -30,6 +33,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   int _viewEditIndex = 3;
   int _memberIndex = 11;
   String memberName = '';
+  String memberId = '';
   bool _locationStatus = false;
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
@@ -226,6 +230,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                   //EDIT BUTTON
                   InkWell(
                     onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditCircleName()));
                       setState(() {
                         if (_viewEditIndex == 1) {
                           _viewEditIndex = 3;
@@ -325,6 +330,9 @@ class _CircleSettingsState extends State<CircleSettings> {
                           } else {
                             _memberIndex = index;
                             memberName = currentCircleData['names'][index];
+                            // Call a code that updates the current clicked ID
+                            memberId = currentCircleData['userIds'][index];
+                            print(memberId);
                           }
                         });
                       },
@@ -356,13 +364,13 @@ class _CircleSettingsState extends State<CircleSettings> {
                                   backgroundColor:
                                       const Color.fromARGB(255, 128, 95, 166),
                                   foregroundColor: Colors.white,
-                                  child: Text(
-                                    currentCircleData['names'][index][0],
-                                    style: TextStyle(
-                                      fontFamily: 'OpunMai',
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                                  child: SafeConnexProfileStorage
+                                      .imageUrl !=
+                                      null
+                                      ? Image.network(
+                                      SafeConnexProfileStorage
+                                          .imageUrl!)
+                                      : Container(color: Colors.white),
                                 ),
                               ),
                             ),
@@ -397,7 +405,7 @@ class _CircleSettingsState extends State<CircleSettings> {
           //REMOVE MEMBER BUTTON
           Flexible(
             flex: 2,
-            child: ElevatedButton(
+            child: SafeConnexCircleDatabase.currentRole == "Circle Creator" ? ElevatedButton(
               onPressed: () {
                 //TOAST THAT WILL DISPLAY THAT THE MEMBER HAS BEEN REMOVED
                 if (memberName != '') {
@@ -421,6 +429,8 @@ class _CircleSettingsState extends State<CircleSettings> {
                     fullWidth: true,
                   );
                   setState(() {
+                    circleDatabase.removeFromCircle(memberId, currentCircleData["circleCode"]);
+                    circleDatabase.listCircleDataForSettings(SafeConnexAuthentication.currentUser!.uid);
                     _memberIndex = 11;
                     memberName = '';
                   });
@@ -446,7 +456,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                   ),
                 ),
               ),
-            ),
+            ) : Container(),
           ),
           //SETTINGS INFO CAROUSEL
           Expanded(

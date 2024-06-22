@@ -55,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
               context, MaterialPageRoute(builder: (context) => CirclePage()));
         }
         else if(SafeConnexCircleDatabase.currentCircleCode != null){
-          circleDatabase.listCircleDataForSettings(SafeConnexAuthentication.currentUser!.uid);
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => MainScreen()));
         }

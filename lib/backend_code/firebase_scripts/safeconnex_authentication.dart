@@ -201,11 +201,14 @@ class SafeConnexAuthentication{
       currentUser = _authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid);
       await profileStorage.getProfilePicture(currentUser!.uid);
+
       await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
         if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
           SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
+          circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
         }
       });
+      await circleDatabase.listCircleDataForSettings(currentUser!.uid);
       await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
   }

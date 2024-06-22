@@ -6,6 +6,8 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/login_textformfield.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
@@ -22,9 +24,7 @@ class EditCircleName extends StatefulWidget {
 class _EditCircleNameState extends State<EditCircleName> {
   TextEditingController _circleNameController = TextEditingController();
   final _circleKey = GlobalKey<FormState>();
-  FirebaseAuthHandler authHandler = FirebaseAuthHandler();
-  CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-  UserDatabaseHandler userDatabase = UserDatabaseHandler();
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   SettingsProvider provider = SettingsProvider();
 
   @override
@@ -210,9 +210,12 @@ class _EditCircleNameState extends State<EditCircleName> {
                         onPressed: () {
                           if (_circleKey.currentState!.validate()) {
                             if (_circleNameController.text.length <= 25) {
-                              //AppManager.circleDatabaseHandler.createCircleWithName(_circleNameController.text, context, CircleResultsPage());
+                              circleDatabase.changeCircleName(_circleNameController.text, SafeConnexCircleDatabase.currentCircleCode!, SafeConnexAuthentication.currentUser!.uid);
+                              circleDatabase.listCircleDataForSettings(SafeConnexAuthentication.currentUser!.uid);
                             }
                           }
+
+                          Navigator.pop(context);
                         },
                         child: FittedBox(
                           child: Text(

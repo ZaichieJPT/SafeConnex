@@ -27,6 +27,7 @@ class SafeConnexCircleDatabase{
   // Current Circle Code and the Circle Exception Reference
   static String? currentCircleCode;
   static String? circleException;
+  static String? currentRole;
 
   // Variable to reference the generated code
   static String? generatedCode;
@@ -161,6 +162,7 @@ class SafeConnexCircleDatabase{
     if(circleDataList.isEmpty){
       // Creates an empty memberNames variables to be used later
       List<String> memberNames = [];
+      List<String> userIds = [];
       // Gets the circle list from the User Database
       for(var circleList in userSnapshot.children){
         // Gets the circles in the Circle Database
@@ -170,10 +172,12 @@ class SafeConnexCircleDatabase{
             memberNames.clear();
             for (int index = 0; index < circleData.child("members").children.length; index++){
               memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
+              userIds.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
             }
             circleDataList.add({
               "circleName": circleData.child("circle_name").value,
               "circleCode": circleData.key.toString(),
+              "userIds": userIds.toList(),
               "names": memberNames.toList()
             });
           }
@@ -182,8 +186,8 @@ class SafeConnexCircleDatabase{
     }
     else{
       circleDataList.clear();
-      // Creates an empty memberNames variables to be used later
       List<String> memberNames = [];
+      List<String> userIds = [];
       // Gets the circle list from the User Database
       for(var circleList in userSnapshot.children){
         // Gets the circles in the Circle Database
@@ -193,10 +197,12 @@ class SafeConnexCircleDatabase{
             memberNames.clear();
             for (int index = 0; index < circleData.child("members").children.length; index++){
               memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
+              userIds.add(circleData.child("members").children.elementAt(index).child("id").value.toString());
             }
             circleDataList.add({
               "circleName": circleData.child("circle_name").value,
               "circleCode": circleData.key.toString(),
+              "userIds": userIds.toList(),
               "names": memberNames.toList()
             });
           }
@@ -253,6 +259,13 @@ class SafeConnexCircleDatabase{
     }
   }
 
+  Future<void> getCircleRole(String circleCode, String userId) async{
+    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).get();
+    if(snapshot.children.isNotEmpty){
+      currentRole = snapshot.child("members").child(userId).child("role").value.toString();
+    }
+  }
+
   Future<void> getCircleData(String circleCode) async
   {
     DataSnapshot snapshot = await _dbCircleReference.child(circleCode).get();
@@ -287,8 +300,28 @@ class SafeConnexCircleDatabase{
   }
 
   Future<void> leaveCircle(String userId, String circleCode) async {
-    await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
-    await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
+    // Transfer the Circle Creator to another user
+    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).get();
+    for (var users in snapshot.children){
+      //print()
+    }
+    //await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
+    //await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
+  }
+
+  Future<void> removeFromCircle(String userId, String circleCode) async {
+    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).child("members").child(userId).get();
+    if(currentRole == "Circle Creator"){
+      print(snapshot.value);
+      if(snapshot.child("role").value != "Circle Creator"){
+        await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
+        await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
+        print("Removed Successfully");
+      }
+      else{
+        print("Cant Remove Circle Creator");
+      }
+    }
   }
 }
 
