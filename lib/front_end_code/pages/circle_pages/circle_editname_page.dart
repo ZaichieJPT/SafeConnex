@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/login_textformfield.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';

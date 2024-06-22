@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 
 class LogoutDialog extends StatefulWidget {
   final double height;
@@ -180,8 +179,10 @@ class _LogoutDialogState extends State<LogoutDialog> {
                                     fullWidth: true,
                                   );
                                   // Logout Function
-                                  authentication.signOutAccount();
-                                  Navigator.of(context).popUntil(ModalRoute.withName("/login"));
+                                  Future.delayed(Duration(seconds: 1), (){
+                                    authentication.signOutAccount();
+                                    Navigator.of(context).popUntil(ModalRoute.withName("/login"));
+                                  });
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(

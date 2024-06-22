@@ -1,17 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/sidemenu_changetoagency_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_passdialog.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
@@ -43,6 +37,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
   SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
+  SafeConnexAuthentication authentication = SafeConnexAuthentication();
   double innerHeight = 0;
   double innerWidth = 0;
   int _selectedMenuIndex = 4;
@@ -126,13 +121,16 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   void validateAndSavePhoneNumber() {
     final currentState = _profileFormKey.currentState;
+    validatePhilippineMobileNumber(_phoneController.text);
     if (currentState != null && currentState.validate()) {
       currentState.save();
       setState(() {
         _phoneNumber = '9${_phoneController.text}';
         _isProfileEditable = !_isProfileEditable;
       });
-    } else {}
+    } else {
+      print("fix phone number");
+    }
   }
 
   void validateAndSaveBirthDate() {
@@ -143,14 +141,18 @@ class _ProfileSettingsState extends State<ProfileSettings> {
         _birthDate = _birthdateController.text;
         _isProfileEditable = !_isProfileEditable;
       });
-    } else {}
+    } else {
+      print("fix birthday");
+    }
   }
 
   @override
   void initState() {
-    super.initState();
+    _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
+    _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
     _phoneController.text = _phoneNumber!;
     _birthdateController.text = _birthDate!;
+    super.initState();
   }
 
   @override
@@ -162,11 +164,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   Widget build(BuildContext context) {
-    //AppManager.userDatabaseHandler.getRegularUser(AppManager.authHandler.authHandler.currentUser!.uid);
-    Future.delayed(Duration(milliseconds: 500), () {
-      _phoneNumber = "test";
-      _birthDate = "day";
-    });
     return Column(
       children: [
         //PROFILE CARD AREA
@@ -239,8 +236,15 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           setState(() {
                                             if (_isProfileEditable) {
                                               validateAndSavePhoneNumber();
+                                              authentication.updatePhoneNumberAndBirthdate(_phoneController.text, _birthdateController.text);
+                                              authentication.getUpdatedPhoneAndBirthday(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
+                                                _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
+                                                _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
+                                              });
                                               //_isProfileEditable = !_isProfileEditable;
                                             } else {
+                                              _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
+                                              _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
                                               _isProfileEditable =
                                               !_isProfileEditable;
                                             }
@@ -297,7 +301,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         Text(
                                           _isProfileEditable
                                               ? 'Phone Number: +639'
-                                              : 'Phone Number: +63',
+                                              : 'Phone Number: +639',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',

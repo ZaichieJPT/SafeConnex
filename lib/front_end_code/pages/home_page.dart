@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
@@ -36,6 +37,8 @@ class _HomePageState extends State<HomePage> {
   Alignment alignment3 = Alignment(0.0, 1.0);
   Alignment alignment4 = Alignment(0.0, 1.0);
 
+  final MapController mapController = MapController();
+
   toggleButtons() {
     setState(() {
       _toggle = !_toggle;
@@ -55,6 +58,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  bool isButtonPressed = false;
 
   @override
   void dispose() {
@@ -73,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        //NewMapProvider(),
+        //UserMapProvider(isButtonPressed: isButtonPressed),
 
         //APP BAR
         HomeAppBar(
@@ -112,7 +116,12 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if(isButtonPressed == false){
+                            isButtonPressed = true;
+                          }
+                          isButtonPressed = false;
+                        },
                         icon: Image.asset(
                           'assets/images/home_focus_icon.png',
                         ),

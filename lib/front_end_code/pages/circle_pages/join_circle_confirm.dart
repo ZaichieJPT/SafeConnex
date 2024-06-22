@@ -4,11 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
 class ConfirmJoinCircle extends StatefulWidget {

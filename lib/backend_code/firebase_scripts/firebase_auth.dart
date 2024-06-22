@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
-import 'package:safeconnex/controller/page_navigator.dart';
 import 'firebase_init.dart';
 import 'firebase_user.dart';
 import 'firebase_users_database.dart';
@@ -115,7 +114,7 @@ class FirebaseAuthHandler
           if(CircleDatabaseHandler.circleList.isNotEmpty) {
             CircleDatabaseHandler.currentCircleCode = CircleDatabaseHandler.circleList[0]["circle_code"].toString();
           }
-          PageNavigator(context, MainScreen);
+          //PageNavigator(context, MainScreen);
         }
       }
     });
@@ -256,7 +255,7 @@ class FirebaseAuthHandler
         SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
       }
       isTransferred = true;
-      PageNavigator(context, screen);
+      //PageNavigator(context, screen);
     }
   }
 
@@ -269,7 +268,7 @@ class FirebaseAuthHandler
       CircleDatabaseHandler.currentCircleCode =
           CircleDatabaseHandler.circleList[0]["circle_code"].toString();
     }
-    PageNavigator(context, MainScreen);
+    //PageNavigator(context, MainScreen);
   }
 
   void signUpWithEmail(String email, String password, String firstName, String lastName, String phoneNumber, String date, BuildContext context, Widget Screen, Function() backClicked){
@@ -284,7 +283,7 @@ class FirebaseAuthHandler
     Future.delayed(Duration(seconds: 1), () {
       if (firebaseSignUpException == null) {
         signOutAccount();
-        PageNavigator(context, Screen);
+        //PageNavigator(context, Screen);
       } else {
         backClicked();
       }

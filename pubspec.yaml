@@ -142,6 +142,17 @@ flutter:
         - asset: assets/fonts/OpunMai-SemiBold.ttf
         - asset: assets/fonts/OpunMai-Thin.ttf
 
+    - family: Merriweather
+      fonts:
+        - asset: assets/fonts/Merriweather/Merriweather-Regular.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Black.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Bold.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Italic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-Light.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-BlackItalic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-BoldItalic.ttf
+        - asset: assets/fonts/Merriweather/Merriweather-LightItalic.ttf
+
     - family: Montserrat
       fonts:
         - asset: assets/fonts/Montserrat/Montserrat-Black.ttf

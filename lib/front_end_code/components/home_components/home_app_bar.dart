@@ -5,10 +5,6 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
@@ -302,15 +298,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                                   if (currentCircleIndex != index) {
                                                     // Check if different circle is tapped
                                                     currentCircleIndex = index;
-                                                    circleDatabase.getCircleData(
-                                                        SafeConnexCircleDatabase
-                                                            .circleList[index]
-                                                        ["circle_code"]);
-                                                    SafeConnexCircleDatabase
-                                                        .currentCircleCode =
-                                                    SafeConnexCircleDatabase
-                                                        .circleList[index]
-                                                    ["circle_code"];
+                                                    circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
+                                                    SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
                                                   }
                                                 });
                                               },

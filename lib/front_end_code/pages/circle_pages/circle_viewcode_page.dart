@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 
 class ViewCircleCode extends StatefulWidget {
   const ViewCircleCode({super.key});
@@ -16,11 +17,9 @@ class ViewCircleCode extends StatefulWidget {
 class _ViewCircleCodeState extends State<ViewCircleCode> {
   @override
   Widget build(BuildContext context) {
-    CircleDatabaseHandler circleDatabase = CircleDatabaseHandler();
-
+    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
-    print(CircleDatabaseHandler.generatedCode);
 
     return Container(
       decoration: BoxDecoration(
@@ -73,7 +72,7 @@ class _ViewCircleCodeState extends State<ViewCircleCode> {
                               ),
                               //CIRCLE CODE
                               SelectableText(
-                                '${CircleDatabaseHandler.generatedCode}',
+                                '${SafeConnexCircleDatabase.currentCircleCode}',
                                 style: TextStyle(
                                   fontSize: height * 0.05,
                                   fontFamily: "OpunMai",
@@ -106,8 +105,7 @@ class _ViewCircleCodeState extends State<ViewCircleCode> {
                                     textAlign: TextAlign.center,
                                   ),
                                   onPressed: () {
-                                    Navigator.of(context).popUntil((route) =>
-                                        route.settings.name == "/home");
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ),

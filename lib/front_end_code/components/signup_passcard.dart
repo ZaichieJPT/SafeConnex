@@ -2,8 +2,6 @@
 import "package:firebase_core/firebase_core.dart";
 import "package:flutter/cupertino.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
-import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
-import "package:safeconnex/controller/app_manager.dart";
 import "package:safeconnex/front_end_code/components/signup_passfield.dart";
 import "package:safeconnex/front_end_code/components/signup_passvalidation.dart";
 import "package:safeconnex/front_end_code/pages/login_page.dart";

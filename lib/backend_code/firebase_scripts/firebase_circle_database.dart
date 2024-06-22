@@ -9,8 +9,6 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_users_database.dart';
-import 'package:safeconnex/controller/app_manager.dart';
-import 'package:safeconnex/controller/page_navigator.dart';
 import "firebase_init.dart";
 
 class CircleDatabaseHandler{
@@ -38,15 +36,15 @@ class CircleDatabaseHandler{
   static List<Map<String, String>> currentAddress = [];
 
   void createCircleWithName(String circleName, BuildContext context, Widget Screen){
-    createCircle(
-        AppManager.authHandler.authHandler.currentUser!.uid,
-        AppManager.authHandler.authHandler.currentUser!.displayName,
-        circleName,
-        AppManager.authHandler.authHandler.currentUser!.email,
-        AppManager.authHandler.authHandler.currentUser!.phoneNumber
-    );
+    //createCircle(
+        //AppManager.authHandler.authHandler.currentUser!.uid,
+        //AppManager.authHandler.authHandler.currentUser!.displayName,
+        //circleName,
+        //AppManager.authHandler.authHandler.currentUser!.email,
+        //AppManager.authHandler.authHandler.currentUser!.phoneNumber
+    //);
     Future.delayed(Duration(milliseconds: 1500), (){
-      PageNavigator(context, Screen);
+      //PageNavigator(context, Screen);
     });
   }
 
@@ -76,25 +74,25 @@ class CircleDatabaseHandler{
   }
 
   void getJoinCircleData(String circleCode, GlobalKey<FormState> joinCircleKey, BuildContext context, Widget Screen){
-    getCircleToJoin(circleCode, AppManager.authHandler.authHandler.currentUser!.uid);
+    getCircleToJoin(circleCode, "uid");
     getCircleData(circleCode);
     Future.delayed(Duration(milliseconds: 1500), () {
       if (joinCircleKey.currentState!.validate()) {
-        PageNavigator(context, Screen);
+        //PageNavigator(context, Screen);
       }
     });
   }
 
   void joinCircle(BuildContext context, Widget Screen){
-    addCircleMember(
+    /*addCircleMember(
         circleToJoin["circle_code"].toString(),
-        AppManager.authHandler.authHandler.currentUser!.uid,
-        AppManager.authHandler.authHandler.currentUser!.displayName.toString(),
+        //AppManager.authHandler.authHandler.currentUser!.uid,
+        //AppManager.authHandler.authHandler.currentUser!.displayName.toString(),
         circleToJoin["circle_name"].toString(),
-        AppManager.authHandler.authHandler.currentUser!.email.toString(),
+        //AppManager.authHandler.authHandler.currentUser!.email.toString(),
         "+639 51 280 7552"
-    );
-    PageNavigator(context, Screen);
+    );*/
+    //PageNavigator(context, Screen);
   }
 
   Future<void> addCircleMember(String circleCode, String? uid, String name, String circleName, String email, String phone) async
@@ -128,7 +126,7 @@ class CircleDatabaseHandler{
   }
 
   Future<void> changeUsername(String username, String circleCode, String userId) async {
-    await AppManager.authHandler.authHandler.currentUser!.updateDisplayName(username);
+    //await AppManager.authHandler.authHandler.currentUser!.updateDisplayName(username);
     await dbCircleReference.child(circleCode).child("members").child(userId).update({
       "name": username
     });

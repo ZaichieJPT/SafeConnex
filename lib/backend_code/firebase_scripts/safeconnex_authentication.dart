@@ -30,6 +30,7 @@ class SafeConnexAuthentication{
   static User? currentUser;
   static String? signUpException;
   static String? loginException;
+  static Map<String, String> userData = {};
 
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
@@ -50,7 +51,8 @@ class SafeConnexAuthentication{
       await _dbUserReference.child(currentCredential.user!.uid).set
         ({
         "birthday": birthdate,
-        "role": "user"
+        "role": "user",
+        "phoneNumber": "000000000"
       });
 
       // Logs out the account after the data has been assigned to prevent auto login
@@ -78,6 +80,24 @@ class SafeConnexAuthentication{
           print(signUpException);
       }
     }
+  }
+
+  Future<void> updatePhoneNumberAndBirthdate(String phoneNumber, String birthdate) async {
+    // Sets the values of the birthday and role in the database
+    await _dbUserReference.child(currentUser!.uid).update
+      ({
+      "birthday": birthdate,
+      "phoneNumber": phoneNumber
+    });
+  }
+
+  Future<void> getUpdatedPhoneAndBirthday(String userId) async {
+    DataSnapshot snapshot = await _dbUserReference.child(userId).get();
+
+    userData = {
+      "phoneNumber": snapshot.child("phoneNumber").value.toString(),
+      "birthdate": snapshot.child("birthday").value.toString()
+    };
   }
 
   Future<void> verifyEmailAddress(String email) async {
@@ -119,6 +139,7 @@ class SafeConnexAuthentication{
 
       if(currentCredential.user!.emailVerified == true){
         currentUser = currentCredential.user!;
+        await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
         await profileStorage.getProfilePicture(currentUser!.uid);
         await SafeconnexNotification().initializeNotification(currentUser!.uid);
         print("Login Successfull");
@@ -171,17 +192,19 @@ class SafeConnexAuthentication{
 
     await profileStorage.getProfilePicture(currentUser!.uid);
     await SafeconnexNotification().initializeNotification(currentUser!.uid);
+    await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
   }
 
   Future<void> loginWithToken() async {
     if(_authHandler.currentUser != null){
+
       currentUser = _authHandler.currentUser!;
-      profileStorage.getProfilePicture(currentUser!.uid).whenComplete(() {
-        circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
-          if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
-            SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
-          }
-        });
+      await getUpdatedPhoneAndBirthday(currentUser!.uid);
+      await profileStorage.getProfilePicture(currentUser!.uid);
+      await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
+        if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
+          SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
+        }
       });
       await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
@@ -202,6 +225,7 @@ class SafeConnexAuthentication{
   Future<void> signOutAccount() async
   {
     await _authHandler.signOut();
+    currentUser = null;
   }
 
   Future<void> changePassword (String oldPassword, String newPassword) async {

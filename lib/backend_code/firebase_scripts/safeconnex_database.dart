@@ -154,38 +154,55 @@ class SafeConnexCircleDatabase{
     print("Circle Name Updated");
   }
 
-  Future<void> listCircleDataForSettings(String userId, String circleCode) async {
-    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).get();
+  Future<void> listCircleDataForSettings(String userId) async {
+    DataSnapshot userSnapshot = await _dbUserReference.child(userId).child("circle_list").get();
+    DataSnapshot circleSnapshot = await _dbCircleReference.get();
 
     if(circleDataList.isEmpty){
-      for(var circleDatas in snapshot.children){
-        List<String> memberNames = [];
-        for(var memberName in snapshot.child("members").children){
-          memberNames.add(memberName.child("name").value.toString());
+      // Creates an empty memberNames variables to be used later
+      List<String> memberNames = [];
+      // Gets the circle list from the User Database
+      for(var circleList in userSnapshot.children){
+        // Gets the circles in the Circle Database
+        for(var circleData in circleSnapshot.children){
+          // Compares the circle code of the User Database and Circle Database
+          if(circleList.key == circleData.key){
+            memberNames.clear();
+            for (int index = 0; index < circleData.child("members").children.length; index++){
+              memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
+            }
+            circleDataList.add({
+              "circleName": circleData.child("circle_name").value,
+              "circleCode": circleData.key.toString(),
+              "names": memberNames.toList()
+            });
+          }
         }
-        circleDataList.add({
-          "circleName": circleDatas.child("circle_name").value,
-          "circleCode": circleDatas.key.toString(),
-          "names": memberNames
-        });
       }
     }
     else{
       circleDataList.clear();
-      for(var circleDatas in snapshot.children){
-        List<String> memberNames = [];
-        for(var memberName in snapshot.child("members").children){
-          memberNames.add(memberName.child("name").value.toString());
+      // Creates an empty memberNames variables to be used later
+      List<String> memberNames = [];
+      // Gets the circle list from the User Database
+      for(var circleList in userSnapshot.children){
+        // Gets the circles in the Circle Database
+        for(var circleData in circleSnapshot.children){
+          // Compares the circle code of the User Database and Circle Database
+          if(circleList.key == circleData.key){
+            memberNames.clear();
+            for (int index = 0; index < circleData.child("members").children.length; index++){
+              memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
+            }
+            circleDataList.add({
+              "circleName": circleData.child("circle_name").value,
+              "circleCode": circleData.key.toString(),
+              "names": memberNames.toList()
+            });
+          }
         }
-        circleDataList.add({
-          "circleName": circleDatas.child("circle_name").value,
-          "circleCode": circleDatas.key.toString(),
-          "names": memberNames
-        });
       }
     }
-
-    print("Data: ${circleDataList}");
   }
 
   Future<void> getCircleList(String userId) async {

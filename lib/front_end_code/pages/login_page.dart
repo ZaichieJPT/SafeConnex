@@ -1,12 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import "package:firebase_auth/firebase_auth.dart";
-import "package:font_awesome_flutter/font_awesome_flutter.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart";
-import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
-import "package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart";
-import "package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart";
-import "package:safeconnex/controller/app_manager.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
@@ -34,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
-  AppManager appController = AppManager();
   bool isTransferred = false;
 
   @override
@@ -57,17 +50,16 @@ class _LoginPageState extends State<LoginPage> {
     // Fix this the delay is too early make it accurate
     authentication.loginWithToken().whenComplete(() {
       if (SafeConnexAuthentication.currentUser != null && isTransferred == false) {
-        Future.delayed(Duration(milliseconds: 500), (){
-          if(SafeConnexCircleDatabase.currentCircleCode == null){
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => CirclePage()));
-          }
-          else if(SafeConnexCircleDatabase.currentCircleCode != null){
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
-          }
-          isTransferred = true;
-        });
+        if(SafeConnexCircleDatabase.currentCircleCode == null){
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => CirclePage()));
+        }
+        else if(SafeConnexCircleDatabase.currentCircleCode != null){
+          circleDatabase.listCircleDataForSettings(SafeConnexAuthentication.currentUser!.uid);
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => MainScreen()));
+        }
+        isTransferred = true;
       }
     });
 

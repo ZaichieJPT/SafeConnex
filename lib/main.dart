@@ -17,7 +17,6 @@ import 'package:safeconnex/front_end_code/pages/password_change_page.dart';
 import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'backend_code/firebase_scripts/firebase_options.dart';
-import 'controller/app_manager.dart';
 import 'front_end_code/pages/circle_pages/create_circle_page.dart';
 import 'package:flutter/services.dart';
 

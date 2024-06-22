@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_leavecircle_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_info_carousel.dart';
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_viewcode_page.dart';
 
 class CircleSettings extends StatefulWidget {
   final double height;
@@ -29,7 +31,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   int _memberIndex = 11;
   String memberName = '';
   bool _locationStatus = false;
-  CircleDatabaseHandler circleDatabaseHandler = CircleDatabaseHandler();
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   final List<Map<String, dynamic>> circleDataList = [
     {
@@ -56,7 +58,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   }
 
   void _nextCircle() {
-    if (_currentCircleIndex < circleDataList.length - 1 ) {
+    if (_currentCircleIndex < SafeConnexCircleDatabase.circleDataList.length - 1 ) {
       setState(() {
         _currentCircleIndex++;
         _memberIndex = 11;
@@ -66,7 +68,9 @@ class _CircleSettingsState extends State<CircleSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final currentCircleData = circleDataList[_currentCircleIndex];
+    //final currentCircleData = circleDataList[_currentCircleIndex];
+    final currentCircleData = SafeConnexCircleDatabase.circleDataList[_currentCircleIndex];
+    SafeConnexCircleDatabase.currentCircleCode = currentCircleData["circleCode"];
 
     return Container(
       height: widget.height,
@@ -103,7 +107,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                     onPressed: _currentCircleIndex == 0
                         ? () {
                             setState(() {
-                              _currentCircleIndex = circleDataList.length - 1;
+                              _currentCircleIndex = SafeConnexCircleDatabase.circleDataList.length - 1;
                             });
                           }
                         : _previousCircle,
@@ -142,7 +146,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                   child: IconButton(
                     alignment: Alignment.center,
                     padding: EdgeInsets.zero,
-                    onPressed: _currentCircleIndex == circleDataList.length - 1
+                    onPressed: _currentCircleIndex == SafeConnexCircleDatabase.circleDataList.length - 1
                         ? () {
                             setState(() {
                               _currentCircleIndex = 0;
@@ -175,6 +179,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                   //VIEW BUTTON
                   InkWell(
                     onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ViewCircleCode()));
                       setState(() {
                         if (_viewEditIndex == 0) {
                           _viewEditIndex = 3;

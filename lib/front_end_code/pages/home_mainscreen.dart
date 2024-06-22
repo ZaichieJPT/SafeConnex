@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/controller/app_manager.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';

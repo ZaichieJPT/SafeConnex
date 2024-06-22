@@ -20,7 +20,9 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class UserMapProvider extends StatefulWidget {
-  const UserMapProvider({super.key});
+  const UserMapProvider({super.key, this.isButtonPressed});
+
+  final bool? isButtonPressed;
 
   @override
   State<UserMapProvider> createState() => _UserMapProviderState();
@@ -34,11 +36,12 @@ class _UserMapProviderState extends State<UserMapProvider> {
     "latitude": 37.44630,
     "longitude": -122.121930
   };
-  MapController? _mapController;
+
   List<Marker> geolocationMarkers = [];
   int index = 0;
 
   SafeConnexGeolocation geolocation = SafeConnexGeolocation();
+  final MapController _mapController = MapController();
 
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
@@ -197,10 +200,23 @@ class _UserMapProviderState extends State<UserMapProvider> {
     setState(() {});
   }
 
+  getLocation(){
+    setState(() {
+      _mapController.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
+      print("InClass" + SafeConnexGeolocation.coordinatesData[1]['userId']);
+      print(SafeConnexGeolocation.coordinatesData[1]["location"]);
+    });
+  }
+
   Widget _buildMonitor() {
     geolocationMarkers.clear();
-    _mapController = MapController();
     index = 0;
+
+    print(widget.isButtonPressed);
+    if(widget.isButtonPressed == true){
+      getLocation();
+    }
+
     Future.delayed(Duration(milliseconds: 400), (){
       geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
     });
@@ -246,25 +262,6 @@ class _UserMapProviderState extends State<UserMapProvider> {
                         ),
                       ],
                     ),
-                    Positioned(
-                      bottom: 80,
-                      right: 30,
-                      child: IconButton(
-                        onPressed: (){
-                          setState(() {
-                            _mapController!.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
-                            print("InClass" + SafeConnexGeolocation.coordinatesData[1]['userId']);
-                            print(SafeConnexGeolocation.coordinatesData[1]["location"]);
-                         });
-                        },
-                        style: IconButton.styleFrom(
-                          fixedSize: Size(70, 70),
-                          iconSize: 43,
-                          backgroundColor: Colors.blueGrey.shade300,
-                        ),
-                        icon: Icon(Icons.my_location),
-                      ),
-                    )
                   ],
                 ),
               );

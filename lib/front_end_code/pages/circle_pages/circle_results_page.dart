@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
-import 'package:safeconnex/controller/page_navigator.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
 class CircleResultsPage extends StatefulWidget {
@@ -110,7 +109,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                                     // Cant do pop until
                                     //Navigator.of(context).popUntil((route) =>
                                     //route.settings.name == "/create_circle");
-                                    PageNavigator(context, MainScreen());
+                                    //PageNavigator(context, MainScreen());
                                   },
                                 ),
                               ),
