@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool _isPinClicked = false;
   Timer? _timer;
   final ScrollController _scrollController = ScrollController();
   bool _toggle = false;
@@ -234,63 +235,66 @@ class _HomePageState extends State<HomePage> {
                       child: GestureDetector(
                         onTap: () {
                           toggleButtons();
+
                           setState(() {
                             _toggle ? buttonScale = 0.9 : buttonScale = 0;
+                            !_isPinClicked
+                                ? showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return InitialPinDialog();
+                                    },
+                                  )
+                                : null;
+                            _isPinClicked = true;
                           });
                         },
-                        onLongPressDown: (details) {
-                          double timeLeft = 1.5;
-                          Future.delayed(Duration(milliseconds: 100), () {
-                            _timer = Timer.periodic(
-                              Duration(milliseconds: 500),
-                              (timer) {
-                                setState(
-                                  () {
-                                    timeLeft -= 0.5;
-                                    if (timeLeft > 0) {
-                                      buttonScale_2 += 5;
-                                      if (timeLeft == 3 ||
-                                          timeLeft == 2 ||
-                                          timeLeft == 1 ||
-                                          timeLeft == 0) {
-                                        print('time: ' + timeLeft.toString());
-                                      }
-                                    } else {
-                                      timer.cancel();
+                        onLongPress: () {
+                          double timeLeft = 1.75;
+                          print('timer start');
 
-                                      // showDialog(
-                                      //   context: context,
-                                      //   builder: (BuildContext context) {
-                                      //     return InitialPinDialog();
-                                      //   },
-                                      // );
-
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return EmergencyReceivedDialog();
-                                        },
-                                      );
-
-                                      // Navigator.of(context).push(
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => CountdownTemplate(
-                                      //       pageTitle: 'EMERGENCY SOS',
-                                      //       buttonColor: Colors.red.shade400,
-                                      //       fontColor: Colors.red.shade900,
-                                      //       PINColor: Colors.yellow,
-                                      //       colorBG: Colors.white,
-                                      //       SOSType: 'General',
-                                      //     ),
-                                      //   ),
-                                      // );
-                                      buttonScale_2 = 0;
+                          _timer = Timer.periodic(
+                            Duration(milliseconds: 300),
+                            (timer) {
+                              setState(
+                                () {
+                                  timeLeft -= 0.5;
+                                  if (timeLeft > 0) {
+                                    buttonScale_2 += 5;
+                                    if (timeLeft == 3 ||
+                                        timeLeft == 2 ||
+                                        timeLeft == 1 ||
+                                        timeLeft == 0) {
+                                      print('time: ' + timeLeft.toString());
                                     }
-                                  },
-                                );
-                              },
-                            );
-                          });
+                                  } else {
+                                    timer.cancel();
+
+                                    // showDialog(
+                                    //   context: context,
+                                    //   builder: (BuildContext context) {
+                                    //     return EmergencyReceivedDialog();
+                                    //   },
+                                    // );
+
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => CountdownTemplate(
+                                          pageTitle: 'EMERGENCY SOS',
+                                          buttonColor: Colors.red.shade400,
+                                          fontColor: Colors.red.shade900,
+                                          PINColor: Colors.yellow,
+                                          colorBG: Colors.white,
+                                          SOSType: 'General',
+                                        ),
+                                      ),
+                                    );
+                                    buttonScale_2 = 0;
+                                  }
+                                },
+                              );
+                            },
+                          );
                         },
                         onLongPressEnd: (details) {
                           setState(
@@ -303,7 +307,7 @@ class _HomePageState extends State<HomePage> {
                         onLongPressCancel: () {
                           setState(
                             () {
-                              _timer!.cancel();
+                              _timer != null ? _timer!.cancel() : null;
                               buttonScale_2 = 0;
                             },
                           );

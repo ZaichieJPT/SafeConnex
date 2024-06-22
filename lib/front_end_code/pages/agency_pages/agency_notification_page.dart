@@ -6,6 +6,7 @@ import 'package:safeconnex/front_end_code/components/agency_components/notiftype
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_soscancel_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_sossent_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_welcome_template.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_summary_page.dart';
 
 class AgencyNotificationPage extends StatefulWidget {
   const AgencyNotificationPage({super.key});
@@ -22,31 +23,30 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
       'fullname': 'Garry Penoliar',
       'name': 'Garry',
       'age': '23',
+      'date': '06/15/2024'
     },
     {
       'type': 3,
       'fullname': 'Alliah Ferrer',
       'name': 'Alliah',
       'age': '',
+      'date': '06/15/2024'
     },
     {
       'type': 2,
       'fullname': 'Alliah Ferrer',
       'name': 'Alliah',
       'age': '21',
+      'date': '06/15/2024'
     },
     {
       'type': 1,
       'fullname': 'Charles Zolina',
       'name': 'Charles',
       'age': '22',
+      'date': '06/15/2024'
     },
-    {
-      'type': 4,
-      'fullname': '',
-      'name': '',
-      'age': '',
-    },
+    {'type': 4, 'fullname': '', 'name': '', 'age': '', 'date': '06/15/2024'},
   ];
 
   @override
@@ -60,41 +60,22 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
         automaticallyImplyLeading: false,
         toolbarHeight: height * 0.08,
         leading: Padding(
-          padding: EdgeInsets.only(left: height * 0.035),
+          padding: EdgeInsets.only(left: width * 0.035),
           child: InkWell(
             onTap: () {
               Navigator.pop(context);
             },
             highlightColor: Colors.transparent,
             splashColor: Colors.transparent,
-            radius: 1,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
+            child: Text(
+              String.fromCharCode(Icons.chevron_left.codePoint),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: Icons.chevron_left.fontFamily,
+                fontSize: height * 0.055,
+                fontWeight: FontWeight.w900,
                 color: Colors.white,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Color.fromARGB(255, 232, 220, 206),
-                  width: 3,
-                ),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 182, 176, 163),
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: FittedBox(
-                child: Text(
-                  String.fromCharCode(Icons.west.codePoint),
-                  style: TextStyle(
-                    fontFamily: Icons.west.fontFamily,
-                    fontSize: width * 0.055,
-                    fontWeight: FontWeight.w900,
-                    color: Color.fromARGB(255, 110, 101, 94),
-                    package: Icons.west.fontPackage,
-                  ),
-                ),
+                package: Icons.chevron_left.fontPackage,
               ),
             ),
           ),
@@ -113,12 +94,33 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
                   color: Colors.white,
                 ),
               ),
-              SizedBox(
-                width: width * 0.025,
-              ),
-              Image.asset(
-                'assets/images/agency_app/agency_notification.png',
-                width: width * 0.085,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => AgencySummaryPage(),
+                    ),
+                  );
+                },
+                //REPORTS BUTTON
+                child: Container(
+                  height: width * 0.1,
+                  width: width * 0.11,
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.015),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(width * 0.02),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(-3, 3),
+                        color: Colors.grey.shade600,
+                      ),
+                    ],
+                  ),
+                  child: Image.asset(
+                    'assets/images/agency_app/agency_reports_icon.png',
+                  ),
+                ),
               ),
             ],
           ),
@@ -148,6 +150,7 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
                 notifications[index]['fullname'],
                 notifications[index]['name'],
                 notifications[index]['age'],
+                notifications[index]['date'],
               ),
             ),
           );
@@ -189,20 +192,22 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
     );
   }
 
-  Widget buildNotificationItem(
-      int notifType, String fullName, String firstName, String age) {
+  Widget buildNotificationItem(int notifType, String fullName, String firstName,
+      String age, String date) {
     switch (notifType) {
       case 1:
         return SOSNotifTemplate(
           fullName: fullName,
           firstName: firstName,
           age: age,
+          date: date,
         );
       case 2:
         return SOSCancelNotifTemplate(
           fullName: fullName,
           firstName: firstName,
           age: age,
+          date: date,
         );
       case 3:
         return ContactInfoRequestTemplate(

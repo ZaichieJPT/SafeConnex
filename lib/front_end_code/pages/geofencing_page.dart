@@ -88,7 +88,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 71, 82, 98),
           leadingWidth: width * 0.15,
-          toolbarHeight: height * 0.1,
+          toolbarHeight: height * 0.08,
           title: Text(
             'Places',
             textAlign: TextAlign.center,
@@ -143,14 +143,16 @@ class _GeofencingPageState extends State<GeofencingPage> {
         ),
         body: Center(
           child: SizedBox(
-            height: height * 0.8,
+            //height: height,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 //VIEW AND ADD BUTTONS
                 Container(
-                  height: height * 0.1,
+                  height: height * 0.045,
                   width: width * 0.85,
-                  padding: EdgeInsets.symmetric(vertical: height * 0.027),
+                  //color: Colors.red,
+                  //padding: EdgeInsets.symmetric(vertical: height * 0.027),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -182,6 +184,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 style: TextStyle(
                                   fontFamily: 'OpunMai',
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 12,
                                   color: _selectedTabIndex == 0
                                       ? Colors.white
                                       : Color.fromARGB(255, 70, 85, 104),
@@ -220,6 +223,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 style: TextStyle(
                                   fontFamily: 'OpunMai',
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 12,
                                   color: _selectedTabIndex == 1
                                       ? Colors.white
                                       : Color.fromARGB(255, 70, 85, 104),
@@ -329,7 +333,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           if (_selectedTabIndex == 1) ...[
                             Container(
                               width: width,
-                              height: height * 0.3,
+                              height: height * 0.35,
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 border: Border.symmetric(
@@ -574,14 +578,14 @@ class _GeofencingPageState extends State<GeofencingPage> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: height * 0.1,
+          height: height * 0.085,
           color: Color.fromARGB(255, 71, 82, 98),
           child: Row(
             children: [
               //CANCEL BUTTON
               Expanded(
                 child: Container(
-                  height: height * 0.1,
+                  //height: height * 0.1,
                   color: Color.fromARGB(255, 81, 97, 112),
                   child: IconButton(
                     onPressed: () {
@@ -637,7 +641,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                       }
                     },
                     elevation: 2,
-                    height: height * 0.05,
+                    height: height * 0.045,
                     color: const Color.fromARGB(255, 121, 192, 148),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(width * 0.2),
