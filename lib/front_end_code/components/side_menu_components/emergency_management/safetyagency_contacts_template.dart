@@ -397,9 +397,9 @@ class _ContactsTemplateState extends State<ContactsTemplate> {
                                     !widget.isEditContactPressed;
                                 widget.onEditContactPressed(
                                     widget.isEditContactPressed);
-                                widget.isContactTapped =
-                                    !widget.isContactTapped;
-                                widget.onAgencySelected(widget.isContactTapped);
+                                // widget.isContactTapped =
+                                //     !widget.isContactTapped;
+                                // widget.onAgencySelected(widget.isContactTapped);
                               }
                             } else {
                               setState(() {

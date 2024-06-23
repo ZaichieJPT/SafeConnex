@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:popover/popover.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/emergency_contacts_options.dart';
 
 class EmergencyContacts extends StatefulWidget {
@@ -23,6 +24,9 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
   bool _isMedicalAgencyCheck = false;
   bool _isDisasterCircleCheck = true;
   bool _isDisasterAgencyCheck = false;
+
+  double height = 0;
+  double width = 0;
 
   _onMainTap(bool circleCheck, bool agencyCheck) {
     setState(() {
@@ -61,8 +65,8 @@ class _EmergencyContactsState extends State<EmergencyContacts> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height;
-    double width = MediaQuery.sizeOf(context).width;
+    height = MediaQuery.sizeOf(context).height;
+    width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 14, 46, 67),

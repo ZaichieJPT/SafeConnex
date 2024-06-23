@@ -96,19 +96,19 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: isFirstTimeOpen! == true ? "/" : "/login",
-      routes: {
-        "/": (context) => OnBoardingScreen(),
-        "/login": (context) => LoginPage(),
-        "/home": (context) => AgencyMainScreen(),
-        "/create_circle": (context) => CirclePage(),
-        "/join_circle": (context) => JoinCirclePage(),
-        "/changePassword": (context) => PasswordChange(),
-        "/temp": (context) => NewMapProvider(),
-        "/temp2": (context) => GeofencingPage(),
-        "/temp3": (context) => CarouseSliderComponent(),
-      },
-      //home: MainScreen(),
+      //initialRoute: isFirstTimeOpen! == true ? "/" : "/login",
+      // routes: {
+      //   "/": (context) => OnBoardingScreen(),
+      //   "/login": (context) => LoginPage(),
+      //   "/home": (context) => AgencyMainScreen(),
+      //   "/create_circle": (context) => CirclePage(),
+      //   "/join_circle": (context) => JoinCirclePage(),
+      //   "/changePassword": (context) => PasswordChange(),
+      //   "/temp": (context) => NewMapProvider(),
+      //   "/temp2": (context) => GeofencingPage(),
+      //   "/temp3": (context) => CarouseSliderComponent(),
+      // },
+      home: AgencyMainScreen(),
     );
   }
 }

@@ -1151,10 +1151,10 @@ class _NewsPageState extends State<NewsPage> {
                                     //color: const Color.fromARGB(255, 217, 217, 217),
                                     color: const Color.fromARGB(
                                         255, 217, 217, 217),
-                                    child: Image.network(
-                                      'https://scontent.fmnl4-6.fna.fbcdn.net/v/t39.30808-6/448546132_895295879303519_3604536046110788333_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGOnnX1PwwgCxETN0JwpYWEtVrwXTLUNzm1WvBdMtQ3OQ3vbtXjTJw_wtkOkb6v0V_jMRhX5-t9uv_vCaTMhp5-&_nc_ohc=PFUZ2BzF1QYQ7kNvgGbLHaj&_nc_ht=scontent.fmnl4-6.fna&oh=00_AYD430cbJILM_yEPjM0BrwmKAQsL6UdElMkldxacF4qTFg&oe=66769FAA',
-                                      fit: BoxFit.contain,
-                                    ),
+                                    // child: Image.network(
+                                    //   'https://scontent.fmnl4-6.fna.fbcdn.net/v/t39.30808-6/448546132_895295879303519_3604536046110788333_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGOnnX1PwwgCxETN0JwpYWEtVrwXTLUNzm1WvBdMtQ3OQ3vbtXjTJw_wtkOkb6v0V_jMRhX5-t9uv_vCaTMhp5-&_nc_ohc=PFUZ2BzF1QYQ7kNvgGbLHaj&_nc_ht=scontent.fmnl4-6.fna&oh=00_AYD430cbJILM_yEPjM0BrwmKAQsL6UdElMkldxacF4qTFg&oe=66769FAA',
+                                    //   fit: BoxFit.contain,
+                                    // ),
                                   ),
                                   //POST FOOTER
                                   Container(
