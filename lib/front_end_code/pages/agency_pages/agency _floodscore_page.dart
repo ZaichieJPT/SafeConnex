@@ -3,7 +3,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_safety_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/provider/agency_map_provider.dart';
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
 class AgencyFloodScore extends StatefulWidget {
   const AgencyFloodScore({super.key});
@@ -14,9 +20,20 @@ class AgencyFloodScore extends StatefulWidget {
 
 class _AgencyFloodScoreState extends State<AgencyFloodScore> {
   ScrollController placesScrollControl = ScrollController();
+  SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
 
   double _sliderValue = 100.0;
   int _currentRiskIndex = -1;
+  int _currentScoringIndex = 0;
+  String? riskInfo = 'Flood Risk';
+  String? riskLevel;
+
+  Color markerColor = Colors.blue;
+  Color borderColor = Colors.blue.shade500;
+
+  Marker? geolocationMarker = Marker(point: LatLng(0, 0), child: Container());
+  CircleMarker? circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
+  LatLng? tapLocation;
 
   _onRiskLevelTapped(int index) {
     setState(() {
@@ -28,10 +45,54 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
     });
   }
 
+  _onScoringTypeTapped(int index) {
+    setState(() {
+      _currentScoringIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
+
+    void addGeolocationMarker(LatLng markerLocation, double sliderValue){
+      geolocationMarker = Marker(
+          height: 50,
+          width: 50,
+          rotate: true,
+          alignment: Alignment.topCenter,
+          point: markerLocation,
+          child: Stack(
+            children: [
+              Positioned(
+                  child: Icon(Icons.location_pin, size: 55)
+              ),
+              Positioned(
+                top: 10,
+                left: 16,
+                child: Container(
+                  width: 23,
+                  height: 23,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.green
+                  ),
+                ),
+              ),
+            ],
+          )
+      );
+      circleMarker = CircleMarker(
+          color: markerColor.withOpacity(0.5),
+          borderColor: borderColor,
+          borderStrokeWidth: 2,
+          point: markerLocation,
+          radius: sliderValue,
+          useRadiusInMeter: true
+      );
+      setState(() {});
+    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -40,14 +101,14 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 71, 82, 98),
           leadingWidth: width * 0.15,
-          toolbarHeight: height * 0.1,
+          toolbarHeight: height * 0.08,
           title: Text(
             'Safety Scoring',
             textAlign: TextAlign.center,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               fontFamily: 'OpunMai',
-              fontSize: height * 0.03,
+              fontSize: 19,
               fontWeight: FontWeight.w400,
               color: Colors.white,
               letterSpacing: 1,
@@ -96,21 +157,21 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
         ),
         body: Center(
           child: SizedBox(
-            height: height * 0.8,
+            height: height * 0.85,
             child: Column(
               children: [
                 Flexible(
                   child: SingleChildScrollView(
                     reverse: true,
                     child: SizedBox(
-                      height: height * 0.8,
+                      height: height * 0.85,
                       child: Column(
                         children: [
                           //MAP VIEW
 
                           Container(
                             width: width,
-                            height: height * 0.4,
+                            height: height * 0.47,
                             decoration: BoxDecoration(
                               color: Colors.blue[100],
                               border: Border.symmetric(
@@ -120,11 +181,42 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                 ),
                               ),
                             ),
-                            //child: NewMapProvider(),
+                            child: FlutterMap(
+                              options: MapOptions(
+                                initialCenter: LatLng(16.0265, 120.3363),
+                                initialZoom: 13.2,
+                                onTap: (_, tapLocation){
+                                  this.tapLocation = tapLocation;
+                                  _sliderValue = 100;
+                                  safetyScoringDatabase.getGeocode(tapLocation).whenComplete((){
+                                    addGeolocationMarker(tapLocation, _sliderValue);
+                                  });
+                                },
+                              ),
+                              children: [
+                                TileLayer(
+                                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                  userAgentPackageName: 'com.safeconnex.app',
+                                  tileProvider: CachedTileProvider(
+                                    store: MemCacheStore(),
+                                  ),
+                                ),
+                                CircleLayer(
+                                  circles: [
+                                    circleMarker!
+                                  ],
+                                ),
+                                MarkerLayer(
+                                  markers: [
+                                    geolocationMarker!
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           //SLIDER
                           Container(
-                            height: height * 0.1,
+                            height: height * 0.08,
                             width: width,
                             padding: EdgeInsets.only(
                                 left: width * 0.02, right: width * 0.03),
@@ -138,23 +230,24 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                       activeTickMarkColor: Colors.transparent,
                                       trackHeight: height * 0.0065,
                                       thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius: width * 0.045,
+                                        enabledThumbRadius: width * 0.04,
                                       ),
                                     ),
                                     child: Slider(
                                       value: _sliderValue,
                                       onChanged: (value) {
                                         setState(() {
-                                          this._sliderValue = value;
+                                          _sliderValue = value;
+                                          addGeolocationMarker(tapLocation!, value);
                                         });
                                       },
                                       min: 50,
                                       max: 3000,
                                       divisions: 100,
                                       activeColor:
-                                          Color.fromARGB(255, 70, 85, 104),
+                                      Color.fromARGB(255, 70, 85, 104),
                                       inactiveColor:
-                                          Color.fromARGB(255, 70, 85, 104),
+                                      Color.fromARGB(255, 70, 85, 104),
                                       thumbColor: Colors.deepPurple[400],
                                     ),
                                   ),
@@ -183,28 +276,105 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                             height: height * 0.05,
                             color: Color.fromARGB(255, 232, 220, 206),
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: width * 0.05),
-                            child: Text(
-                              'Flood Risk Level',
-                              style: TextStyle(
-                                fontFamily: 'OpunMai',
-                                fontSize: height * 0.022,
-                                fontWeight: FontWeight.w700,
-                                color: Color.fromARGB(255, 173, 162, 153),
-                              ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: (){
+                                      riskInfo = "Flood Risk";
+                                      _onScoringTypeTapped(0);
+                                    },
+                                    child: Container(
+                                      height: height * 0.05,
+                                      width: width,
+                                      alignment: Alignment.center,
+                                      decoration: _currentScoringIndex == 0
+                                          ? BoxDecoration(
+                                        color: Color.fromARGB(
+                                            255, 121, 192, 148),
+                                        borderRadius:
+                                        BorderRadius.circular(
+                                            width * 0.02),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            offset: Offset(0, 3),
+                                            color: Color.fromARGB(
+                                                255, 110, 169, 134),
+                                          ),
+                                        ],
+                                      )
+                                          : null,
+                                      child: Text(
+                                        'Flood Risk Level',
+                                        style: TextStyle(
+                                          fontFamily: 'OpunMai',
+                                          fontSize: height * 0.02,
+                                          fontWeight: FontWeight.w700,
+                                          color: _currentScoringIndex == 0
+                                              ? Color.fromARGB(255, 71, 82, 98)
+                                              : Color.fromARGB(
+                                              255, 173, 162, 153),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      riskInfo = "Accident Risk";
+                                      _onScoringTypeTapped(1);
+                                    },
+                                    child: Container(
+                                      height: height,
+                                      width: width,
+                                      alignment: Alignment.center,
+                                      decoration: _currentScoringIndex == 1
+                                          ? BoxDecoration(
+                                        color: Color.fromARGB(
+                                            255, 121, 192, 148),
+                                        borderRadius:
+                                        BorderRadius.circular(
+                                            width * 0.02),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            offset: Offset(0, 3),
+                                            color: Color.fromARGB(
+                                                255, 110, 169, 134),
+                                          ),
+                                        ],
+                                      )
+                                          : null,
+                                      child: Text(
+                                        'Accident Risk Level',
+                                        style: TextStyle(
+                                          fontFamily: 'OpunMai',
+                                          fontSize: height * 0.02,
+                                          fontWeight: FontWeight.w700,
+                                          color: _currentScoringIndex == 1
+                                              ? Color.fromARGB(255, 71, 82, 98)
+                                              : Color.fromARGB(
+                                              255, 173, 162, 153),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          //LOCATION LABELS
+                          //SAFETY SCORE LABEL
                           Expanded(
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 //LABEL TEXT
                                 Flexible(
+                                  flex: 2,
                                   child: Container(
                                     alignment: Alignment.centerLeft,
                                     padding:
-                                        EdgeInsets.only(left: width * 0.05),
+                                    EdgeInsets.only(left: width * 0.05),
                                     child: FittedBox(
                                       child: Text(
                                         'Risk Level',
@@ -214,7 +384,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                           fontWeight: FontWeight.w700,
                                           fontSize: 18,
                                           color:
-                                              Color.fromARGB(255, 71, 82, 98),
+                                          Color.fromARGB(255, 71, 82, 98),
                                         ),
                                       ),
                                     ),
@@ -222,13 +392,16 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                 ),
                                 //LABEL TEXT FIELD
                                 Flexible(
-                                  flex: 3,
+                                  flex: 4,
                                   child: Row(
                                     children: [
                                       //LOW STATUS
                                       Flexible(
                                         child: InkWell(
                                           onTap: () {
+                                            markerColor = Colors.yellow;
+                                            borderColor = Colors.yellow.shade500;
+                                            riskLevel = "Low";
                                             _onRiskLevelTapped(0);
                                           },
                                           highlightColor: Colors.transparent,
@@ -244,7 +417,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                   flex: 2,
                                                   child: Padding(
                                                     padding:
-                                                        EdgeInsets.symmetric(
+                                                    EdgeInsets.symmetric(
                                                       vertical: height * 0.005,
                                                       horizontal: width * 0.05,
                                                     ),
@@ -258,10 +431,10 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                               255, 71, 82, 98),
                                                         ),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    width *
-                                                                        0.01),
+                                                        BorderRadius
+                                                            .circular(
+                                                            width *
+                                                                0.01),
                                                       ),
                                                     ),
                                                   ),
@@ -272,11 +445,11 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                     child: Text(
                                                       'Low',
                                                       overflow:
-                                                          TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         fontFamily: 'OpunMai',
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                        FontWeight.w700,
                                                         fontSize: 18,
                                                         color: Color.fromARGB(
                                                             255, 71, 82, 98),
@@ -293,6 +466,9 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                       Flexible(
                                         child: InkWell(
                                           onTap: () {
+                                            markerColor = Colors.orange;
+                                            borderColor = Colors.orange.shade500;
+                                            riskLevel = "Moderate";
                                             _onRiskLevelTapped(1);
                                           },
                                           highlightColor: Colors.transparent,
@@ -308,7 +484,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                   flex: 2,
                                                   child: Padding(
                                                     padding:
-                                                        EdgeInsets.symmetric(
+                                                    EdgeInsets.symmetric(
                                                       vertical: height * 0.005,
                                                       horizontal: width * 0.05,
                                                     ),
@@ -321,10 +497,10 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                               255, 71, 82, 98),
                                                         ),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    width *
-                                                                        0.01),
+                                                        BorderRadius
+                                                            .circular(
+                                                            width *
+                                                                0.01),
                                                       ),
                                                     ),
                                                   ),
@@ -335,11 +511,11 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                     child: Text(
                                                       'Moderate',
                                                       overflow:
-                                                          TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         fontFamily: 'OpunMai',
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                        FontWeight.w700,
                                                         fontSize: 18,
                                                         color: Color.fromARGB(
                                                             255, 71, 82, 98),
@@ -356,6 +532,9 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                       Flexible(
                                         child: InkWell(
                                           onTap: () {
+                                            markerColor = Colors.red;
+                                            borderColor = Colors.red.shade500;
+                                            riskLevel = "High";
                                             _onRiskLevelTapped(2);
                                           },
                                           highlightColor: Colors.transparent,
@@ -371,23 +550,23 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                   flex: 2,
                                                   child: Padding(
                                                     padding:
-                                                        EdgeInsets.symmetric(
+                                                    EdgeInsets.symmetric(
                                                       vertical: height * 0.005,
                                                       horizontal: width * 0.05,
                                                     ),
                                                     child: Container(
                                                       decoration: BoxDecoration(
                                                         color:
-                                                            Colors.red.shade700,
+                                                        Colors.red.shade700,
                                                         border: Border.all(
                                                           color: Color.fromARGB(
                                                               255, 71, 82, 98),
                                                         ),
                                                         borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    width *
-                                                                        0.01),
+                                                        BorderRadius
+                                                            .circular(
+                                                            width *
+                                                                0.01),
                                                       ),
                                                     ),
                                                   ),
@@ -398,11 +577,11 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                                     child: Text(
                                                       'High',
                                                       overflow:
-                                                          TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         fontFamily: 'OpunMai',
                                                         fontWeight:
-                                                            FontWeight.w700,
+                                                        FontWeight.w700,
                                                         fontSize: 18,
                                                         color: Color.fromARGB(
                                                             255, 71, 82, 98),
@@ -430,7 +609,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                         border: Border(
                                           bottom: BorderSide(
                                             color:
-                                                Color.fromARGB(255, 71, 82, 98),
+                                            Color.fromARGB(255, 71, 82, 98),
                                             width: 3.5,
                                           ),
                                         ),
@@ -441,7 +620,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                           bottom: 5,
                                         ),
                                         child: Text(
-                                          'Location Name',
+                                          SafeConnexSafetyScoringDatabase.geocodedStreet != null ? SafeConnexSafetyScoringDatabase.geocodedStreet! : "No Location Data",
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: height * 0.022,
@@ -472,14 +651,14 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: height * 0.1,
+          height: height * 0.08,
           color: Color.fromARGB(255, 71, 82, 98),
           child: Row(
             children: [
               //CANCEL BUTTON
               Expanded(
                 child: Container(
-                  height: height * 0.1,
+                  height: height * 0.08,
                   color: Color.fromARGB(255, 81, 97, 112),
                   child: IconButton(
                     onPressed: () {
@@ -500,9 +679,14 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: width * 0.1),
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {
+                        safetyScoringDatabase.addSafetyScore(tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
+                        Navigator.pop(context);
+                      });
+                    },
                     elevation: 2,
-                    height: height * 0.05,
+                    height: height * 0.045,
                     color: const Color.fromARGB(255, 121, 192, 148),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(width * 0.2),

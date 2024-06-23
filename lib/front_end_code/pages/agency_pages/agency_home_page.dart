@@ -25,21 +25,7 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        Container(
-          color: Colors.blue[700],
-          child: SingleChildScrollView(
-            child: Center(
-              child: Text(
-                'Hello Word!' * 1000,
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontFamily: 'OpunMai',
-                ),
-              ),
-            ),
-          ),
-        ),
-        //NewMapProvider(),
+        AgencyMapProvider(),
 
         //APP BAR
         AgencyAppBar(

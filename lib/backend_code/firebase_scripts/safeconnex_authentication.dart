@@ -20,6 +20,13 @@ class SafeConnexAuthentication{
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");
 
+  // Database Reference for the Agency Database
+  final DatabaseReference _dbAgencyReference = FirebaseDatabase.instanceFor(
+    //Keep the FirebaseInit or not?
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("agency");
+
   // Database Reference for the Circle Database
   final DatabaseReference _dbCircleReference = FirebaseDatabase.instanceFor(
     //Keep the FirebaseInit or not?
@@ -31,9 +38,11 @@ class SafeConnexAuthentication{
   static String? signUpException;
   static String? loginException;
   static Map<String, String> userData = {};
+  static Map<String, String> agencyData = {};
 
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
+  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
 
   /// Register an account to SafeConnex using [email] and [password]
   Future<void> signUpWithEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String birthdate) async {
@@ -133,6 +142,16 @@ class SafeConnexAuthentication{
     }
   }
 
+  Future<void> getAgencyData() async {
+    DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).get();
+    final splitData = snapshot.child("agencyType").value.toString().split(' ');
+
+    agencyData = {
+      "role": snapshot.child("role").value.toString(),
+      "agencyType": snapshot.child("agencyType").value.toString()
+    };
+  }
+
   Future<void> loginWithEmailAccount(String email, String password) async {
     try{
       UserCredential currentCredential = await _authHandler.signInWithEmailAndPassword(email: email, password: password);
@@ -206,9 +225,11 @@ class SafeConnexAuthentication{
         if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
           SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
           circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
+          geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
         }
       });
       await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+      await getAgencyData();
       await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
   }

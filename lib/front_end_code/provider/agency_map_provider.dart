@@ -6,6 +6,7 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 
 class AgencyMapProvider extends StatefulWidget {
   const AgencyMapProvider({super.key});
@@ -18,6 +19,11 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   final _activityStreamController = StreamController<geofence.Activity>();
   final _geofenceStreamController = StreamController<geofence.Geofence>();
 
+  List<CircleMarker> circleMarker = [];
+  List<geofence.Geofence> _safetyScoreList = [];
+  Color riskLevelColor = Colors.green.shade200;
+  Color riskLevelBorderColor = Colors.green.shade500;
+
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
       accuracy: 2000,
@@ -28,6 +34,50 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
       printDevLog: false,
       geofenceRadiusSortType: geofence.GeofenceRadiusSortType.DESC
   );
+
+  Future<void> getSafetyScoreData() async {
+    for(var safetyScoreData in SafeConnexSafetyScoringDatabase.safetyScoreData){
+      _safetyScoreList.add(geofence.Geofence(
+          id: safetyScoreData["locationName"],
+          latitude: safetyScoreData["latitude"],
+          longitude: safetyScoreData["longitude"],
+          radius: [
+            geofence.GeofenceRadius(id: safetyScoreData["radiusId"], length: double.parse(safetyScoreData["radiusSize"].toString()))
+          ]
+      ));
+      switch(safetyScoreData["riskLevel"]){
+        case "Low":
+          riskLevelColor = Colors.yellow;
+          riskLevelBorderColor = Colors.yellow.shade500;
+          break;
+        case "Moderate":
+          riskLevelColor = Colors.orange;
+          riskLevelBorderColor = Colors.orange.shade500;
+          break;
+        case "High":
+          riskLevelColor = Colors.red;
+          riskLevelBorderColor = Colors.red.shade500;
+          break;
+        default:
+          riskLevelColor = Colors.blue;
+          riskLevelBorderColor = Colors.blue.shade500;
+      }
+      Future.delayed(Duration(milliseconds: 2500), (){
+        addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
+      });
+    }
+  }
+
+  addCircleMarker(LatLng markerLocation, double radiusSize){
+    circleMarker.add(CircleMarker(
+        color: riskLevelColor.withOpacity(0.2),
+        borderColor: riskLevelBorderColor,
+        borderStrokeWidth: 2,
+        point: markerLocation,
+        radius: radiusSize,
+        useRadiusInMeter: true
+    ));
+  }
 
   @override
   void initState() {
@@ -106,6 +156,9 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   }
 
   Widget _buildMonitor() {
+    Future.delayed(Duration(milliseconds: 400), (){
+      getSafetyScoreData();
+    });
     //geolocationMarkers.clear();
     //_mapController = MapController();
     //index = 0;
@@ -134,7 +187,7 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
                   children: [
                     FlutterMap(
                       options: MapOptions(
-                          initialCenter: LatLng(37.44630, -122.121930),
+                          initialCenter: LatLng(16.0265, 120.3363),
                           initialZoom: 13.2,
                           onMapReady: (){
                             print("ready");
@@ -148,6 +201,9 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
                             store: MemCacheStore(),
                           ),
                         ),
+                        CircleLayer(
+                          circles: circleMarker,
+                        )
                       ],
                     ),
                   ],

@@ -27,6 +27,7 @@ class HomeAppBar extends StatefulWidget {
 
 class _HomeAppBarState extends State<HomeAppBar> {
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
   late GlobalKey expansionTileKey = GlobalKey();
 
   bool isExpanded = false;
@@ -44,7 +45,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    print("Test ${SafeConnexCircleDatabase.currentCircleCode}");
+
     ExpansionTileController _expansionController = ExpansionTileController();
     return Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -187,6 +188,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                   ),
                                   child: IconButton(
                                     onPressed: () {
+                                      geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(

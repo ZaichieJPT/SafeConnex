@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_circle_settings.dart';
-import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_emergency_contacts.dart';
 import 'package:safeconnex/front_end_code/components//side_menu_components/sidemenu_profile_settings.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_emergency_management.dart';
 

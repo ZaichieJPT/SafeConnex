@@ -25,10 +25,10 @@ class UserMapProvider extends StatefulWidget {
   final bool? isButtonPressed;
 
   @override
-  State<UserMapProvider> createState() => _UserMapProviderState();
+  State<UserMapProvider> createState() => UserMapProviderState();
 }
 
-class _UserMapProviderState extends State<UserMapProvider> {
+class UserMapProviderState extends State<UserMapProvider> {
   //String currentAddress = 'My Address';
   final _activityStreamController = StreamController<geofence.Activity>();
   final _geofenceStreamController = StreamController<geofence.Geofence>();
@@ -38,10 +38,12 @@ class _UserMapProviderState extends State<UserMapProvider> {
   };
 
   List<Marker> geolocationMarkers = [];
+  List<CircleMarker> circleMarker = [];
   int index = 0;
 
   SafeConnexGeolocation geolocation = SafeConnexGeolocation();
   final MapController _mapController = MapController();
+  List<geofence.Geofence> _geofenceList = [];
 
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
@@ -54,26 +56,22 @@ class _UserMapProviderState extends State<UserMapProvider> {
       geofenceRadiusSortType: geofence.GeofenceRadiusSortType.DESC
   );
 
-  final _geofenceList = <geofence.Geofence>[
-    geofence.Geofence(
-        id: 'place_1',
-        latitude: 37.3290,
-        longitude: -121.9405,
+  Future<void> getGeofenceData() async {
+    for(var geofenceData in SafeConnexGeofenceDatabase.geofenceData){
+      // there is no place label
+      _geofenceList.add(geofence.Geofence(
+        id: geofenceData["addressLabel"],
+        latitude: geofenceData["latitude"],
+        longitude: geofenceData["longitude"],
         radius: [
-          geofence.GeofenceRadius(id: 'radius_100m', length: 100),
+          geofence.GeofenceRadius(id: geofenceData["radiusId"], length: double.parse(geofenceData["radiusSize"].toString()))
         ]
-    ),
-    geofence.Geofence(
-      id: 'place_2',
-      latitude: 35.104971,
-      longitude: 129.034851,
-      radius: [
-        geofence.GeofenceRadius(id: 'radius_25m', length: 25),
-        geofence.GeofenceRadius(id: 'radius_100m', length: 100),
-        geofence.GeofenceRadius(id: 'radius_200m', length: 200),
-      ],
-    ),
-  ];
+      ));
+      Future.delayed(Duration(milliseconds: 2500), (){
+        addCircleMarker(LatLng(double.parse(geofenceData["latitude"].toString()), double.parse(geofenceData["longitude"].toString())), double.parse(geofenceData["radiusSize"].toString()));
+      });
+    }
+  }
 
   Future<void> _onGeofenceStatusChanged(geofence.Geofence geofencing, geofence.GeofenceRadius geofenceRadius, geofence.GeofenceStatus geofenceStatus, geofence.Location location) async {
 
@@ -169,6 +167,17 @@ class _UserMapProviderState extends State<UserMapProvider> {
     return false;
   }
 
+  addCircleMarker(LatLng markerLocation, double radiusSize){
+    circleMarker.add(CircleMarker(
+        color: Colors.blue.shade300.withOpacity(0.2),
+        borderColor: Colors.blue.shade500,
+        borderStrokeWidth: 2,
+        point: markerLocation,
+        radius: radiusSize,
+        useRadiusInMeter: true
+    ));
+  }
+
   addGeolocationMarker(int index){
     geolocationMarkers.add(Marker(
         height: 50,
@@ -179,7 +188,7 @@ class _UserMapProviderState extends State<UserMapProvider> {
         child: Stack(
           children: [
             Positioned(
-                child: Icon(Icons.location_pin, size: 55)
+                child: Icon(Icons.location_pin, size: 55, color: Colors.blue,)
             ),
             Positioned(
               top: 10,
@@ -203,8 +212,8 @@ class _UserMapProviderState extends State<UserMapProvider> {
   getLocation(){
     setState(() {
       _mapController.move(LatLng(_location!['latitude'], _location!['longitude']), 14.2);
-      print("InClass" + SafeConnexGeolocation.coordinatesData[1]['userId']);
-      print(SafeConnexGeolocation.coordinatesData[1]["location"]);
+      //print("InClass" + SafeConnexGeolocation.coordinatesData[1]['userId']);
+      //print(SafeConnexGeolocation.coordinatesData[1]["location"]);
     });
   }
 
@@ -212,16 +221,12 @@ class _UserMapProviderState extends State<UserMapProvider> {
     geolocationMarkers.clear();
     index = 0;
 
-    print(widget.isButtonPressed);
-    if(widget.isButtonPressed == true){
-      getLocation();
-    }
-
     Future.delayed(Duration(milliseconds: 400), (){
       geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
+      getGeofenceData();
     });
 
-    for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
+    for(index; index < SafeConnexGeolocation.coordinatesData.length; index++){
       addGeolocationMarker(index);
     }
 
@@ -237,13 +242,15 @@ class _UserMapProviderState extends State<UserMapProvider> {
               final geofencingUpdatedDateTime = DateTime.now();
               final geofencingContent = snapshot.data?.toJson().toString() ?? '';
 
+              print("Activity: $activityContent");
+              print("Geofence: $geofencingContent");
               return Scaffold(
                 body: Stack(
                   children: [
                     FlutterMap(
                       mapController: _mapController,
                       options: MapOptions(
-                        initialCenter: LatLng(37.44630, -122.121930),
+                        initialCenter: LatLng(16.0265, 120.3363),
                         initialZoom: 13.2,
                         onMapReady: (){
                           print("ready");
@@ -260,6 +267,9 @@ class _UserMapProviderState extends State<UserMapProvider> {
                         MarkerLayer(
                             markers: geolocationMarkers
                         ),
+                        CircleLayer(
+                          circles: circleMarker,
+                        )
                       ],
                     ),
                   ],

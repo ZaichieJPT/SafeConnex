@@ -6,11 +6,13 @@ class SOSCancelNotifTemplate extends StatelessWidget {
   final String firstName;
   final String fullName;
   final String age;
+  final String date;
   const SOSCancelNotifTemplate({
     super.key,
     required this.age,
     required this.firstName,
     required this.fullName,
+    required this.date,
   });
 
   @override
@@ -55,17 +57,41 @@ class SOSCancelNotifTemplate extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  Container(
-                    width: width,
-                    child: Text(
-                      'CANCELLED SOS REPORT',
-                      style: TextStyle(
-                        fontFamily: 'OpunMai',
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.5,
-                        color: Color.fromARGB(255, 66, 79, 88),
+                  Row(
+                    children: [
+                      //TITLE
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          width: width,
+                          child: Text(
+                            'CANCELLED SOS REPORT',
+                            style: TextStyle(
+                              fontFamily: 'OpunMai',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 12.5,
+                              color: Color.fromARGB(255, 66, 79, 88),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                      //DATE
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: width * 0.02),
+                          child: Text(
+                            date,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'OpunMai',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 12,
+                              color: Color.fromARGB(255, 66, 79, 88),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     width: width,

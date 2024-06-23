@@ -77,6 +77,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
         if (index == 1) {
           placeLabelName = '';
           placeLocationName = '';
+          SafeConnexGeofenceDatabase.geofenceToUpdate = {};
         }else if(index == 0){
           geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
         }
@@ -139,7 +140,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
         appBar: AppBar(
           backgroundColor: Color.fromARGB(255, 71, 82, 98),
           leadingWidth: width * 0.15,
-          toolbarHeight: height * 0.1,
+          toolbarHeight: height * 0.08,
           title: Text(
             'Places',
             textAlign: TextAlign.center,
@@ -194,14 +195,15 @@ class _GeofencingPageState extends State<GeofencingPage> {
         ),
         body: Center(
           child: SizedBox(
-            height: height * 0.8,
+            //height: height * 0.8,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 //VIEW AND ADD BUTTONS
                 Container(
-                  height: height * 0.1,
+                  height: height * 0.045,
                   width: width * 0.85,
-                  padding: EdgeInsets.symmetric(vertical: height * 0.027),
+                  //padding: EdgeInsets.symmetric(vertical: height * 0.027),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -233,6 +235,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 style: TextStyle(
                                   fontFamily: 'OpunMai',
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 12,
                                   color: _selectedTabIndex == 0
                                       ? Colors.white
                                       : Color.fromARGB(255, 70, 85, 104),
@@ -271,6 +274,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 style: TextStyle(
                                   fontFamily: 'OpunMai',
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 12,
                                   color: _selectedTabIndex == 1
                                       ? Colors.white
                                       : Color.fromARGB(255, 70, 85, 104),
@@ -300,7 +304,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 radius: Radius.circular(15),
                                 child: ListView.builder(
                                   controller: placesScrollControl,
-                                  itemCount: places.length,
+                                  itemCount: SafeConnexGeofenceDatabase.geofenceData.length,
                                   itemBuilder: ((context, index) {
                                     return InkWell(
                                       onTap: () => _onPlaceTapped(index),
@@ -354,7 +358,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                               //PLACE NAME
                                               Expanded(
                                                 child: Text(
-                                                  places[index],
+                                                  SafeConnexGeofenceDatabase.geofenceData[index]["radiusId"].toString(),
                                                   overflow:
                                                   TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -380,7 +384,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           if (_selectedTabIndex == 1) ...[
                             Container(
                               width: width,
-                              height: height * 0.3,
+                              height: height * 0.35,
                               decoration: BoxDecoration(
                                 color: Colors.blue[100],
                                 border: Border.symmetric(
@@ -445,6 +449,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                         onChanged: (value) {
                                           setState(() {
                                             this._sliderValue = value;
+                                            addGeolocationMarker(tapLocation!, value);
                                           });
                                         },
                                         min: 50,
@@ -654,14 +659,14 @@ class _GeofencingPageState extends State<GeofencingPage> {
           ),
         ),
         bottomNavigationBar: Container(
-          height: height * 0.1,
+          height: height * 0.085,
           color: Color.fromARGB(255, 71, 82, 98),
           child: Row(
             children: [
               //CANCEL BUTTON
               Expanded(
                 child: Container(
-                  height: height * 0.1,
+                  //height: height * 0.1,
                   color: Color.fromARGB(255, 81, 97, 112),
                   child: IconButton(
                     onPressed: () {
@@ -700,24 +705,46 @@ class _GeofencingPageState extends State<GeofencingPage> {
                             _selectedTabIndex = 1;
                             //set placeLabelName to the name of the selected index
                             //set placeLocationName to the the location name of the selected index
+                            _placeNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["radiusId"].toString();
+                            _locationNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["addressLabel"].toString();
+                            SafeConnexGeofenceDatabase.geofenceToUpdate = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!];
+                            tapLocation = LatLng(
+                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["latitude"],
+                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["longitude"]);
+                            addGeolocationMarker(LatLng(
+                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["latitude"],
+                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["longitude"]),
+                                double.parse(SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["radiusSize"].toString()));
                           });
                         }
                       } else {
-                        if (placeLabelName == '') {
+                        if (_placeNameController.text == '') {
                           showErrorMessage(context,
                               'Please enter name for the place', height, width);
                           //get the value of the textfields
-
                           //add the geofence, label, and location to database
-                        } else if (placeLocationName == '') {
+                        } else if (_locationNameController.text == '') {
+                          showErrorMessage(context,
+                              'Please enter name for the location', height, width);
+                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
                         } else {
                           //get the value of the texfields
+                          geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, SafeConnexCircleDatabase.currentCircleCode!, _locationNameController.text);
+                          geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+                          setState(() {
+                            _selectedTabIndex = 0;
+                            _locationNameController.text = "";
+                            _placeNameController.text = "";
+                            _selectedPlaceIndex = null;
+                          });
+
                           //modify the selected place's value in the database
+                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, placeLabelName!, _sliderValue, "circleName", placeLocationName!);
                         }
                       }
                     },
                     elevation: 2,
-                    height: height * 0.05,
+                    height: height * 0.045,
                     color: const Color.fromARGB(255, 121, 192, 148),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(width * 0.2),

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/pages/agency_pages/agency%20_floodscore_page.dart';
@@ -114,7 +115,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                     ],
                                   ),
                                   child: Text(
-                                    'Natural Disaster and Accident Responder',
+                                    '${SafeConnexAuthentication.agencyData["agencyType"]}',
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.clip,
                                     style: TextStyle(

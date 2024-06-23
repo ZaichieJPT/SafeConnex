@@ -190,6 +190,8 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                   );
                                   // Circle leave Function
                                   circleDatabase.leaveCircle(SafeConnexAuthentication.currentUser!.uid, widget.circleCode!);
+                                  setState(() {
+                                  });
                                   Navigator.of(context).pop();
                                 },
                                 style: ButtonStyle(

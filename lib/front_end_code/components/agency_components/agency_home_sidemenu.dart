@@ -151,19 +151,7 @@ class _AgencySideMenuState extends State<AgencySideMenu> {
                 ),
               ),
             ),
-            //CHANGE PASSWORD
-            Flexible(
-              flex: 1,
-              child: ProfileOption(
-                  optionText: 'Change Password',
-                  image: 'assets/images/side_menu/sidemenu_changepass_icon.png',
-                  index: 0,
-                  selectedMenuIndex: _selectedMenuIndex,
-                  onMenuTapped: _onMenuTapped,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/changePassword');
-                  }),
-            ),
+
             //SHARE YOUR FEEDBACK
             Flexible(
               flex: 1,

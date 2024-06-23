@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  final GlobalKey<UserMapProviderState> _mapState = GlobalKey<UserMapProviderState>();
   bool isButtonPressed = false;
 
   @override
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         //SCROLLABLE BODY
-        //UserMapProvider(isButtonPressed: isButtonPressed),
+        UserMapProvider(key: _mapState, isButtonPressed: isButtonPressed),
 
         //APP BAR
         HomeAppBar(
@@ -117,10 +118,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: IconButton(
                         onPressed: () {
-                          if(isButtonPressed == false){
-                            isButtonPressed = true;
-                          }
-                          isButtonPressed = false;
+                          _mapState.currentState?.getLocation();
                         },
                         icon: Image.asset(
                           'assets/images/home_focus_icon.png',

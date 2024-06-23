@@ -1,6 +1,8 @@
 
 import 'dart:math';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 
@@ -301,22 +303,45 @@ class SafeConnexCircleDatabase{
 
   Future<void> leaveCircle(String userId, String circleCode) async {
     // Transfer the Circle Creator to another user
-    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).get();
-    for (var users in snapshot.children){
-      //print()
+    DataSnapshot snapshot = await _dbCircleReference.child(circleCode).child("members").get();
+    print(snapshot.children.length);
+    // Check if the childrens are greater than 1 or else just delete the circle
+    if(snapshot.children.length > 1){
+      print("There are more users");
+      // Finds a valid ID and make sure that it does not match the current user ID
+      // Checks the last and first of the children
+      print(snapshot.children.first.child("id").value.toString());
+      if(snapshot.children.first.child("id").value.toString() != userId){
+        // Transfer to the accepted ID
+        print("true");
+        await _dbCircleReference.child(circleCode).child("members").child(snapshot.children.first.child("id").value.toString()).update({
+          "role": "Circle Creator"
+        });
+      }else if(snapshot.children.last.child("id").value.toString() != userId){
+        // Transfers to the accepted ID
+        print("false");
+        await _dbCircleReference.child(circleCode).child("members").child(snapshot.children.last.child("id").value.toString()).update({
+          "role": "Circle Creator"
+        });
+      }
+      else{
+        await _dbCircleReference.child(circleCode).remove();
+        await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
+      }
     }
-    //await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
-    //await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
+    await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
+    await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
   }
 
   Future<void> removeFromCircle(String userId, String circleCode) async {
     DataSnapshot snapshot = await _dbCircleReference.child(circleCode).child("members").child(userId).get();
     if(currentRole == "Circle Creator"){
-      print(snapshot.value);
+      print("Snapshot Value: " + snapshot.child("role").value.toString());
       if(snapshot.child("role").value != "Circle Creator"){
+        print("Circle Code: $circleCode");
+        print("User ID: $userId");
         await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
         await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
-        print("Removed Successfully");
       }
       else{
         print("Cant Remove Circle Creator");
@@ -356,7 +381,7 @@ class SafeConnexGeofenceDatabase{
       .ref("geofence");
 
   static List<Map<String, dynamic>> geofenceData = [];
-  Map<String, dynamic> geofenceToUpdate = {};
+  static Map<String, dynamic> geofenceToUpdate = {};
 
   addGeofence(double latitude, double longitude, String radiusId, double radiusSize, String circleCode, String addressLabel){
     final geofence = <String, dynamic> {
@@ -368,7 +393,10 @@ class SafeConnexGeofenceDatabase{
       "addressLabel": addressLabel
     };
 
-    deleteGeofence(geofenceToUpdate[circleCode]);
+    if(geofenceToUpdate.isNotEmpty){
+      print(geofenceToUpdate);
+      deleteGeofence(circleCode);
+    }
     dbGeofenceReference.child(circleCode).child(radiusId).set(geofence);
     print("Data Added on Geofence Collection");
   }
@@ -381,31 +409,36 @@ class SafeConnexGeofenceDatabase{
   Future<void> getGeofence(String circleCode) async {
     dbGeofenceReference.child(circleCode).onValue.listen((DatabaseEvent event){
       final snapshot = event.snapshot;
-      if(geofenceData.isEmpty){
-        for(var data in snapshot.children)
-        {
-          geofenceData.add(<String, dynamic>{
-            "id": data.child("id").value,
-            "latitude":  data.child("latitude").value,
-            "longitude":  data.child("longitude").value,
-            "radiusId":  data.child("radiusId").value,
-            "radiusSize":  data.child("radiusSize").value,
-            "addressLabel":  data.child("addressLabel").value
-          });
+      if(snapshot.exists){
+        if(geofenceData.isEmpty){
+          for(var data in snapshot.children)
+          {
+            geofenceData.add(<String, dynamic>{
+              "id": data.child("id").value,
+              "latitude":  data.child("latitude").value,
+              "longitude":  data.child("longitude").value,
+              "radiusId":  data.child("radiusId").value,
+              "radiusSize":  data.child("radiusSize").value,
+              "addressLabel":  data.child("addressLabel").value
+            });
+          }
+        }else if(geofenceData.isNotEmpty){
+          geofenceData.clear();
+          for(var data in snapshot.children)
+          {
+            geofenceData.add(<String, dynamic>{
+              "id": data.child("id").value,
+              "latitude":  data.child("latitude").value,
+              "longitude":  data.child("longitude").value,
+              "radiusId":  data.child("radiusId").value,
+              "radiusSize":  data.child("radiusSize").value,
+              "addressLabel":  data.child("addressLabel").value
+            });
+          }
         }
-      }else if(geofenceData.isNotEmpty){
-        geofenceData.clear();
-        for(var data in snapshot.children)
-        {
-          geofenceData.add(<String, dynamic>{
-            "id": data.child("id").value,
-            "latitude":  data.child("latitude").value,
-            "longitude":  data.child("longitude").value,
-            "radiusId":  data.child("radiusId").value,
-            "radiusSize":  data.child("radiusSize").value,
-            "addressLabel":  data.child("addressLabel").value
-          });
-        }
+      }
+      else{
+        print("No Data");
       }
     });
   }
@@ -420,32 +453,54 @@ class SafeConnexAgencyDatabase{
   DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
-      .ref("user");
+      .ref("users");
 
   static String? selectedAgencyType;
   static Map<String, String> agencyData = {};
+  static String? frontIdLink;
+  static String? backIdLink;
+  static String? selfieLink;
 
-  Future<void> joinTheAgency(String role, String agencyName, String locationOfAgency,
+  Future<void> setAgencyData(String role, String agencyName, String locationOfAgency,
       String phoneNumber, String telephoneNumber, String emailAddress, String facebookLink,
       String agencyWebsite) async {
+    agencyData = {
+      "agencyRole": role,
+      "agencyName": agencyName,
+      "agencyLocation": locationOfAgency,
+      "agencyPhoneNumber": phoneNumber,
+      "agencyTelephoneNumber": telephoneNumber,
+      "agencyEmailAddress": emailAddress,
+      "facebookLink": facebookLink,
+      "agencyWebsite": agencyWebsite
+    };
+  }
 
-    if(selectedAgencyType != null){
-      await _dbAgencyReference.child(selectedAgencyType!).child(agencyName).set({
-        "agencyLocation": locationOfAgency,
-        "agencyPhoneNumber": phoneNumber,
-        "agencyTelephoneNumber": telephoneNumber,
-        "agencyEmailAddress": emailAddress,
-        "facebookLink": facebookLink,
-        "agencyWebsite": agencyWebsite
+  Future<void> joinTheAgency() async {
+    final selectedAgencySplit = selectedAgencyType!.split(' ');
+    DataSnapshot snapshot = await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString()).child(agencyData["agencyName"]!.replaceAll(' ', '').toString()).get();
+    if(selectedAgencyType != null) {
+      if(snapshot.exists == false){
+        await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString())
+            .child(agencyData["agencyName"]!.replaceAll(' ', '').toString())
+            .set({
+          "agencyLocation": agencyData["agencyLocation"].toString(),
+          "agencyPhoneNumber": agencyData["agencyPhoneNumber"].toString(),
+          "agencyTelephoneNumber": agencyData["agencyTelephoneNumber"].toString(),
+          "agencyEmailAddress": agencyData["agencyEmailAddress"].toString(),
+          "facebookLink": agencyData["facebookLink"].toString(),
+          "agencyWebsite": agencyData["agencyWebsite"].toString()
+        });
+      }
+
+      await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1])).child(agencyData["agencyName"]!.replaceAll(" ", ""))
+          .child("employees").child(SafeConnexAuthentication.currentUser!.uid).set({
+        "role": agencyData["agencyRole"].toString()
       });
 
-      await _dbAgencyReference.child(selectedAgencyType!).child(agencyName)
-          .child(SafeConnexAuthentication.currentUser!.uid).set({
-        "role": role
-      });
-
-      await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).set({
-        "agencyType": selectedAgencyType!
+      await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).update({
+        "agencyType": selectedAgencyType!,
+        "role": "Agency"
       });
 
     }else if(selectedAgencyType == null){
@@ -485,5 +540,89 @@ class SafeConnexAgencyDatabase{
     }
 
 
+  }
+}
+
+class SafeConnexSafetyScoringDatabase{
+  DatabaseReference _dbSafetyScoreReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("safety_score");
+
+  static List<Map<String, dynamic>> safetyScoreData = [];
+  static Map<String, dynamic> safetyScoreToUpdate = {};
+  static String? geocodedStreet;
+
+  Future<void> getGeocode(LatLng location) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(location.latitude, location.longitude);
+    geocodedStreet = placemarks[0].street;
+  }
+
+  Future<void> addSafetyScore(double latitude, double longitude, double radiusSize, String riskLevel, String riskInfo) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+    final newSafetyScoreId = _dbSafetyScoreReference.push().key;
+
+    final safetyScore = <String, dynamic> {
+      "latitude": latitude,
+      "longitude": longitude,
+      "radiusId": newSafetyScoreId,
+      "radiusSize": radiusSize,
+      "locationName": placemarks[0].street,
+      "riskInfo" : riskInfo,
+      "riskLevel": riskLevel
+    };
+
+    if(safetyScoreToUpdate.isNotEmpty){
+      print(safetyScoreToUpdate);
+      deleteSafetyScore();
+    }
+    _dbSafetyScoreReference.child(newSafetyScoreId!).update(safetyScore);
+    print("Data Added on SafetyScore Collection");
+  }
+
+  deleteSafetyScore(){
+    _dbSafetyScoreReference.child(safetyScoreToUpdate['radiusId']).remove();
+    print("Database Removed");
+  }
+
+  Future<void> getSafetyScore() async {
+    _dbSafetyScoreReference.onValue.listen((DatabaseEvent event){
+      final snapshot = event.snapshot;
+      print(snapshot.value);
+      if(snapshot.exists){
+        if(safetyScoreData.isEmpty){
+          for(var data in snapshot.children)
+          {
+            safetyScoreData.add(<String, dynamic>{
+              "latitude":  data.child("latitude").value,
+              "longitude":  data.child("longitude").value,
+              "radiusId":  data.child("radiusId").value,
+              "radiusSize":  data.child("radiusSize").value,
+              "locationName": data.child("locationName").value,
+              "riskInfo": data.child("riskInfo").value,
+              "riskLevel": data.child("riskLevel").value
+            });
+          }
+        }else if(safetyScoreData.isNotEmpty){
+          safetyScoreData.clear();
+          for(var data in snapshot.children)
+          {
+            safetyScoreData.add(<String, dynamic>{
+              "latitude":  data.child("latitude").value,
+              "longitude":  data.child("longitude").value,
+              "radiusId":  data.child("radiusId").value,
+              "radiusSize":  data.child("radiusSize").value,
+              "locationName": data.child("locationName").value,
+              "riskInfo": data.child("riskInfo").value,
+              "riskLevel": data.child("riskLevel").value
+            });
+          }
+        }
+      }
+      else{
+        print("No Data");
+      }
+    });
   }
 }

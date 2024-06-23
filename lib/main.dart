@@ -98,7 +98,8 @@ class _MyAppState extends State<MyApp> {
       routes: {
         "/": (context) => OnBoardingScreen(),
         "/login": (context) => LoginPage(),
-        "/home": (context) => AgencyMainScreen(),
+        "/home": (context) => MainScreen(),
+        "/agencyPage": (context) => AgencyMainScreen(),
         "/create_circle": (context) => CirclePage(),
         "/join_circle": (context) => JoinCirclePage(),
         "/changePassword": (context) => PasswordChange(),

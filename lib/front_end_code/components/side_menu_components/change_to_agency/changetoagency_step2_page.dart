@@ -79,6 +79,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
   @override
   void dispose() {
     _agencyNameController.dispose();
+    _agencyRoleController.dispose();
     _agencyLocationController.dispose();
     _agencyMobileController.dispose();
     _agencyTelephoneController.dispose();
@@ -141,7 +142,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
                           //ROLE TEXT FIELD
                           Expanded(
                             child: AgencyStep2TextField(
-                              controller: _agencyNameController,
+                              controller: _agencyRoleController,
                               hintText: 'role or position',
                               validator: (value) {
                                 if (value.toString().isEmpty) {
@@ -385,7 +386,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
                     onPressed: () {
                       setState(() {
                         if (_step2FormKey.currentState!.validate()) {
-                          agencyDatabase.joinTheAgency(
+                          agencyDatabase.setAgencyData(
                               _agencyRoleController.text,
                               _agencyNameController.text,
                               _agencyLocationController.text,
@@ -395,10 +396,10 @@ class _AgencyStep2State extends State<AgencyStep2> {
                               _agencyFBController.text,
                               _agencyWebsiteController.text
                           );
+                          widget.toNextStep();
                         }else {
                           _showNextToast();
                         }
-                        widget.toNextStep();
                       });
                     },
                     elevation: 2,

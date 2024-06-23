@@ -5,6 +5,7 @@ import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
+import "package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart";
 import "package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart";
 import "package:safeconnex/front_end_code/pages/circle_pages/create_circle_page.dart";
 import "package:safeconnex/front_end_code/pages/home_mainscreen.dart";
@@ -46,18 +47,26 @@ class _LoginPageState extends State<LoginPage> {
     SettingsProvider provider = SettingsProvider();
     SafeConnexAuthentication authentication = SafeConnexAuthentication();
     SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+    SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
 
     // Fix this the delay is too early make it accurate
     authentication.loginWithToken().whenComplete(() {
       if (SafeConnexAuthentication.currentUser != null && isTransferred == false) {
-        if(SafeConnexCircleDatabase.currentCircleCode == null){
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => CirclePage()));
+        if(SafeConnexAuthentication.agencyData["role"] != "Agency"){
+          if(SafeConnexCircleDatabase.currentCircleCode == null){
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => CirclePage()));
+          }
+          else if(SafeConnexCircleDatabase.currentCircleCode != null){
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainScreen()));
+          }
         }
-        else if(SafeConnexCircleDatabase.currentCircleCode != null){
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => MainScreen()));
+        else{
+          safetyScoringDatabase.getSafetyScore();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
         }
+
         isTransferred = true;
       }
     });
