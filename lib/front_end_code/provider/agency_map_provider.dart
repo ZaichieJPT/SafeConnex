@@ -58,9 +58,6 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
           riskLevelColor = Colors.red;
           riskLevelBorderColor = Colors.red.shade500;
           break;
-        default:
-          riskLevelColor = Colors.blue;
-          riskLevelBorderColor = Colors.blue.shade500;
       }
       Future.delayed(Duration(milliseconds: 2500), (){
         addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
@@ -85,11 +82,10 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
-      _geofenceService.addLocationChangeListener(_onLocationChanged);
       _geofenceService.addActivityChangeListener(_onActivityChanged);
       _geofenceService.addLocationServicesStatusChangeListener(_onLocationServicesStatusChanged);
       _geofenceService.addStreamErrorListener(_onError);
-      //_geofenceService.start(_geofenceList).catchError(_onError);
+      _geofenceService.start(_safetyScoreList).catchError(_onError);
     });
   }
 
@@ -105,16 +101,6 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
     print('preActivity: ${preActivity.toJson()}');
     print('preActivity: ${curActivity.toJson()}');
     _activityStreamController.sink.add(curActivity);
-  }
-
-  void _onLocationChanged(geofence.Location location){
-    Future.delayed(Duration(milliseconds: 400), (){
-      setState(() {
-        //_location = location.toJson();
-      });
-    });
-
-    print('location: ${location.toJson()}');
   }
 
   void _onLocationServicesStatusChanged(bool status){
@@ -156,17 +142,16 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   }
 
   Widget _buildMonitor() {
-    Future.delayed(Duration(milliseconds: 400), (){
-      getSafetyScoreData();
-    });
+
     //geolocationMarkers.clear();
     //_mapController = MapController();
     //index = 0;
-    /*Future.delayed(Duration(milliseconds: 400), (){
-      geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
+    Future.delayed(Duration(milliseconds: 400), (){
+      circleMarker.clear();
+      getSafetyScoreData();
     });
 
-    for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
+    /*for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
       addGeolocationMarker(index);
     }*/
 

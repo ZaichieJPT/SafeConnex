@@ -124,6 +124,15 @@ class UserMapProviderState extends State<UserMapProvider> {
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);
     });
+
+    getGeofenceData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    getGeofenceData();
+    super.didChangeDependencies();
   }
 
   @override
@@ -223,7 +232,6 @@ class UserMapProviderState extends State<UserMapProvider> {
 
     Future.delayed(Duration(milliseconds: 400), (){
       geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
-      getGeofenceData();
     });
 
     for(index; index < SafeConnexGeolocation.coordinatesData.length; index++){

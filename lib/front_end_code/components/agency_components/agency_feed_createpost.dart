@@ -3,6 +3,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 
 class AgencyCreatePost extends StatefulWidget {
   const AgencyCreatePost({super.key});
@@ -14,11 +19,22 @@ class AgencyCreatePost extends StatefulWidget {
 class _AgencyCreatePostState extends State<AgencyCreatePost> {
   final _postTitleController = TextEditingController();
   final _postDescriptionController = TextEditingController();
+  SafeConnexNewsStorage newsStorage = SafeConnexNewsStorage();
+
+  Future<void> _onFileUploadTapped() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    newsStorage.uploadNewsPic(
+        _postTitleController.text, image!.path);
+    if (image == null) return;
+  }
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
+    SafeConnexNewsDatabase newsDatabase = SafeConnexNewsDatabase();
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -48,7 +64,12 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
               Padding(
                 padding: EdgeInsets.only(right: width * 0.02),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
+                      newsDatabase.createNews(SafeConnexAuthentication.agencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, SafeConnexAuthentication.currentUser!.displayName!, SafeConnexAgencyDatabase.agencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
+                    }
+                  },
                   child: Image.asset(
                     'assets/images/agency_app/agency_createpost_icon.png',
                     width: width * 0.09,
@@ -98,7 +119,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.grey,
                                     child: Text(
-                                      'Garry Penoliar',
+                                      SafeConnexAuthentication.currentUser!.displayName!,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -118,7 +139,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.green,
                                     child: Text(
-                                      'Admin Staff at PNP',
+                                      '${SafeConnexAgencyDatabase.agencyData["agencyRole"]} at ${SafeConnexAuthentication.agencyData["agencyName"]}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -222,7 +243,9 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                             ),
                             Expanded(
                               child: MaterialButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _onFileUploadTapped();
+                                },
                                 color: Color.fromARGB(255, 119, 194, 152),
                                 shape: RoundedRectangleBorder(
                                   borderRadius:

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/sidemenu_changetoagency_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_passdialog.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
@@ -38,6 +40,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final TextEditingController _birthdateController = TextEditingController();
   SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
   SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
   double innerHeight = 0;
   double innerWidth = 0;
   int _selectedMenuIndex = 4;
@@ -544,15 +547,20 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         heightFactor: 0.45,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return ChangeToAgency(
-                                                  height: widget.height,
-                                                  width: widget.width,
-                                                );
-                                              },
-                                            );
+                                            if(SafeConnexAuthentication.agencyData["agencyName"] != null){
+                                              agencyDatabase.revertToAgency();
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
+                                            }else{
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return ChangeToAgency(
+                                                    height: widget.height,
+                                                    width: widget.width,
+                                                  );
+                                                },
+                                              );
+                                            }
                                           },
                                           style: ButtonStyle(
                                             overlayColor:

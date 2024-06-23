@@ -3,12 +3,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_circle_settings.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_dialog.dart';
 import 'package:safeconnex/front_end_code/components//side_menu_components/sidemenu_profile_settings.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_feedback_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_logout_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_profile_option.dart';
+import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
 class AgencySideMenu extends StatefulWidget {
   const AgencySideMenu({
@@ -23,6 +25,7 @@ class _AgencySideMenuState extends State<AgencySideMenu> {
   int _selectedMenuIndex = 4;
   double height = 0;
   double width = 0;
+  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   void _onMenuTapped(int index) {
     setState(() {
@@ -126,7 +129,10 @@ class _AgencySideMenuState extends State<AgencySideMenu> {
                   widthFactor: 0.7,
                   heightFactor: 0.45,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      agencyDatabase.revertToUser();
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                    },
                     style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(
                         const Color.fromARGB(50, 0, 0, 0),

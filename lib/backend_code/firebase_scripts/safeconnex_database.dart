@@ -476,6 +476,29 @@ class SafeConnexAgencyDatabase{
     };
   }
 
+  Future<void> updateAgency(String agencyLocation, String agencyPhoneNumber, String agencyTelephoneNumber, String agencyEmail, String facebookLink, String agencyWebsite) async {
+    selectedAgencyType = SafeConnexAuthentication.agencyData["agencyType"]!;
+    final selectedAgencySplit = selectedAgencyType!.split(' ');
+    DataSnapshot snapshot = await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString()).child(SafeConnexAuthentication.agencyData["agencyName"]!.replaceAll(' ', '').toString()).get();
+    if(selectedAgencyType != null) {
+      if(snapshot.exists == false){
+        await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString())
+            .child(agencyData["agencyName"]!.replaceAll(' ', '').toString())
+            .update({
+          "agencyLocation": agencyLocation,
+          "agencyPhoneNumber": agencyPhoneNumber,
+          "agencyTelephoneNumber": agencyTelephoneNumber,
+          "agencyEmailAddress": agencyEmail,
+          "facebookLink": facebookLink,
+          "agencyWebsite": agencyWebsite,
+        });
+      }
+
+    }else if(selectedAgencyType == null){
+      print("selectedAgency is null");
+    }
+  }
+
   Future<void> joinTheAgency() async {
     final selectedAgencySplit = selectedAgencyType!.split(' ');
     DataSnapshot snapshot = await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString()).child(agencyData["agencyName"]!.replaceAll(' ', '').toString()).get();
@@ -489,7 +512,7 @@ class SafeConnexAgencyDatabase{
           "agencyTelephoneNumber": agencyData["agencyTelephoneNumber"].toString(),
           "agencyEmailAddress": agencyData["agencyEmailAddress"].toString(),
           "facebookLink": agencyData["facebookLink"].toString(),
-          "agencyWebsite": agencyData["agencyWebsite"].toString()
+          "agencyWebsite": agencyData["agencyWebsite"].toString(),
         });
       }
 
@@ -500,7 +523,8 @@ class SafeConnexAgencyDatabase{
 
       await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).update({
         "agencyType": selectedAgencyType!,
-        "role": "Agency"
+        "role": "Agency",
+        "agencyName": agencyData["agencyName"]!.replaceAll(' ', '')
       });
 
     }else if(selectedAgencyType == null){
@@ -508,31 +532,45 @@ class SafeConnexAgencyDatabase{
     }
   }
 
-  Future<void> getMyAgencyData(String agencyName) async {
-    DataSnapshot userSnapshot = await _dbUserReference.child("agencyType").get();
-    selectedAgencyType = userSnapshot.value.toString();
+  Future<void> revertToUser() async {
+    await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).update({
+      "role": "user",
+    });
+  }
 
-    DataSnapshot agencySnapshot = await _dbAgencyReference.child(selectedAgencyType!).child(agencyName).get();
+  Future<void> revertToAgency() async {
+    await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).update({
+      "role": "Agency",
+    });
+  }
+
+  Future<void> getMyAgencyData(String agencyName) async {
+    DataSnapshot userSnapshot = await _dbUserReference.child(SafeConnexAuthentication.currentUser!.uid).get();
+    selectedAgencyType = userSnapshot.child("agencyType").value.toString();
+    final selectedAgencySplit = selectedAgencyType!.split(" ");
+    DataSnapshot agencySnapshot = await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1])).child(userSnapshot.child("agencyName").value.toString()).get();
 
     if(agencySnapshot.exists){
       if(agencyData.isEmpty){
         agencyData = {
-          "agencyLocation": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyLocation").value.toString(),
-          "agencyPhoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyPhoneNumber").value.toString(),
-          "agencyTelephoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyTelephoneNumber").value.toString(),
-          "agencyEmailAddress": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyEmailAddress").value.toString(),
-          "facebookLink": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("facebookLink").value.toString(),
-          "agencyWebsite": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyWebsite").value.toString()
+          "agencyLocation": agencySnapshot.child("agencyLocation").value.toString(),
+          "agencyPhoneNumber": agencySnapshot.child("agencyPhoneNumber").value.toString(),
+          "agencyTelephoneNumber": agencySnapshot.child("agencyTelephoneNumber").value.toString(),
+          "agencyEmailAddress": agencySnapshot.child("agencyEmailAddress").value.toString(),
+          "facebookLink": agencySnapshot.child("facebookLink").value.toString(),
+          "agencyWebsite": agencySnapshot.child("agencyWebsite").value.toString(),
+          "agencyRole": agencySnapshot.child("employees").child(SafeConnexAuthentication.currentUser!.uid).child("role").value.toString()
         };
       }else if(agencyData.isNotEmpty){
         agencyData.clear();
         agencyData = {
-          "agencyLocation": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyLocation").value.toString(),
-          "agencyPhoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyPhoneNumber").value.toString(),
-          "agencyTelephoneNumber": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyTelephoneNumber").value.toString(),
-          "agencyEmailAddress": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyEmailAddress").value.toString(),
-          "facebookLink": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("facebookLink").value.toString(),
-          "agencyWebsite": agencySnapshot.child(SafeConnexAuthentication.currentUser!.uid).child("agencyWebsite").value.toString()
+          "agencyLocation": agencySnapshot.child("agencyLocation").value.toString(),
+          "agencyPhoneNumber": agencySnapshot.child("agencyPhoneNumber").value.toString(),
+          "agencyTelephoneNumber": agencySnapshot.child("agencyTelephoneNumber").value.toString(),
+          "agencyEmailAddress": agencySnapshot.child("agencyEmailAddress").value.toString(),
+          "facebookLink": agencySnapshot.child("facebookLink").value.toString(),
+          "agencyWebsite": agencySnapshot.child("agencyWebsite").value.toString(),
+          "agencyRole": agencySnapshot.child("employees").child(SafeConnexAuthentication.currentUser!.uid).child("role").value.toString()
         };
       }
     }else{
@@ -623,6 +661,56 @@ class SafeConnexSafetyScoringDatabase{
       else{
         print("No Data");
       }
+    });
+  }
+}
+
+class SafeConnexNewsDatabase{
+  DatabaseReference _dbNewsReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("news");
+
+  static List<Map<String, dynamic>> newsData = [];
+  Future<void> createNews(String agency, String title, String body, String sender, String role, String date) async
+  {
+    final postData = {
+      'agency': agency,
+      'title': title,
+      'body': body,
+      'sender': sender,
+      'role': role,
+      'date': date
+    };
+
+    final newPostKey = _dbNewsReference.push().key;
+
+    final Map<String, Map> updates = {};
+    updates['/$newPostKey'] = postData;
+
+    await _dbNewsReference.update(updates);
+
+    print("Database Update Done");
+  }
+
+  Future<void> listenOnTheNews() async
+  {
+    _dbNewsReference.onValue.listen((DatabaseEvent event) {
+      final news = event.snapshot;
+      //print(news);
+      for(var post in news.children){
+        //print(post.value);
+        newsData.add({
+          "role": post.child("role").value,
+          "agency": post.child("agency").value,
+          "sender": post.child("sender").value,
+          "body": post.child("body").value,
+          "title": post.child("title").value,
+          "date": post.child("date").value,
+        });
+      }
+
+      print(newsData);
     });
   }
 }

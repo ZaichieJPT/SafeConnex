@@ -43,6 +43,7 @@ class SafeConnexAuthentication{
   SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
   SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
+  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   /// Register an account to SafeConnex using [email] and [password]
   Future<void> signUpWithEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String birthdate) async {
@@ -148,7 +149,8 @@ class SafeConnexAuthentication{
 
     agencyData = {
       "role": snapshot.child("role").value.toString(),
-      "agencyType": snapshot.child("agencyType").value.toString()
+      "agencyType": snapshot.child("agencyType").value.toString(),
+      "agencyName": snapshot.child("agencyName").value.toString()
     };
   }
 
@@ -161,6 +163,18 @@ class SafeConnexAuthentication{
         await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
         await profileStorage.getProfilePicture(currentUser!.uid);
         await SafeconnexNotification().initializeNotification(currentUser!.uid);
+        await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
+          if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
+            SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
+            circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
+            geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+          }
+        });
+        await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+        await getAgencyData().whenComplete((){
+          agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+        });
+
         print("Login Successfull");
       }
       else{
@@ -212,11 +226,21 @@ class SafeConnexAuthentication{
     await profileStorage.getProfilePicture(currentUser!.uid);
     await SafeconnexNotification().initializeNotification(currentUser!.uid);
     await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
+    await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
+      if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
+        SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
+        circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
+        geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+      }
+    });
+    await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+    await getAgencyData().whenComplete((){
+      agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+    });
   }
 
   Future<void> loginWithToken() async {
     if(_authHandler.currentUser != null){
-
       currentUser = _authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid);
       await profileStorage.getProfilePicture(currentUser!.uid);
@@ -229,7 +253,9 @@ class SafeConnexAuthentication{
         }
       });
       await circleDatabase.listCircleDataForSettings(currentUser!.uid);
-      await getAgencyData();
+      await getAgencyData().whenComplete((){
+        agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+      });
       await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
   }

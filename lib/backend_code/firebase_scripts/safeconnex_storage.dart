@@ -54,3 +54,30 @@ class SafeConnexIDDatabase{
   }
 }
 
+class SafeConnexNewsStorage{
+  final _newsRefs = FirebaseStorage.instance.ref().child("news_pics");
+  static String? imageUrl;
+
+  Future<void> getProfilePicture(String userId) async {
+    final alternative_pic_male = _newsRefs.child("male_profile.png");
+    final networkImageAlternate = await alternative_pic_male.getDownloadURL();
+
+    try{
+      final profile_pic = _newsRefs.child("${userId}.png");
+      final networkImage = await profile_pic.getDownloadURL();
+      imageUrl = networkImage;
+    } on FirebaseException catch(e){
+      if(e.code == "object-not-found"){
+        imageUrl = networkImageAlternate;
+      }
+    }
+  }
+
+  Future<void> uploadNewsPic(String title, String path) async {
+    final news_pic = _newsRefs.child("${title}.png");
+    final file = File(path);
+    await news_pic.putFile(file);
+    print("File Uploaded");
+  }
+}
+

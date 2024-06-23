@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 
 class AgencyNavBar extends StatefulWidget {
@@ -26,6 +27,8 @@ class _AgencyNavBarState extends State<AgencyNavBar> {
           return CarouseSliderComponent();
         });
   }
+
+  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   @override
   Widget build(BuildContext context) {
