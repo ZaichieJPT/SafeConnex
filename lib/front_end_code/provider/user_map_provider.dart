@@ -129,13 +129,6 @@ class UserMapProviderState extends State<UserMapProvider> {
   }
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    getGeofenceData();
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return geofence.WillStartForegroundTask(
       onWillStart: () async {

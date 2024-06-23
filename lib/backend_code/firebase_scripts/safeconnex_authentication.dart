@@ -171,9 +171,11 @@ class SafeConnexAuthentication{
           }
         });
         await circleDatabase.listCircleDataForSettings(currentUser!.uid);
-        await getAgencyData().whenComplete((){
-          agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
-        });
+        if(agencyData["agencyName"] != null){
+          await getAgencyData().whenComplete((){
+            agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+          });
+        }
 
         print("Login Successfull");
       }
@@ -234,9 +236,11 @@ class SafeConnexAuthentication{
       }
     });
     await circleDatabase.listCircleDataForSettings(currentUser!.uid);
-    await getAgencyData().whenComplete((){
-      agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
-    });
+    if(agencyData["agencyName"] != null){
+      await getAgencyData().whenComplete((){
+        agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+      });
+    }
   }
 
   Future<void> loginWithToken() async {
@@ -253,9 +257,11 @@ class SafeConnexAuthentication{
         }
       });
       await circleDatabase.listCircleDataForSettings(currentUser!.uid);
-      await getAgencyData().whenComplete((){
-        agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
-      });
+      if(agencyData["agencyName"] != null){
+        await getAgencyData().whenComplete((){
+          agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+        });
+      }
       await SafeconnexNotification().initializeNotification(currentUser!.uid);
     }
   }
