@@ -215,15 +215,14 @@ class SafeConnexAuthentication{
         idToken: googleAuth?.idToken // this is the universal token used to auto login
     );
 
-    await _dbUserReference.child(credential.idToken!).set
+    UserCredential currentCredential = await _authHandler.signInWithCredential(credential);
+    currentUser = currentCredential.user!;
+
+    await _dbUserReference.child(currentUser!.uid).set
       ({
       "birthday": "01-01-1999",
       "role": "user"
     });
-
-
-    UserCredential currentCredential = await _authHandler.signInWithCredential(credential);
-    currentUser = currentCredential.user!;
 
     await profileStorage.getProfilePicture(currentUser!.uid);
     await SafeconnexNotification().initializeNotification(currentUser!.uid);
@@ -241,6 +240,10 @@ class SafeConnexAuthentication{
         agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
       });
     }
+  }
+
+  Future<void> forgotUserPassword(String email) async {
+    await _authHandler.sendPasswordResetEmail(email: email);
   }
 
   Future<void> loginWithToken() async {

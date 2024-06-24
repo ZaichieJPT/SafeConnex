@@ -5,6 +5,7 @@ import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
+import 'package:safeconnex/front_end_code/pages/email_verification_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';

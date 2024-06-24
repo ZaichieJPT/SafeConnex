@@ -106,9 +106,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                                     textAlign: TextAlign.center,
                                   ),
                                   onPressed: () {
-                                    // Cant do pop until
-                                    //Navigator.of(context).popUntil((route) =>
-                                    //route.settings.name == "/create_circle");
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                                     //PageNavigator(context, MainScreen());
                                   },
                                 ),

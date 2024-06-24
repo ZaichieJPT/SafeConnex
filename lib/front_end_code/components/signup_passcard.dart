@@ -4,6 +4,7 @@ import "package:flutter/cupertino.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
 import "package:safeconnex/front_end_code/components/signup_passfield.dart";
 import "package:safeconnex/front_end_code/components/signup_passvalidation.dart";
+import "package:safeconnex/front_end_code/pages/email_verification_page.dart";
 import "package:safeconnex/front_end_code/pages/login_page.dart";
 import "package:safeconnex/front_end_code/provider/setting_provider.dart";
 import "package:flutter/material.dart";
@@ -416,7 +417,7 @@ class _PassCardState extends State<PassCard> {
                     .whenComplete(() {
                   if (SafeConnexAuthentication.signUpException == null) {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()));
+                        MaterialPageRoute(builder: (context) => VerifyEmailPage()));
                   } else {
                     widget.backClicked();
                   }

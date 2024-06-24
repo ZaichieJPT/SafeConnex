@@ -8,6 +8,7 @@ import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
 import "package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart";
 import "package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart";
 import "package:safeconnex/front_end_code/pages/circle_pages/create_circle_page.dart";
+import "package:safeconnex/front_end_code/pages/forgot_pass_dialog.dart";
 import "package:safeconnex/front_end_code/pages/home_mainscreen.dart";
 import 'package:safeconnex/front_end_code/pages/signup_page.dart';
 import "package:flutter/cupertino.dart";
@@ -247,7 +248,14 @@ class _LoginPageState extends State<LoginPage> {
                                             //color: Colors.amber,
                                             alignment: Alignment.centerRight,
                                             child: TextButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return ForgotPassDialog(height: height, width: width);
+                                                  },
+                                                );
+                                              },
                                               child: FittedBox(
                                                 child: Text(
                                                   'Forgot Password?',
@@ -338,20 +346,18 @@ class _LoginPageState extends State<LoginPage> {
                                               ),
                                               onTap: () {
                                                 authentication.loginInWithGoogle().whenComplete((){
-                                                  if(_loginFormKey.currentState!.validate()){
-                                                    if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
-                                                      Future.delayed(Duration(milliseconds: 500), (){
-                                                        if(SafeConnexCircleDatabase.currentCircleCode == null){
-                                                          Navigator.push(
-                                                              context, MaterialPageRoute(builder: (context) => CirclePage()));
-                                                        }
-                                                        else if(SafeConnexCircleDatabase.currentCircleCode != null){
-                                                          Navigator.push(
-                                                              context, MaterialPageRoute(builder: (context) => MainScreen()));
-                                                        }
-                                                        isTransferred = true;
-                                                      });
-                                                    }
+                                                  if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                    Future.delayed(Duration(milliseconds: 500), (){
+                                                      if(SafeConnexCircleDatabase.currentCircleCode == null){
+                                                        Navigator.push(
+                                                            context, MaterialPageRoute(builder: (context) => CirclePage()));
+                                                      }
+                                                      else if(SafeConnexCircleDatabase.currentCircleCode != null){
+                                                        Navigator.push(
+                                                            context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                                      }
+                                                      isTransferred = true;
+                                                    });
                                                   }
                                                 });
                                               },

@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 
@@ -29,5 +30,4 @@ class SafeconnexNotification{
       "notificationToken": _fcmToken
     });
   }
-
 }
