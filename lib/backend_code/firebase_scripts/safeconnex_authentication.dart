@@ -162,7 +162,7 @@ class SafeConnexAuthentication{
         currentUser = currentCredential.user!;
         await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
         await profileStorage.getProfilePicture(currentUser!.uid);
-        await SafeconnexNotification().initializeNotification(currentUser!.uid);
+        await SafeConnexNotification().initializeNotification(currentUser!.uid);
         await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
           if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
             SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
@@ -225,7 +225,7 @@ class SafeConnexAuthentication{
     });
 
     await profileStorage.getProfilePicture(currentUser!.uid);
-    await SafeconnexNotification().initializeNotification(currentUser!.uid);
+    await SafeConnexNotification().initializeNotification(currentUser!.uid);
     await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
     await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
       if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
@@ -265,7 +265,7 @@ class SafeConnexAuthentication{
           agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
         });
       }
-      await SafeconnexNotification().initializeNotification(currentUser!.uid);
+      await SafeConnexNotification().initializeNotification(currentUser!.uid);
     }
   }
 

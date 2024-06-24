@@ -54,7 +54,6 @@ class _PassCardState extends State<PassCard> {
   int strengthCount = 0;
   final provider = SettingsProvider();
   final passFormKey = GlobalKey<FormState>();
-  //AppManager appController = AppManager();
   SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   onPasswordChanged(password) {

@@ -3,6 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_bottom_nav_bar.dart';
 
 class NewsPage extends StatefulWidget {
@@ -326,7 +328,7 @@ class _NewsPageState extends State<NewsPage> {
                         thickness: width * 0.015,
                         child: ListView.builder(
                           controller: _postScrollController,
-                          itemCount: 4,
+                          itemCount: SafeConnexNewsDatabase.newsData.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding: EdgeInsets.symmetric(
@@ -391,7 +393,7 @@ class _NewsPageState extends State<NewsPage> {
                                                       width: width,
                                                       //color: Colors.yellow,
                                                       child: Text(
-                                                        'Garry Penoliar $index',
+                                                        SafeConnexNewsDatabase.newsData[index]["sender"],
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -412,7 +414,7 @@ class _NewsPageState extends State<NewsPage> {
                                                       width: width,
                                                       //color: Colors.cyan,
                                                       child: Text(
-                                                        'Admin Staff at PNP $index',
+                                                        SafeConnexNewsDatabase.newsData[index]["role"],
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         textAlign:
@@ -1110,7 +1112,7 @@ class _NewsPageState extends State<NewsPage> {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "EARTHQUAKE INFORMATION $index",
+                                            SafeConnexNewsDatabase.newsData[index]["title"],
                                             textAlign: TextAlign.left,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -1129,7 +1131,7 @@ class _NewsPageState extends State<NewsPage> {
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Date/Time: 16 Jun 2024 - 07:48:52 PM\nLocation: 04.17°N, 125.51°E - 138 km S 4° E of Sarangani (Davao Occidental)\nDepth of Focus (Km):  010\nOrigin: TECTONIC\nMagnitude: Ms 5.1 Expecting\nDamage: NO\nExpecting Aftershocks: YES \nIndex $index",
+                                            SafeConnexNewsDatabase.newsData[index]["body"],
                                             textAlign: TextAlign.left,
                                             overflow: TextOverflow.clip,
                                             style: TextStyle(
@@ -1151,10 +1153,10 @@ class _NewsPageState extends State<NewsPage> {
                                     //color: const Color.fromARGB(255, 217, 217, 217),
                                     color: const Color.fromARGB(
                                         255, 217, 217, 217),
-                                    child: Image.network(
-                                      'https://scontent.fmnl4-6.fna.fbcdn.net/v/t39.30808-6/448546132_895295879303519_3604536046110788333_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGOnnX1PwwgCxETN0JwpYWEtVrwXTLUNzm1WvBdMtQ3OQ3vbtXjTJw_wtkOkb6v0V_jMRhX5-t9uv_vCaTMhp5-&_nc_ohc=PFUZ2BzF1QYQ7kNvgGbLHaj&_nc_ht=scontent.fmnl4-6.fna&oh=00_AYD430cbJILM_yEPjM0BrwmKAQsL6UdElMkldxacF4qTFg&oe=66769FAA',
+                                    child: SafeConnexNewsStorage.imageUrl != null ? Image.network(
+                                      SafeConnexNewsStorage.imageUrl!,
                                       fit: BoxFit.contain,
-                                    ),
+                                    ) : Container(),
                                   ),
                                   //POST FOOTER
                                   Container(
@@ -1185,7 +1187,7 @@ class _NewsPageState extends State<NewsPage> {
                                       children: [
                                         //POST TIME ELAPSED
                                         Text(
-                                          '12 mins ago',
+                                          SafeConnexNewsDatabase.newsData[index]["date"].toString().replaceAll(" ", "-"),
                                           textAlign: TextAlign.left,
                                           overflow: TextOverflow.clip,
                                           style: TextStyle(

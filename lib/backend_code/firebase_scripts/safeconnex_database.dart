@@ -590,6 +590,7 @@ class SafeConnexSafetyScoringDatabase{
   static List<Map<String, dynamic>> safetyScoreData = [];
   static Map<String, dynamic> safetyScoreToUpdate = {};
   static String? geocodedStreet;
+  static bool? isMapSwitched;
 
   Future<void> getGeocode(LatLng location) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(location.latitude, location.longitude);

@@ -45,6 +45,10 @@ class UserMapProviderState extends State<UserMapProvider> {
   final MapController _mapController = MapController();
   List<geofence.Geofence> _geofenceList = [];
 
+  List<geofence.Geofence> _safetyScoreList = [];
+  Color riskLevelColor = Colors.green.shade200;
+  Color riskLevelBorderColor = Colors.green.shade500;
+
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
       accuracy: 2000,
@@ -55,6 +59,36 @@ class UserMapProviderState extends State<UserMapProvider> {
       printDevLog: false,
       geofenceRadiusSortType: geofence.GeofenceRadiusSortType.DESC
   );
+
+  Future<void> getSafetyScoreData() async {
+    for(var safetyScoreData in SafeConnexSafetyScoringDatabase.safetyScoreData){
+      _safetyScoreList.add(geofence.Geofence(
+          id: safetyScoreData["locationName"],
+          latitude: safetyScoreData["latitude"],
+          longitude: safetyScoreData["longitude"],
+          radius: [
+            geofence.GeofenceRadius(id: safetyScoreData["radiusId"], length: double.parse(safetyScoreData["radiusSize"].toString()))
+          ]
+      ));
+      switch(safetyScoreData["riskLevel"]){
+        case "Low":
+          riskLevelColor = Colors.yellow;
+          riskLevelBorderColor = Colors.yellow.shade500;
+          break;
+        case "Moderate":
+          riskLevelColor = Colors.orange;
+          riskLevelBorderColor = Colors.orange.shade500;
+          break;
+        case "High":
+          riskLevelColor = Colors.red;
+          riskLevelBorderColor = Colors.red.shade500;
+          break;
+      }
+      Future.delayed(Duration(milliseconds: 2500), (){
+        addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
+      });
+    }
+  }
 
   Future<void> getGeofenceData() async {
     for(var geofenceData in SafeConnexGeofenceDatabase.geofenceData){
@@ -224,9 +258,15 @@ class UserMapProviderState extends State<UserMapProvider> {
     index = 0;
 
     Future.delayed(Duration(milliseconds: 400), (){
-      circleMarker.clear();
       geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
-      getGeofenceData();
+      if(SafeConnexSafetyScoringDatabase.isMapSwitched == true){
+        circleMarker.clear();
+        getGeofenceData();
+      }else if(SafeConnexSafetyScoringDatabase.isMapSwitched == false){
+        circleMarker.clear();
+        getSafetyScoreData();
+      }
+
     });
 
     for(index; index < SafeConnexGeolocation.coordinatesData.length; index++){
