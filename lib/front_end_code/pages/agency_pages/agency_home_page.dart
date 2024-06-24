@@ -6,6 +6,7 @@ import 'package:safeconnex/front_end_code/components/agency_components/agency_ho
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/pages/agency_pages/agency%20_floodscore_page.dart';
+import 'package:safeconnex/front_end_code/pages/forgot_pass_dialog.dart';
 import 'package:safeconnex/front_end_code/provider/new_map_provider.dart';
 
 class AgencyHomePage extends StatefulWidget {
@@ -133,189 +134,194 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
                 //START OF THE POPUP CODE
                 Builder(builder: (context) {
               return GestureDetector(
-                onTap: () => showPopover(
+                onTap: () => showDialog(
                   context: context,
-                  width: width * 0.45,
-                  height: height * 0.1,
-                  //arrowDyOffset is HEIGHT OF THE SAFETY SCORE CIRCLE DIVIDED BY 2 TO MAKE IT CENTERED
-                  arrowDyOffset: height * 0.2 / 2,
-                  direction: PopoverDirection.top,
-                  barrierDismissible: true,
-                  backgroundColor: Colors.white,
-                  shadow: [
-                    BoxShadow(
-                      offset: Offset(0, 4),
-                      color: Colors.grey.shade500,
-                    ),
-                  ],
-                  bodyBuilder: ((context) => Padding(
-                        padding: EdgeInsets.symmetric(vertical: height * 0.005),
-                        child: Column(
-                          children: [
-                            //POPUP HEADER
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                        //color: Colors.deepPurple[300],
-                                        ),
-                                  ),
-                                  Expanded(
-                                    flex: 3,
-                                    child: Container(
-                                      child: Text(
-                                        _currentPopupData?['title'],
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: 'OpunMai',
-                                          fontWeight: FontWeight.w700,
-                                          fontSize: 12.5,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  //EDIT BUTTON
-                                  Expanded(
-                                    child: InkWell(
-                                      //PASS DATA OF THIS SAFETY SCORE TO THE EDIT PAGE
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AgencyFloodScore(),
-                                          ),
-                                        );
-                                      },
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.grey.shade600,
-                                        radius: width * 0.027,
-                                        child: Image.asset(
-                                          'assets/images/agency_app/agency_edit_button.png',
-                                          width: width * 0.027,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            //TEXT DESCRIPTION
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.01),
-                                child: Text(
-                                  _currentPopupData?['description'],
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.clip,
-                                  style: TextStyle(
-                                    fontFamily: 'OpunMai',
-                                    fontSize: 10,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            //RISK LEVEL
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: width * 0.02),
-                                child: Row(
-                                  children: [
-                                    //FLOOD LEVEL
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              width: width * 0.08,
-                                              height: height * 0.022,
-                                              decoration: BoxDecoration(
-                                                color: _currentPopupData?[
-                                                    'floodColor'],
-                                                border: Border.all(
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        width * 0.02),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.01,
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'FLOOD',
-                                              textAlign: TextAlign.left,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyle(
-                                                fontFamily: 'OpunMai',
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: width * 0.023,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                  builder: (BuildContext context) {
+                    return ForgotPassDialog(height: height, width: width);
+                  },
+                  //showPopover(
+                  //   context: context,
+                  //   width: width * 0.45,
+                  //   height: height * 0.1,
+                  //   //arrowDyOffset is HEIGHT OF THE SAFETY SCORE CIRCLE DIVIDED BY 2 TO MAKE IT CENTERED
+                  //   arrowDyOffset: height * 0.2 / 2,
+                  //   direction: PopoverDirection.top,
+                  //   barrierDismissible: true,
+                  //   backgroundColor: Colors.white,
+                  //   shadow: [
+                  //     BoxShadow(
+                  //       offset: Offset(0, 4),
+                  //       color: Colors.grey.shade500,
+                  //     ),
+                  //   ],
+                  //   bodyBuilder: ((context) => Padding(
+                  //         padding: EdgeInsets.symmetric(vertical: height * 0.005),
+                  //         child: Column(
+                  //           children: [
+                  //             //POPUP HEADER
+                  //             Expanded(
+                  //               child: Row(
+                  //                 children: [
+                  //                   Expanded(
+                  //                     child: Container(
+                  //                         //color: Colors.deepPurple[300],
+                  //                         ),
+                  //                   ),
+                  //                   Expanded(
+                  //                     flex: 3,
+                  //                     child: Container(
+                  //                       child: Text(
+                  //                         _currentPopupData?['title'],
+                  //                         textAlign: TextAlign.center,
+                  //                         style: TextStyle(
+                  //                           fontFamily: 'OpunMai',
+                  //                           fontWeight: FontWeight.w700,
+                  //                           fontSize: 12.5,
+                  //                           color: Colors.red,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                   //EDIT BUTTON
+                  //                   Expanded(
+                  //                     child: InkWell(
+                  //                       //PASS DATA OF THIS SAFETY SCORE TO THE EDIT PAGE
+                  //                       onTap: () {
+                  //                         Navigator.of(context).push(
+                  //                           MaterialPageRoute(
+                  //                             builder: (context) =>
+                  //                                 AgencyFloodScore(),
+                  //                           ),
+                  //                         );
+                  //                       },
+                  //                       child: CircleAvatar(
+                  //                         backgroundColor: Colors.grey.shade600,
+                  //                         radius: width * 0.027,
+                  //                         child: Image.asset(
+                  //                           'assets/images/agency_app/agency_edit_button.png',
+                  //                           width: width * 0.027,
+                  //                           color: Colors.white,
+                  //                         ),
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //             //TEXT DESCRIPTION
+                  //             Expanded(
+                  //               child: Padding(
+                  //                 padding: EdgeInsets.symmetric(
+                  //                     horizontal: width * 0.01),
+                  //                 child: Text(
+                  //                   _currentPopupData?['description'],
+                  //                   textAlign: TextAlign.center,
+                  //                   overflow: TextOverflow.clip,
+                  //                   style: TextStyle(
+                  //                     fontFamily: 'OpunMai',
+                  //                     fontSize: 10,
+                  //                     color: Colors.black,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //             //RISK LEVEL
+                  //             Expanded(
+                  //               child: Padding(
+                  //                 padding: EdgeInsets.symmetric(
+                  //                     horizontal: width * 0.02),
+                  //                 child: Row(
+                  //                   children: [
+                  //                     //FLOOD LEVEL
+                  //                     Expanded(
+                  //                       flex: 2,
+                  //                       child: Row(
+                  //                         children: [
+                  //                           Expanded(
+                  //                             child: Container(
+                  //                               width: width * 0.08,
+                  //                               height: height * 0.022,
+                  //                               decoration: BoxDecoration(
+                  //                                 color: _currentPopupData?[
+                  //                                     'floodColor'],
+                  //                                 border: Border.all(
+                  //                                   color: Colors.black,
+                  //                                 ),
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(
+                  //                                         width * 0.02),
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                           SizedBox(
+                  //                             width: width * 0.01,
+                  //                           ),
+                  //                           Expanded(
+                  //                             flex: 2,
+                  //                             child: Text(
+                  //                               'FLOOD',
+                  //                               textAlign: TextAlign.left,
+                  //                               overflow: TextOverflow.clip,
+                  //                               style: TextStyle(
+                  //                                 fontFamily: 'OpunMai',
+                  //                                 fontWeight: FontWeight.w600,
+                  //                                 fontSize: width * 0.023,
+                  //                                 color: Colors.black,
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                         ],
+                  //                       ),
+                  //                     ),
 
-                                    //ACCIDENT LEVEL
-                                    Expanded(
-                                      flex: 2,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              width: width * 0.08,
-                                              height: height * 0.022,
-                                              decoration: BoxDecoration(
-                                                color: _currentPopupData?[
-                                                    'accidentColors'],
-                                                border: Border.all(
-                                                  color: Colors.black,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        width * 0.02),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.01,
-                                          ),
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              'ACCIDENT',
-                                              textAlign: TextAlign.center,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyle(
-                                                fontFamily: 'OpunMai',
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: width * 0.022,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
+                  //                     //ACCIDENT LEVEL
+                  //                     Expanded(
+                  //                       flex: 2,
+                  //                       child: Row(
+                  //                         children: [
+                  //                           Expanded(
+                  //                             child: Container(
+                  //                               width: width * 0.08,
+                  //                               height: height * 0.022,
+                  //                               decoration: BoxDecoration(
+                  //                                 color: _currentPopupData?[
+                  //                                     'accidentColors'],
+                  //                                 border: Border.all(
+                  //                                   color: Colors.black,
+                  //                                 ),
+                  //                                 borderRadius:
+                  //                                     BorderRadius.circular(
+                  //                                         width * 0.02),
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                           SizedBox(
+                  //                             width: width * 0.01,
+                  //                           ),
+                  //                           Expanded(
+                  //                             flex: 2,
+                  //                             child: Text(
+                  //                               'ACCIDENT',
+                  //                               textAlign: TextAlign.center,
+                  //                               overflow: TextOverflow.clip,
+                  //                               style: TextStyle(
+                  //                                 fontFamily: 'OpunMai',
+                  //                                 fontWeight: FontWeight.w600,
+                  //                                 fontSize: width * 0.022,
+                  //                                 color: Colors.black,
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                         ],
+                  //                       ),
+                  //                     ),
+                  //                   ],
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       )),
                 ),
               );
               //END OF THE POPUP CODE
