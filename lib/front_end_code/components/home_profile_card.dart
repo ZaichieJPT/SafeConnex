@@ -3,8 +3,8 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 
 class ProfileCard extends StatefulWidget {
   const ProfileCard({super.key});
@@ -24,7 +24,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   bool _checkIfGeocodeExist() {
-    for (var geocodes in FlutterFireCoordinates.coordinatesData) {
+    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
       if (geocodes["geocoded"] != null) {
         return true;
       }
@@ -33,7 +33,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   String _getGeocodeValue(String userId) {
-    for (var geocodes in FlutterFireCoordinates.coordinatesData) {
+    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
       if (geocodes["userId"] == userId) {
         return geocodes["geocoded"];
       }

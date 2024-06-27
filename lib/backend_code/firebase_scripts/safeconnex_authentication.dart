@@ -4,9 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 
 /// SafeConnex Authentication System using the Firebase API
 class SafeConnexAuthentication{
@@ -63,10 +61,12 @@ class SafeConnexAuthentication{
         "birthday": birthdate,
         "role": "user",
         "phoneNumber": "000000000"
+      }).whenComplete((){
+        // Logs out the account after the data has been assigned to prevent auto login
+        _authHandler.signOut();
       });
 
-      // Logs out the account after the data has been assigned to prevent auto login
-      await _authHandler.signOut();
+
 
       // For Verification only remove if the app is in production
       print("Account Created");

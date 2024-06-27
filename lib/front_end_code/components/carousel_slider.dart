@@ -2,14 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
-
-import '../../backend_code/firebase_scripts/firebase_coordinates_store.dart';
 
 class CarouseSliderComponent extends StatefulWidget {
   const CarouseSliderComponent({super.key});

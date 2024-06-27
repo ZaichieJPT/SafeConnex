@@ -3,8 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
@@ -19,8 +17,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
-    double width = MediaQuery.sizeOf(context).width;
-    print(CircleDatabaseHandler.generatedCode);
+    double width = MediaQuery.sizeOf(context).width;;
 
     return Container(
       decoration: BoxDecoration(

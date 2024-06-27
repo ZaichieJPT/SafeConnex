@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-import "package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart";
 import "package:safeconnex/front_end_code/components/signup_emailcard.dart";
 import "package:safeconnex/front_end_code/components/signup_namecard.dart";
 import "package:safeconnex/front_end_code/components/signup_passcard.dart";

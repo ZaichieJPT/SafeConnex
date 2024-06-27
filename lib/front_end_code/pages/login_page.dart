@@ -27,10 +27,16 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passController = TextEditingController();
 
+  SettingsProvider provider = SettingsProvider();
+  SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
+
   final _loginFormKey = GlobalKey<FormState>();
 
   bool isPasswordValidated = false;
   bool isTransferred = false;
+
 
   @override
   void dispose() {
@@ -45,13 +51,8 @@ class _LoginPageState extends State<LoginPage> {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 
-    SettingsProvider provider = SettingsProvider();
-    SafeConnexAuthentication authentication = SafeConnexAuthentication();
-    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-    SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
-
     // Fix this the delay is too early make it accurate
-    authentication.loginWithToken().whenComplete(() {
+    /*authentication.loginWithToken().whenComplete(() {
       if (SafeConnexAuthentication.currentUser != null && isTransferred == false) {
         if(SafeConnexAuthentication.agencyData["role"] != "Agency"){
           if(SafeConnexCircleDatabase.currentCircleCode == null){
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
 
         isTransferred = true;
       }
-    });
+    });*/
 
     return Container(
       decoration: BoxDecoration(

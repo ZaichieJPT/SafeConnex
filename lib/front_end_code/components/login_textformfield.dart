@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
 
 class LoginFormField extends StatefulWidget {
   final String hintText;
@@ -77,7 +76,6 @@ class _LoginFormFieldState extends State<LoginFormField> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuthHandler authHandler = FirebaseAuthHandler();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       //child: SizedBox(

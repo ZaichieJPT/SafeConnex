@@ -8,11 +8,6 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_coordinates_store.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_geofence_store.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_profile_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
@@ -287,6 +282,9 @@ class UserMapProviderState extends State<UserMapProvider> {
 
               print("Activity: $activityContent");
               print("Geofence: $geofencingContent");
+              if(geofencingContent != ''){
+                //if(geofencingContent[])
+              }
               return Scaffold(
                 body: Stack(
                   children: [

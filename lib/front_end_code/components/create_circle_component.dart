@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_circle_database.dart';
 
 class CircleCreator{
   void createCircle(BuildContext context){

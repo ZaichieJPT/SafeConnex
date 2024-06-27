@@ -2,8 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_auth.dart';
-import 'package:safeconnex/front_end_code/components/create_circle_component.dart';
 
 class NavButtonComponent extends StatefulWidget {
   NavButtonComponent(
