@@ -6,7 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/agency_step2_textfields.dart';
 
@@ -37,7 +39,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
   final _step2FormKey = GlobalKey<FormState>();
   double height = 0.0;
   double width = 0.0;
-  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+  //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   final _toastQueue = Queue<String>();
 
@@ -386,7 +388,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
                     onPressed: () {
                       setState(() {
                         if (_step2FormKey.currentState!.validate()) {
-                          agencyDatabase.setAgencyData(
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().setAgencyData(
                               _agencyRoleController.text,
                               _agencyNameController.text,
                               _agencyLocationController.text,

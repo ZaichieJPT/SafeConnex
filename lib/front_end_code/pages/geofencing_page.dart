@@ -6,7 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -19,7 +21,7 @@ class GeofencingPage extends StatefulWidget {
 }
 
 class _GeofencingPageState extends State<GeofencingPage> {
-  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
+  //SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
   ScrollController placesScrollControl = ScrollController();
   TextEditingController _placeNameController = TextEditingController();
   TextEditingController _locationNameController = TextEditingController();
@@ -77,9 +79,9 @@ class _GeofencingPageState extends State<GeofencingPage> {
         if (index == 1) {
           placeLabelName = '';
           placeLocationName = '';
-          SafeConnexGeofenceDatabase.geofenceToUpdate = {};
+          DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceToUpdate = {};
         }else if(index == 0){
-          geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+          DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
         }
       });
     }
@@ -304,7 +306,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                 radius: Radius.circular(15),
                                 child: ListView.builder(
                                   controller: placesScrollControl,
-                                  itemCount: SafeConnexGeofenceDatabase.geofenceData.length,
+                                  itemCount: DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData.length,
                                   itemBuilder: ((context, index) {
                                     return InkWell(
                                       onTap: () => _onPlaceTapped(index),
@@ -358,7 +360,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                               //PLACE NAME
                                               Expanded(
                                                 child: Text(
-                                                  SafeConnexGeofenceDatabase.geofenceData[index]["radiusId"].toString(),
+                                                  DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[index]["radiusId"].toString(),
                                                   overflow:
                                                   TextOverflow.ellipsis,
                                                   style: TextStyle(
@@ -705,16 +707,16 @@ class _GeofencingPageState extends State<GeofencingPage> {
                             _selectedTabIndex = 1;
                             //set placeLabelName to the name of the selected index
                             //set placeLocationName to the the location name of the selected index
-                            _placeNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["radiusId"].toString();
-                            _locationNameController.text = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["addressLabel"].toString();
-                            SafeConnexGeofenceDatabase.geofenceToUpdate = SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!];
+                            _placeNameController.text = DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["radiusId"].toString();
+                            _locationNameController.text = DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["addressLabel"].toString();
+                            DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceToUpdate = DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!];
                             tapLocation = LatLng(
-                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["latitude"],
-                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["longitude"]);
+                                DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["latitude"],
+                                DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["longitude"]);
                             addGeolocationMarker(LatLng(
-                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["latitude"],
-                                SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["longitude"]),
-                                double.parse(SafeConnexGeofenceDatabase.geofenceData[_selectedPlaceIndex!]["radiusSize"].toString()));
+                                DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["latitude"],
+                                DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["longitude"]),
+                                double.parse(DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData[_selectedPlaceIndex!]["radiusSize"].toString()));
                           });
                         }
                       } else {
@@ -729,8 +731,8 @@ class _GeofencingPageState extends State<GeofencingPage> {
                           //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
                         } else {
                           //get the value of the texfields
-                          geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, SafeConnexCircleDatabase.currentCircleCode!, _locationNameController.text);
-                          geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+                          DependencyInjector().locator<SafeConnexGeofenceDatabase>().addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, _locationNameController.text);
+                          DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
                           setState(() {
                             _selectedTabIndex = 0;
                             _locationNameController.text = "";

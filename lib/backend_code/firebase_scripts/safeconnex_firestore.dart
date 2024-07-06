@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class SafeConnexGeolocation{
   final dbReference = FirebaseFirestore.instance;
@@ -29,10 +30,10 @@ class SafeConnexGeolocation{
     final snapshot = dbReference.collection("geoCoordinates");
     snapshot.snapshots(includeMetadataChanges: true).listen(
         (event){
-        circleDatabase.getCircleDataForLocation(SafeConnexCircleDatabase.currentCircleCode!).whenComplete(() async {
+        circleDatabase.getCircleDataForLocation(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!).whenComplete(() async {
           if(coordinatesData.isEmpty){
             for (var docs in event.docs){
-              for (var index in SafeConnexCircleDatabase.locationCircleData){
+              for (var index in DependencyInjector().locator<SafeConnexCircleDatabase>().locationCircleData){
                 if(index["id"] == docs.id){
                   List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
                   coordinatesData.add(
@@ -51,7 +52,7 @@ class SafeConnexGeolocation{
           else if(coordinatesData.isNotEmpty) {
             coordinatesData.clear();
             for (var docs in event.docs) {
-              for (var index in SafeConnexCircleDatabase.locationCircleData){
+              for (var index in DependencyInjector().locator<SafeConnexCircleDatabase>().locationCircleData){
                 if(index["id"] == docs.id){
                   List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
                   coordinatesData.add(

@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
 class AgencyFeedProfile extends StatefulWidget {
@@ -28,7 +30,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
   final GlobalKey<FormState> _agencyDataFormKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _agencyProfileFormKey = GlobalKey<FormState>();
 
-  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+  //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   List<String> agencyInfo = [
     'location of the agency',
@@ -59,12 +61,12 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
       _agencyDataControllers.add(TextEditingController());
     }
 
-    _agencyDataControllers[0].text = SafeConnexAgencyDatabase.agencyData["agencyLocation"]!;
-    _agencyDataControllers[1].text = SafeConnexAgencyDatabase.agencyData["agencyPhoneNumber"]!;
-    _agencyDataControllers[2].text = SafeConnexAgencyDatabase.agencyData["agencyTelephoneNumber"]!;
-    _agencyDataControllers[3].text = SafeConnexAgencyDatabase.agencyData["agencyEmailAddress"]!;
-    _agencyDataControllers[4].text = SafeConnexAgencyDatabase.agencyData["facebookLink"]!;
-    _agencyDataControllers[5].text = SafeConnexAgencyDatabase.agencyData["agencyWebsite"]!;
+    _agencyDataControllers[0].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyLocation"]!;
+    _agencyDataControllers[1].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyPhoneNumber"]!;
+    _agencyDataControllers[2].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyTelephoneNumber"]!;
+    _agencyDataControllers[3].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyEmailAddress"]!;
+    _agencyDataControllers[4].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["facebookLink"]!;
+    _agencyDataControllers[5].text = DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyWebsite"]!;
     int filled = 0;
     for (int i = 0; i < _agencyDataControllers.length; i++) {
       if (_agencyDataControllers[i].text.isNotEmpty) {
@@ -190,7 +192,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                           )
                                         : Text(
                                             _agencyNameController.text.isEmpty
-                                                ? SafeConnexAuthentication.agencyData["agencyName"]!
+                                                ? DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]!
                                                 : _agencyNameController.text,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -225,7 +227,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                           flex: 6,
                                           child: SizedBox(
                                             child: Text(
-                                              SafeConnexAuthentication.currentUser!.displayName!,
+                                              DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                 fontFamily: 'Montserrat',
@@ -304,7 +306,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                                     ),
                                                   )
                                                 : Text(
-                                                    SafeConnexAgencyDatabase.agencyData["agencyRole"]!,
+                                              DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                     style: TextStyle(
@@ -477,7 +479,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                 _getDetailsProgress(filled);
                                 // Not changing
                                 if(_isEditDetailsSelected == false){
-                                  agencyDatabase.updateAgency(_agencyDataControllers[0].text, _agencyDataControllers[1].text, _agencyDataControllers[2].text, _agencyDataControllers[3].text, _agencyDataControllers[4].text, _agencyDataControllers[5].text).whenComplete((){print(true);});
+                                  DependencyInjector().locator<SafeConnexAgencyDatabase>().updateAgency(_agencyDataControllers[0].text, _agencyDataControllers[1].text, _agencyDataControllers[2].text, _agencyDataControllers[3].text, _agencyDataControllers[4].text, _agencyDataControllers[5].text).whenComplete((){print(true);});
                                 }
                               });
                             },

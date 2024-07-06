@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class AgencyStep4 extends StatefulWidget {
   final Function() toNextStep;
@@ -22,7 +24,7 @@ class _AgencyStep4State extends State<AgencyStep4> {
   Future<void> _onSelfieIDTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    SafeConnexAgencyDatabase.selfieLink = image!.path;
+    DependencyInjector().locator<SafeConnexAgencyDatabase>().selfieLink = image!.path;
     if (image == null) return;
   }
 

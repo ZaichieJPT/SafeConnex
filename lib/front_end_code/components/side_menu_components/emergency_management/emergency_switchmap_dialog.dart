@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 
 class SwitchMapDialog extends StatefulWidget {
   SwitchMapDialog({
@@ -103,7 +105,7 @@ class _SwitchMapDialogState extends State<SwitchMapDialog> {
                         onChanged: (value) {
                           setState(() {
                             _isMapSwitched = value;
-                            SafeConnexSafetyScoringDatabase.isMapSwitched = value;
+                            DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched = value;
                             print('Switched: ${_isMapSwitched}');
                           });
                         },

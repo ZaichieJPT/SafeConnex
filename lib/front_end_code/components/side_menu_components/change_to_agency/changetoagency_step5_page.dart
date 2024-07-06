@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class AgencyStep5 extends StatefulWidget {
   final Function() toNextStep;
@@ -20,7 +22,7 @@ class _AgencyStep3State extends State<AgencyStep5> {
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
-    SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+    //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
     return Padding(
       padding: EdgeInsets.only(bottom: height * 0.03),
       child: Column(
@@ -90,7 +92,7 @@ class _AgencyStep3State extends State<AgencyStep5> {
                 //color: Colors.grey,
                 child: MaterialButton(
                   onPressed: () {
-                    agencyDatabase.joinTheAgency();
+                    DependencyInjector().locator<SafeConnexAgencyDatabase>().joinTheAgency();
                     setState(() {
                       Navigator.of(context).popAndPushNamed("/agencyPage");
                     });

@@ -4,7 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
 
 class ConfirmJoinCircle extends StatefulWidget {
@@ -95,7 +96,7 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                       Container(
                         width: width * 0.75,
                         child: Text(
-                          SafeConnexCircleDatabase.circleToJoin['circle_name'].toString(),
+                          DependencyInjector().locator<SafeConnexCircleDatabase>().circleToJoin['circle_name'].toString(),
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: TextStyle(

@@ -6,7 +6,9 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 
 class AgencyMapProvider extends StatefulWidget {
   const AgencyMapProvider({super.key});
@@ -36,7 +38,7 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   );
 
   Future<void> getSafetyScoreData() async {
-    for(var safetyScoreData in SafeConnexSafetyScoringDatabase.safetyScoreData){
+    for(var safetyScoreData in DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().safetyScoreData){
       _safetyScoreList.add(geofence.Geofence(
           id: safetyScoreData["locationName"],
           latitude: safetyScoreData["latitude"],

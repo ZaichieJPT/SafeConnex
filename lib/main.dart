@@ -1,32 +1,27 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
-import 'package:safeconnex/front_end_code/pages/circle_pages/circle_results_page.dart';
-import 'package:safeconnex/front_end_code/pages/email_verification_page.dart';
 import 'package:safeconnex/front_end_code/pages/geofencing_page.dart';
 import 'package:safeconnex/front_end_code/pages/home_mainscreen.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
-import 'package:safeconnex/front_end_code//pages/signup_page.dart';
 import 'package:safeconnex/front_end_code/pages/join_circle.dart';
-import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 import 'package:safeconnex/front_end_code/pages/onboarding_page.dart';
 import 'package:safeconnex/front_end_code/pages/password_change_page.dart';
 import 'package:safeconnex/front_end_code/provider/user_map_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'backend_code/firebase_scripts/firebase_options.dart';
-import 'front_end_code/pages/circle_pages/create_circle_page.dart';
 import 'package:flutter/services.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  print('initializing firebase...');
-  await FirebaseInit.rootFirebase;
-  print(FirebaseInit.rootFirebase);
-  print('initialization complete');
+  FirebaseInit.rootFirebase;
+  DependencyInjector().setupDependencyInjector();
   runApp(const MyApp());
 }
 

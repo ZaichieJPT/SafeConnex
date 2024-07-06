@@ -4,8 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class LeaveDialog extends StatefulWidget {
   final double height;
@@ -31,7 +32,7 @@ class _LeaveDialogState extends State<LeaveDialog> {
   @override
   Widget build(BuildContext context) {
     String? _circleName = widget.circleName;
-    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+    //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -187,7 +188,7 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                     fullWidth: true,
                                   );
                                   // Circle leave Function
-                                  circleDatabase.leaveCircle(SafeConnexAuthentication.currentUser!.uid, widget.circleCode!);
+                                  DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
                                   setState(() {
                                   });
                                   Navigator.of(context).pop();

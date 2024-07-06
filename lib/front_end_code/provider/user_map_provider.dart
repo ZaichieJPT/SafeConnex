@@ -8,9 +8,12 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 
@@ -56,7 +59,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   );
 
   Future<void> getSafetyScoreData() async {
-    for(var safetyScoreData in SafeConnexSafetyScoringDatabase.safetyScoreData){
+    for(var safetyScoreData in DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().safetyScoreData){
       _safetyScoreList.add(geofence.Geofence(
           id: safetyScoreData["locationName"],
           latitude: safetyScoreData["latitude"],
@@ -86,7 +89,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   }
 
   Future<void> getGeofenceData() async {
-    for(var geofenceData in SafeConnexGeofenceDatabase.geofenceData){
+    for(var geofenceData in DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData){
       // there is no place label
       _geofenceList.add(geofence.Geofence(
         id: geofenceData["addressLabel"],
@@ -190,7 +193,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   }
 
   bool _checkIfProfileExist(){
-    for(var profile in SafeConnexCircleDatabase.circleDataValue){
+    for(var profile in DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue){
       if(profile["image"] != null){
         return true;
       }
@@ -253,11 +256,11 @@ class UserMapProviderState extends State<UserMapProvider> {
     index = 0;
 
     Future.delayed(Duration(milliseconds: 400), (){
-      geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], SafeConnexAuthentication.currentUser!.uid);
-      if(SafeConnexSafetyScoringDatabase.isMapSwitched == true){
+      geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+      if(DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched == true){
         circleMarker.clear();
         getGeofenceData();
-      }else if(SafeConnexSafetyScoringDatabase.isMapSwitched == false){
+      }else if(DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched == false){
         circleMarker.clear();
         getSafetyScoreData();
       }

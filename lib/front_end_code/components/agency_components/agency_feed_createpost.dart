@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/pages/agency_pages/agency_home_mainscreen.dart';
 
@@ -33,7 +35,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
-    SafeConnexNewsDatabase newsDatabase = SafeConnexNewsDatabase();
+    //SafeConnexNewsDatabase newsDatabase = SafeConnexNewsDatabase();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -66,7 +68,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                 child: InkWell(
                   onTap: () {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
-                      newsDatabase.createNews(SafeConnexAuthentication.agencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, SafeConnexAuthentication.currentUser!.displayName!, SafeConnexAgencyDatabase.agencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
+                      DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!, DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                     }
                   },
@@ -119,7 +121,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.grey,
                                     child: Text(
-                                      SafeConnexAuthentication.currentUser!.displayName!,
+                                      DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -139,7 +141,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.green,
                                     child: Text(
-                                      '${SafeConnexAgencyDatabase.agencyData["agencyRole"]} at ${SafeConnexAuthentication.agencyData["agencyName"]}',
+                                      '${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyRole"]} at ${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(

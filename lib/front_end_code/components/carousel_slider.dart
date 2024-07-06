@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
@@ -15,7 +16,7 @@ class CarouseSliderComponent extends StatefulWidget {
 
 class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
   bool _checkIfProfileExist() {
-    for (var profile in SafeConnexCircleDatabase.circleDataValue) {
+    for (var profile in DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue) {
       if (profile["image"] != null) {
         return true;
       }
@@ -55,7 +56,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
         enableInfiniteScroll: true,
         enlargeStrategy: CenterPageEnlargeStrategy.zoom,
       ),
-      items: SafeConnexCircleDatabase.circleDataValue.map((userData) {
+      items: DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue.map((userData) {
         return Builder(
           builder: (BuildContext context) {
             return Stack(

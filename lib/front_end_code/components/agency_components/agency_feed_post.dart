@@ -3,7 +3,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_deletepost_dialog.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_feed_editpost.dart';
@@ -27,7 +29,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
   int _currentPostIndex = -1;
   bool _showPostFilter = false;
 
-  SafeConnexNewsDatabase newsDatabase = SafeConnexNewsDatabase();
+  //SafeConnexNewsDatabase newsDatabase = SafeConnexNewsDatabase();
 
   Future deletePostDialog() => showDialog(
         context: context,
@@ -70,7 +72,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
         _isLikePostTapped.add(false);
       });
     }
-    newsDatabase.listenOnTheNews();
+    DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
     super.initState();
   }
 
@@ -323,7 +325,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                   thickness: width * 0.015,
                   child: ListView.builder(
                     controller: _postScrollController,
-                    itemCount: SafeConnexNewsDatabase.newsData.length,
+                    itemCount: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: EdgeInsets.symmetric(
@@ -382,7 +384,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                                 width: width,
                                                 //color: Colors.yellow,
                                                 child: Text(
-                                                  SafeConnexNewsDatabase.newsData[index]["sender"],
+                                                  DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["sender"],
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,
@@ -400,7 +402,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                                 width: width,
                                                 //color: Colors.cyan,
                                                 child: Text(
-                                                  SafeConnexNewsDatabase.newsData[index]["role"],
+                                                  DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["role"],
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,
@@ -559,7 +561,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      SafeConnexNewsDatabase.newsData[index]["title"],
+                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["title"],
                                       textAlign: TextAlign.left,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -577,7 +579,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      SafeConnexNewsDatabase.newsData[index]["body"],                                     textAlign: TextAlign.left,
+                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["body"],                                     textAlign: TextAlign.left,
                                       overflow: TextOverflow.clip,
                                       style: TextStyle(
                                         fontFamily: 'OpunMai',
@@ -596,8 +598,8 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                               width: width * 0.85,
                               //color: const Color.fromARGB(255, 217, 217, 217),
                               color: const Color.fromARGB(255, 217, 217, 217),
-                              child: SafeConnexNewsStorage.imageUrl != null ? Image.network(
-                                SafeConnexNewsStorage.imageUrl!,
+                              child: DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl != null ? Image.network(
+                                DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl!,
                                 fit: BoxFit.contain,
                               ) : Container(),
                             ),
@@ -627,7 +629,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                 children: [
                                   //POST TIME ELAPSED
                                   Text(
-                                    SafeConnexNewsDatabase.newsData[index]["date"].toString().replaceAll(" ", "-"),
+                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["date"].toString().replaceAll(" ", "-"),
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip,
                                     style: TextStyle(

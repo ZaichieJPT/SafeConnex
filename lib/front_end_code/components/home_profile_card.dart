@@ -3,7 +3,8 @@
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 
 class ProfileCard extends StatefulWidget {
@@ -15,7 +16,7 @@ class ProfileCard extends StatefulWidget {
 
 class _ProfileCardState extends State<ProfileCard> {
   bool _checkIfProfileExist() {
-    for (var profile in SafeConnexCircleDatabase.circleDataValue) {
+    for (var profile in DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue) {
       if (profile["image"] != null) {
         return true;
       }

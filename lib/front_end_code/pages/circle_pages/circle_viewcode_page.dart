@@ -3,7 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class ViewCircleCode extends StatefulWidget {
   const ViewCircleCode({super.key});
@@ -70,7 +71,7 @@ class _ViewCircleCodeState extends State<ViewCircleCode> {
                               ),
                               //CIRCLE CODE
                               SelectableText(
-                                '${SafeConnexCircleDatabase.currentCircleCode}',
+                                '${DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode}',
                                 style: TextStyle(
                                   fontSize: height * 0.05,
                                   fontFamily: "OpunMai",

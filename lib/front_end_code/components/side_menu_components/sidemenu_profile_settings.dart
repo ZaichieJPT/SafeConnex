@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/change_to_agency/sidemenu_changetoagency_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_passdialog.dart';
@@ -38,9 +40,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final _profileDateFormKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _birthdateController = TextEditingController();
-  SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
-  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+  //SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
   double innerHeight = 0;
   double innerWidth = 0;
   int _selectedMenuIndex = 4;
@@ -57,8 +59,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   Future<void> _onProfileTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    profileStorage.uploadProfilePic(
-        SafeConnexAuthentication.currentUser!.uid, image!.path);
+    DependencyInjector().locator<SafeConnexProfileStorage>().uploadProfilePic(
+        DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, image!.path);
     if (image == null) return;
   }
 
@@ -151,8 +153,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
 
   @override
   void initState() {
-    _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
-    _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
+    _phoneNumber = DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"].toString();
+    _birthDate = DependencyInjector().locator<SafeConnexAuthentication>().userData["birthdate"].toString();
     _phoneController.text = _phoneNumber!;
     _birthdateController.text = _birthDate!;
     super.initState();
@@ -239,15 +241,15 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           setState(() {
                                             if (_isProfileEditable) {
                                               validateAndSavePhoneNumber();
-                                              authentication.updatePhoneNumberAndBirthdate(_phoneController.text, _birthdateController.text);
-                                              authentication.getUpdatedPhoneAndBirthday(SafeConnexAuthentication.currentUser!.uid).whenComplete((){
-                                                _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
-                                                _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
+                                              DependencyInjector().locator<SafeConnexAuthentication>().updatePhoneNumberAndBirthdate(_phoneController.text, _birthdateController.text);
+                                              DependencyInjector().locator<SafeConnexAuthentication>().getUpdatedPhoneAndBirthday(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid).whenComplete((){
+                                                _birthDate = DependencyInjector().locator<SafeConnexAuthentication>().userData["birthdate"].toString();
+                                                _phoneNumber = DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"].toString();
                                               });
                                               //_isProfileEditable = !_isProfileEditable;
                                             } else {
-                                              _birthDate = SafeConnexAuthentication.userData["birthdate"].toString();
-                                              _phoneNumber = SafeConnexAuthentication.userData["phoneNumber"].toString();
+                                              _birthDate = DependencyInjector().locator<SafeConnexAuthentication>().userData["birthdate"].toString();
+                                              _phoneNumber = DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"].toString();
                                               _isProfileEditable =
                                               !_isProfileEditable;
                                             }
@@ -274,7 +276,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                           horizontal: innerHeight * 0.05,
                                         ),
                                         child: Text(
-                                          '${SafeConnexAuthentication.currentUser!.displayName}',
+                                          '${DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName}',
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: innerHeight * 0.11,
@@ -287,7 +289,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                   Flexible(
                                     child: FittedBox(
                                       child: Text(
-                                        'Email: ${SafeConnexAuthentication.currentUser!.email}',
+                                        'Email: ${DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.email}',
                                         style: TextStyle(
                                           fontFamily: 'OpunMai',
                                           fontSize: widget.height * 0.018,
@@ -547,8 +549,8 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         heightFactor: 0.45,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            if(SafeConnexAuthentication.agencyData["agencyName"] != null){
-                                              agencyDatabase.revertToAgency();
+                                            if(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"] != null){
+                                              DependencyInjector().locator<SafeConnexAgencyDatabase>().revertToAgency();
                                               Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                                             }else{
                                               showDialog(

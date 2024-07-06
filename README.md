@@ -1,4 +1,4 @@
-# safeconnex
+safeconnex
 
 A new project.
 

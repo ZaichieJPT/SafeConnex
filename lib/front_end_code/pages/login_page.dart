@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import "package:safeconnex/api/dependecy_injector/injector.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
-import "package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart";
+import "package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
@@ -28,9 +29,9 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
 
   SettingsProvider provider = SettingsProvider();
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-  SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
 
   final _loginFormKey = GlobalKey<FormState>();
 
@@ -291,20 +292,20 @@ class _LoginPageState extends State<LoginPage> {
                                           fontSize: 15,
                                           formKey: _loginFormKey,
                                           continueClicked: () {
-                                            authentication
+                                            DependencyInjector().locator<SafeConnexAuthentication>()
                                                 .loginWithEmailAccount(
                                                 _emailController.text,
                                                 _passController.text)
                                                 .whenComplete(() {
                                               if (_loginFormKey.currentState!
                                                   .validate()) {
-                                                if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                if (DependencyInjector().locator<SafeConnexAuthentication>().loginException == null || DependencyInjector().locator<SafeConnexAuthentication>().loginException == "") {
                                                   Future.delayed(Duration(milliseconds: 500), (){
-                                                    if(SafeConnexCircleDatabase.currentCircleCode == null){
+                                                    if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null){
                                                       Navigator.push(
                                                           context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                     }
-                                                    else if(SafeConnexCircleDatabase.currentCircleCode != null){
+                                                    else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null){
                                                       Navigator.push(
                                                           context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                     }
@@ -346,14 +347,14 @@ class _LoginPageState extends State<LoginPage> {
                                                 scale: 7,
                                               ),
                                               onTap: () {
-                                                authentication.loginInWithGoogle().whenComplete((){
-                                                  if (SafeConnexAuthentication.loginException == null || SafeConnexAuthentication.loginException == "") {
+                                                DependencyInjector().locator<SafeConnexAuthentication>().loginInWithGoogle().whenComplete((){
+                                                  if (DependencyInjector().locator<SafeConnexAuthentication>().loginException == null || DependencyInjector().locator<SafeConnexAuthentication>().loginException == "") {
                                                     Future.delayed(Duration(milliseconds: 500), (){
-                                                      if(SafeConnexCircleDatabase.currentCircleCode == null){
+                                                      if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null){
                                                         Navigator.push(
                                                             context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                       }
-                                                      else if(SafeConnexCircleDatabase.currentCircleCode != null){
+                                                      else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null){
                                                         Navigator.push(
                                                             context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                       }

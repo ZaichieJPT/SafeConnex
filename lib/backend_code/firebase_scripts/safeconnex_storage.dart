@@ -56,7 +56,7 @@ class SafeConnexIDDatabase{
 
 class SafeConnexNewsStorage{
   final _newsRefs = FirebaseStorage.instance.ref().child("news_pics");
-  static String? imageUrl;
+  String? imageUrl;
 
   Future<void> getProfilePicture(String userId) async {
     final alternative_pic_male = _newsRefs.child("male_profile.png");

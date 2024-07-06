@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_leavecircle_dialog.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/circle_settings/circlesettings_info_carousel.dart';
@@ -63,7 +65,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   }
 
   void _nextCircle() {
-    if (_currentCircleIndex < SafeConnexCircleDatabase.circleDataList.length - 1 ) {
+    if (_currentCircleIndex < DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1 ) {
       setState(() {
         _currentCircleIndex++;
         _memberIndex = 11;
@@ -80,8 +82,8 @@ class _CircleSettingsState extends State<CircleSettings> {
   @override
   Widget build(BuildContext context) {
     //final currentCircleData = circleDataList[_currentCircleIndex];
-    final currentCircleData = SafeConnexCircleDatabase.circleDataList[_currentCircleIndex];
-    SafeConnexCircleDatabase.currentCircleCode = currentCircleData["circleCode"];
+    final currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
+    DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -122,7 +124,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                         onPressed: _currentCircleIndex == 0
                             ? () {
                                 setState(() {
-                                  _currentCircleIndex = SafeConnexCircleDatabase.circleDataList.length - 1;
+                                  _currentCircleIndex = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1;
                                 });
                               }
                             : _previousCircle,
@@ -161,7 +163,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                       child: IconButton(
                         alignment: Alignment.center,
                         padding: EdgeInsets.zero,
-                        onPressed: _currentCircleIndex == SafeConnexCircleDatabase.circleDataList.length - 1
+                        onPressed: _currentCircleIndex == DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1
                             ? () {
                                 setState(() {
                                   _currentCircleIndex = 0;
@@ -416,7 +418,7 @@ class _CircleSettingsState extends State<CircleSettings> {
               //REMOVE MEMBER BUTTON
               Flexible(
                 flex: 2,
-                child: SafeConnexCircleDatabase.currentRole == "Circle Creator" ? ElevatedButton(
+                child: DependencyInjector().locator<SafeConnexCircleDatabase>().currentRole == "Circle Creator" ? ElevatedButton(
                   onPressed: () {
                     //TOAST THAT WILL DISPLAY THAT THE MEMBER HAS BEEN REMOVED
                     if (memberName != '') {

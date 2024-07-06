@@ -6,8 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
 class AgencyStep3 extends StatefulWidget {
@@ -28,14 +30,14 @@ class _AgencyStep3State extends State<AgencyStep3> {
   Future<void> _onFrontIDTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    SafeConnexAgencyDatabase.frontIdLink = image!.path;
+    DependencyInjector().locator<SafeConnexAgencyDatabase>().frontIdLink = image!.path;
     if (image == null) return;
   }
 
   Future<void> _onBackTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    SafeConnexAgencyDatabase.backIdLink = image!.path;
+    DependencyInjector().locator<SafeConnexAgencyDatabase>().backIdLink = image!.path;
     if (image == null) return;
   }
 
@@ -140,7 +142,7 @@ class _AgencyStep3State extends State<AgencyStep3> {
                   onPressed: () {
                     setState(() {
                       widget.toNextStep();
-                      if(SafeConnexAgencyDatabase.frontIdLink == null && SafeConnexAgencyDatabase.backIdLink == null){
+                      if(DependencyInjector().locator<SafeConnexAgencyDatabase>().frontIdLink == null && DependencyInjector().locator<SafeConnexAgencyDatabase>().backIdLink == null){
 
                       }
                       else{

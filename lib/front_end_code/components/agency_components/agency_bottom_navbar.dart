@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/carousel_slider.dart';
 
 class AgencyNavBar extends StatefulWidget {
@@ -27,7 +27,7 @@ class _AgencyNavBarState extends State<AgencyNavBar> {
         });
   }
 
-  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+  //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   @override
   Widget build(BuildContext context) {

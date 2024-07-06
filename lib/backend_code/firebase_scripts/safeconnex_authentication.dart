@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
@@ -32,16 +35,16 @@ class SafeConnexAuthentication{
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("circle");
 
-  static User? currentUser;
-  static String? signUpException;
-  static String? loginException;
-  static Map<String, String> userData = {};
-  static Map<String, String> agencyData = {};
+  User? currentUser;
+  String? signUpException;
+  String? loginException;
+  Map<String, String> userData = {};
+  Map<String, String> agencyData = {};
 
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-  SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
-  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
-  SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
+  //SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
+  //SafeConnexAgencyDatabase agencyDatabase = SafeConnexAgencyDatabase();
 
   /// Register an account to SafeConnex using [email] and [password]
   Future<void> signUpWithEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String birthdate) async {
@@ -65,11 +68,6 @@ class SafeConnexAuthentication{
         // Logs out the account after the data has been assigned to prevent auto login
         _authHandler.signOut();
       });
-
-
-
-      // For Verification only remove if the app is in production
-      print("Account Created");
     }
     on FirebaseAuthException catch(exception){
       switch(exception.code){
@@ -159,21 +157,21 @@ class SafeConnexAuthentication{
       UserCredential currentCredential = await _authHandler.signInWithEmailAndPassword(email: email, password: password);
 
       if(currentCredential.user!.emailVerified == true){
-        currentUser = currentCredential.user!;
-        await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
-        await profileStorage.getProfilePicture(currentUser!.uid);
-        await SafeConnexNotification().initializeNotification(currentUser!.uid);
-        await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
-          if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
-            SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
-            circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
-            geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+        currentUser = currentCredential.user!; //
+        await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
+        await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+        await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+        await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
+          if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
+            DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
+            DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
+            DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
           }
         });
-        await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+        await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
         if(agencyData["agencyName"] != null){
           await getAgencyData().whenComplete((){
-            agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+            DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
           });
         }
 
@@ -224,20 +222,20 @@ class SafeConnexAuthentication{
       "role": "user"
     });
 
-    await profileStorage.getProfilePicture(currentUser!.uid);
-    await SafeConnexNotification().initializeNotification(currentUser!.uid);
-    await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
-    await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
-      if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
-        SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
-        circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
-        geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+    await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
+    await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+    await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+    await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
+      if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
+        DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
+        DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
+        DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
       }
     });
-    await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+    await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
     if(agencyData["agencyName"] != null){
       await getAgencyData().whenComplete((){
-        agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+        DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
       });
     }
   }
@@ -249,23 +247,22 @@ class SafeConnexAuthentication{
   Future<void> loginWithToken() async {
     if(_authHandler.currentUser != null){
       currentUser = _authHandler.currentUser!;
-      await getUpdatedPhoneAndBirthday(currentUser!.uid);
-      await profileStorage.getProfilePicture(currentUser!.uid);
-
-      await circleDatabase.getCircleList(currentUser!.uid).whenComplete(() {
-        if(SafeConnexCircleDatabase.circleList.isNotEmpty) {
-          SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[0]["circle_code"].toString();
-          circleDatabase.getCircleRole(SafeConnexCircleDatabase.currentCircleCode!, currentUser!.uid);
-          geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+      await getUpdatedPhoneAndBirthday(currentUser!.uid); //
+      await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+      await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
+        if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
+          DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
+          DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
+          DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
         }
       });
-      await circleDatabase.listCircleDataForSettings(currentUser!.uid);
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       if(agencyData["agencyName"] != null){
         await getAgencyData().whenComplete((){
-          agencyDatabase.getMyAgencyData(agencyData["agencyName"]!);
+          DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
         });
       }
-      await SafeConnexNotification().initializeNotification(currentUser!.uid);
     }
   }
 

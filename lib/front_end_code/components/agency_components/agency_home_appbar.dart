@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                     ],
                                   ),
                                   child: Text(
-                                    '${SafeConnexAuthentication.agencyData["agencyType"]}',
+                                    '${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyType"]}',
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.clip,
                                     style: TextStyle(

@@ -4,7 +4,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
@@ -57,7 +58,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   final GlobalKey<UserMapProviderState> _mapState = GlobalKey<UserMapProviderState>();
   bool isButtonPressed = false;
 
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    circleDatabase.getCircleData(SafeConnexCircleDatabase.currentCircleCode!);
+    DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
     super.initState();
   }
 

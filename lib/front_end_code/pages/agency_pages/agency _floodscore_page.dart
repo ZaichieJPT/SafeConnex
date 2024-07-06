@@ -6,8 +6,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 
 class AgencyFloodScore extends StatefulWidget {
   const AgencyFloodScore({super.key});
@@ -18,7 +22,7 @@ class AgencyFloodScore extends StatefulWidget {
 
 class _AgencyFloodScoreState extends State<AgencyFloodScore> {
   ScrollController placesScrollControl = ScrollController();
-  SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
+  //SafeConnexSafetyScoringDatabase safetyScoringDatabase = SafeConnexSafetyScoringDatabase();
 
   double _sliderValue = 100.0;
   int _currentRiskIndex = -1;
@@ -186,7 +190,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                 onTap: (_, tapLocation){
                                   this.tapLocation = tapLocation;
                                   _sliderValue = 100;
-                                  safetyScoringDatabase.getGeocode(tapLocation).whenComplete((){
+                                  DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getGeocode(tapLocation).whenComplete((){
                                     addGeolocationMarker(tapLocation, _sliderValue);
                                   });
                                 },
@@ -618,7 +622,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                           bottom: 5,
                                         ),
                                         child: Text(
-                                          SafeConnexSafetyScoringDatabase.geocodedStreet != null ? SafeConnexSafetyScoringDatabase.geocodedStreet! : "No Location Data",
+                                          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet != null ? DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet! : "No Location Data",
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: height * 0.022,
@@ -679,7 +683,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        safetyScoringDatabase.addSafetyScore(tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
+                        DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().addSafetyScore(tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
                         Navigator.pop(context);
                       });
                     },

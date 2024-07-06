@@ -3,7 +3,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 
 class AgencyStep1 extends StatefulWidget {
   final Function() toNextStep;
@@ -148,7 +150,7 @@ class _AgencyStep1State extends State<AgencyStep1> {
                             fullWidth: true,
                           );
                         } else {
-                          SafeConnexAgencyDatabase.selectedAgencyType = agencyTypes[_currentAgencyIndex];
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().selectedAgencyType = agencyTypes[_currentAgencyIndex];
                           _selectedAgencyType = agencyTypes[_currentAgencyIndex];
                           print(_selectedAgencyType);
                           widget.toNextStep();

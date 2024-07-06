@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_feedback_database.dart';
 
 class FeedbackDialog extends StatefulWidget {
   final double height;
@@ -21,7 +23,7 @@ class FeedbackDialog extends StatefulWidget {
 
 class _FeedbackDialogState extends State<FeedbackDialog> {
   final TextEditingController feedbackController = TextEditingController();
-  SafeConnexFeedbackDatabase feedbackDatabase = SafeConnexFeedbackDatabase();
+  //SafeConnexFeedbackDatabase feedbackDatabase = SafeConnexFeedbackDatabase();
 
   @override
   void dispose() {
@@ -191,7 +193,7 @@ class _FeedbackDialogState extends State<FeedbackDialog> {
                                     fullWidth: true,
                                   );
                                   // Feedback Data Upload
-                                  feedbackDatabase.createFeedBack(userFeedback);
+                                  DependencyInjector().locator<SafeConnexFeedbackDatabase>().createFeedBack(userFeedback);
                                   Navigator.of(context).pop();
                                 },
                                 style: ButtonStyle(

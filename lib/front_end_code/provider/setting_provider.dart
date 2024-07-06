@@ -1,7 +1,8 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
 class SettingsProvider extends ChangeNotifier {
@@ -62,9 +63,9 @@ class SettingsProvider extends ChangeNotifier {
       showErrorMessage(context, "Please enter your password", height, width);
 
       return '';
-    } else if (SafeConnexAuthentication.loginException != null) {
+    } else if (DependencyInjector().locator<SafeConnexAuthentication>().loginException != null) {
       showErrorMessage(
-          context, SafeConnexAuthentication.loginException!, height, width);
+          context, DependencyInjector().locator<SafeConnexAuthentication>().loginException!, height, width);
       return '';
     } else {
       return null;
@@ -108,12 +109,12 @@ class SettingsProvider extends ChangeNotifier {
       return "";
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
-    } else if (SafeConnexAuthentication.loginException != null) {
-      print("Firebase Error: $SafeConnexAuthentication.loginException},");
+    } else if (DependencyInjector().locator<SafeConnexAuthentication>().loginException != null) {
+      print("Firebase Error: ${DependencyInjector().locator<SafeConnexAuthentication>().loginException},");
       showErrorMessage(
-          context, SafeConnexAuthentication.loginException!, height, width);
+          context, DependencyInjector().locator<SafeConnexAuthentication>().loginException!, height, width);
       //causes problems for the UI;
-      SafeConnexAuthentication.loginException = null;
+      DependencyInjector().locator<SafeConnexAuthentication>().loginException = null;
       return '';
     }
     return null;
@@ -129,10 +130,10 @@ class SettingsProvider extends ChangeNotifier {
     } else if (!EmailValidator.validate(email)) {
       showErrorMessage(context, "Please enter a valid email", height, width);
       return '';
-    } else if(SafeConnexAuthentication.signUpException != null){
+    } else if(DependencyInjector().locator<SafeConnexAuthentication>().signUpException != null){
       showErrorMessage(context,
-          SafeConnexAuthentication.signUpException!, height, width);
-      SafeConnexAuthentication.signUpException == null;
+          DependencyInjector().locator<SafeConnexAuthentication>().signUpException!, height, width);
+      DependencyInjector().locator<SafeConnexAuthentication>().signUpException == null;
       return '';
     }
     return null;
@@ -148,8 +149,8 @@ class SettingsProvider extends ChangeNotifier {
           "Invalid Code. Check the Circle Code and try again.", height, width);
       return '';
     } else {
-      if (SafeConnexCircleDatabase.circleToJoin['circle_code'] == null ||
-          SafeConnexCircleDatabase.circleToJoin['circle_name'] == null) {
+      if (DependencyInjector().locator<SafeConnexCircleDatabase>().circleToJoin['circle_code'] == null ||
+          DependencyInjector().locator<SafeConnexCircleDatabase>().circleToJoin['circle_name'] == null) {
         showErrorMessage(
           context,
           "Circle does not exist. Check the Circle Code and try again.",
@@ -158,7 +159,7 @@ class SettingsProvider extends ChangeNotifier {
         );
         return "";
       }
-      else if(SafeConnexCircleDatabase.circleToJoin['isAMember'] == true){
+      else if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleToJoin['isAMember'] == true){
         showErrorMessage(context, "You're already in the Circle", height, width);
         return "";
       }

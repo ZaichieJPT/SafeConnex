@@ -3,8 +3,10 @@
 import 'dart:math';
 
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
-import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/circle_list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
@@ -26,8 +28,8 @@ class HomeAppBar extends StatefulWidget {
 }
 
 class _HomeAppBarState extends State<HomeAppBar> {
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
-  SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexGeofenceDatabase geofenceDatabase = SafeConnexGeofenceDatabase();
   late GlobalKey expansionTileKey = GlobalKey();
 
   bool isExpanded = false;
@@ -188,7 +190,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                   ),
                                   child: IconButton(
                                     onPressed: () {
-                                      geofenceDatabase.getGeofence(SafeConnexCircleDatabase.currentCircleCode!);
+                                      DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -256,9 +258,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
                           collapsedIconColor:
                           const Color.fromARGB(255, 62, 73, 101),
                           title: Text(
-                            SafeConnexCircleDatabase.circleList.isEmpty
+                            DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isEmpty
                                 ? "No Circle"
-                                : SafeConnexCircleDatabase
+                                : DependencyInjector().locator<SafeConnexCircleDatabase>()
                                 .circleList[currentCircleIndex]
                             ["circle_name"],
                             textScaler: TextScaler.linear(0.9),
@@ -288,11 +290,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: SafeConnexCircleDatabase
+                                        itemCount: DependencyInjector().locator<SafeConnexCircleDatabase>()
                                             .circleList.length,
                                         itemBuilder: (context, index) =>
                                             CircleListTile(
-                                              title: SafeConnexCircleDatabase
+                                              title: DependencyInjector().locator<SafeConnexCircleDatabase>()
                                                   .circleList[index]["circle_name"],
                                               onTap: () {
                                                 setState(() {
@@ -300,8 +302,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
                                                   if (currentCircleIndex != index) {
                                                     // Check if different circle is tapped
                                                     currentCircleIndex = index;
-                                                    circleDatabase.getCircleData(SafeConnexCircleDatabase.circleList[index]["circle_code"]);
-                                                    SafeConnexCircleDatabase.currentCircleCode = SafeConnexCircleDatabase.circleList[index]["circle_code"];
+                                                    DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[index]["circle_code"]);
+                                                    DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[index]["circle_code"];
                                                   }
                                                 });
                                               },
