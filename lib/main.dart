@@ -38,20 +38,22 @@ class _MyAppState extends State<MyApp> {
   Future<void> setPreferences() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     // Removed setState count cause problems
-    isFirstTimeOpen = preferences.getBool("isFirstTime");
-    switch (isFirstTimeOpen) {
-      case true:
-        preferences.setBool("isFirstTime", false);
-        print('First time!');
-        break;
-      case false:
-        print("Do Nothing");
-      case null:
-        print('initial: ${isFirstTimeOpen}');
-        preferences.setBool("isFirstTime", true);
-        print('new: ${isFirstTimeOpen}');
-        break;
-    }
+    setState(() {
+      isFirstTimeOpen = preferences.getBool("isFirstTime");
+      switch (isFirstTimeOpen) {
+        case true:
+          preferences.setBool("isFirstTime", false);
+          print('First time!');
+          break;
+        case false:
+          print("Do Nothing");
+        case null:
+          print('initial: ${isFirstTimeOpen}');
+          preferences.setBool("isFirstTime", true);
+          print('new: ${isFirstTimeOpen}');
+          break;
+      }
+    });
   }
 
   @override
