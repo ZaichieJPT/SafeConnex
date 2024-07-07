@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -26,10 +27,13 @@ class AgencyStep3 extends StatefulWidget {
 class _AgencyStep3State extends State<AgencyStep3> {
   SafeConnexIDDatabase idStorage = SafeConnexIDDatabase();
 
+  String? frontIdPath;
+  String? backIdPath;
 
   Future<void> _onFrontIDTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    frontIdPath = image!.path;
     DependencyInjector().locator<SafeConnexAgencyDatabase>().frontIdLink = image!.path;
     if (image == null) return;
   }
@@ -37,6 +41,7 @@ class _AgencyStep3State extends State<AgencyStep3> {
   Future<void> _onBackTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    backIdPath = image!.path;
     DependencyInjector().locator<SafeConnexAgencyDatabase>().backIdLink = image!.path;
     if (image == null) return;
   }
@@ -93,8 +98,8 @@ class _AgencyStep3State extends State<AgencyStep3> {
                     onTap: (){
                       _onFrontIDTapped();
                     },
-                    child: Image.asset(
-                      'assets/images/change_to_agency/agency_step3_icon.png',
+                    child: frontIdPath == null || frontIdPath == "" ? Image.asset(
+                      'assets/images/change_to_agency/agency_step3_icon.png') : Image.file(File(frontIdPath!),
                       width: width * 0.2,
                     ),
                   ),

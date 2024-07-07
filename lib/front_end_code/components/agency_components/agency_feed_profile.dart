@@ -123,11 +123,20 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                             flex: 2,
                             child: Padding(
                               padding: EdgeInsets.only(left: width * 0.015),
-                              child: Image.asset(
+                              child: DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Natural Disaster and Accident\nResponder" ? Image.asset(
                                 'assets/images/change_to_agency/agency_3_icon.png',
                                 width: width * 0.2,
-                              ),
-                            ),
+                              ) : DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Fire Incident Responder" ? Image.asset(
+                                  'assets/images/change_to_agency/agency_0_icon.png',
+                                width: width * 0.2,
+                              ) : DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Crime Incident Responder" ? Image.asset(
+                                  'assets/images/change_to_agency/agency_1_icon.png',
+                                width: width * 0.2,
+                              ) : DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Medical Emergency Responder" ? Image.asset(
+                                  'assets/images/change_to_agency/agency_2_icon.png',
+                                width: width * 0.2,
+                              ) : Container()
+                            )
                           ),
                           SizedBox(
                             width: width * 0.01,
@@ -192,7 +201,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                           )
                                         : Text(
                                             _agencyNameController.text.isEmpty
-                                                ? DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]!
+                                                ? DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!
                                                 : _agencyNameController.text,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(
@@ -333,6 +342,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                 if (_isEditProfileSelected) {
                                   if (_agencyProfileFormKey.currentState!
                                       .validate()) {
+                                    DependencyInjector().locator<SafeConnexAgencyDatabase>().updateAgencyMain(_agencyNameController.text, _agencyRoleController.text);
                                     setState(() {
                                       _isEditProfileSelected =
                                           !_isEditProfileSelected;
@@ -479,7 +489,12 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                 _getDetailsProgress(filled);
                                 // Not changing
                                 if(_isEditDetailsSelected == false){
-                                  DependencyInjector().locator<SafeConnexAgencyDatabase>().updateAgency(_agencyDataControllers[0].text, _agencyDataControllers[1].text, _agencyDataControllers[2].text, _agencyDataControllers[3].text, _agencyDataControllers[4].text, _agencyDataControllers[5].text).whenComplete((){print(true);});
+                                  print("Before" + _agencyDataControllers[3].text);
+                                  print(_agencyDataControllers[0].text);
+                                  Future.delayed(Duration(milliseconds: 400), (){
+                                    print("After" + _agencyDataControllers[3].text);
+                                    DependencyInjector().locator<SafeConnexAgencyDatabase>().updateAgencyData(_agencyDataControllers[0].text, _agencyDataControllers[1].text, _agencyDataControllers[2].text, _agencyDataControllers[3].text, _agencyDataControllers[4].text, _agencyDataControllers[5].text).whenComplete((){print(true);});
+                                  });
                                 }
                               });
                             },

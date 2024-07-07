@@ -68,7 +68,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                 child: InkWell(
                   onTap: () {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
-                      DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!, DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
+                      DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!, DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                     }
                   },
@@ -141,7 +141,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.green,
                                     child: Text(
-                                      '${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyRole"]} at ${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"]}',
+                                      '${DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]} at ${DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(

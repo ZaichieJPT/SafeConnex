@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_camera/flutter_camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
@@ -21,12 +22,12 @@ class AgencyStep4 extends StatefulWidget {
 
 class _AgencyStep4State extends State<AgencyStep4> {
 
-  Future<void> _onSelfieIDTapped() async {
+  /*Future<void> _onSelfieIDTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     DependencyInjector().locator<SafeConnexAgencyDatabase>().selfieLink = image!.path;
     if (image == null) return;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +79,6 @@ class _AgencyStep4State extends State<AgencyStep4> {
                         color: Colors.blueAccent,
                         width: 5,
                       ),
-                    ),
-                    child: Icon(
-                      Icons.photo_camera,
-                      color: const Color.fromARGB(255, 98, 98, 98),
-                      size: width * 0.1,
                     ),
                   ),
                 ),

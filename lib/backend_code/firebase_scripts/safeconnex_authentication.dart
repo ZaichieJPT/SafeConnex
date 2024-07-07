@@ -39,7 +39,7 @@ class SafeConnexAuthentication{
   String? signUpException;
   String? loginException;
   Map<String, String> userData = {};
-  Map<String, String> agencyData = {};
+  Map<String, String> authAgencyData = {};
 
   //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   //SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
@@ -145,7 +145,7 @@ class SafeConnexAuthentication{
     DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).get();
     final splitData = snapshot.child("agencyType").value.toString().split(' ');
 
-    agencyData = {
+    authAgencyData = {
       "role": snapshot.child("role").value.toString(),
       "agencyType": snapshot.child("agencyType").value.toString(),
       "agencyName": snapshot.child("agencyName").value.toString()
@@ -169,10 +169,9 @@ class SafeConnexAuthentication{
           }
         });
         await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
-        if(agencyData["agencyName"] != null){
-          await getAgencyData().whenComplete((){
-            DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
-          });
+        await getAgencyData();
+        if(authAgencyData["role"] == "Agency"){
+          DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
         }
 
         print("Login Successfull");
@@ -237,10 +236,9 @@ class SafeConnexAuthentication{
       }
     });
     await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
-    if(agencyData["agencyName"] != null){
-      await getAgencyData().whenComplete((){
-        DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
-      });
+    await getAgencyData();
+    if(authAgencyData["role"] == "Agency"){
+      DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
     }
   }
 
@@ -262,10 +260,9 @@ class SafeConnexAuthentication{
         }
       });
       await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
-      if(agencyData["agencyName"] != null){
-        await getAgencyData().whenComplete((){
-          DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData(agencyData["agencyName"]!);
-        });
+      await getAgencyData();
+      if(authAgencyData["role"] == "Agency"){
+        DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
       }
     }
   }

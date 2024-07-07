@@ -150,9 +150,9 @@ class _AgencyStep1State extends State<AgencyStep1> {
                             fullWidth: true,
                           );
                         } else {
-                          DependencyInjector().locator<SafeConnexAgencyDatabase>().selectedAgencyType = agencyTypes[_currentAgencyIndex];
                           _selectedAgencyType = agencyTypes[_currentAgencyIndex];
-                          print(_selectedAgencyType);
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().selectedAgencyType = _selectedAgencyType;
+                          print("Current Agency" + DependencyInjector().locator<SafeConnexAgencyDatabase>().selectedAgencyType!);
                           widget.toNextStep();
                         }
                       });

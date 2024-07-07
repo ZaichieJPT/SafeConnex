@@ -56,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
     // Fix this the delay is too early make it accurate
     DependencyInjector().locator<SafeConnexAuthentication>().loginWithToken().whenComplete(() {
       if (DependencyInjector().locator<SafeConnexAuthentication>().currentUser != null && isTransferred == false) {
-        if(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["role"] != "Agency"){
+        if(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["role"] != "Agency"){
           if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => CirclePage()));

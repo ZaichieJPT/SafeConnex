@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_circle_settings.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_dialog.dart';
@@ -132,6 +133,8 @@ class _AgencySideMenuState extends State<AgencySideMenu> {
                   heightFactor: 0.45,
                   child: ElevatedButton(
                     onPressed: () {
+                      DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData.clear();
+                      DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData.clear();
                       DependencyInjector().locator<SafeConnexAgencyDatabase>().revertToUser();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                     },

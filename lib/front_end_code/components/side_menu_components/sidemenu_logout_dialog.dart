@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/pages/login_page.dart';
 
@@ -22,7 +23,7 @@ class LogoutDialog extends StatefulWidget {
 
 class _LogoutDialogState extends State<LogoutDialog> {
   final TextEditingController feedbackController = TextEditingController();
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -181,7 +182,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
                                   );
                                   // Logout Function
                                   Future.delayed(Duration(seconds: 1), (){
-                                    authentication.signOutAccount();
+                                    DependencyInjector().locator<SafeConnexAuthentication>().signOutAccount();
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
                                   });
                                 },

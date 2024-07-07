@@ -115,7 +115,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                     ],
                                   ),
                                   child: Text(
-                                    '${DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyType"]}',
+                                    '${DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"]}',
                                     textAlign: TextAlign.center,
                                     overflow: TextOverflow.clip,
                                     style: TextStyle(
@@ -190,7 +190,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             //SAFETY SCORING BUTTON
-                            Flexible(
+                            DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Natural Disaster and Accident Responder" ? Flexible(
                               flex: 1,
                               child: FractionallySizedBox(
                                 widthFactor: 0.9,
@@ -229,7 +229,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                   ),
                                 ),
                               ),
-                            ),
+                            ) : Container(),
 
                             //PLACEHOLDER
                             Expanded(

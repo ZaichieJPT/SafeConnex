@@ -549,7 +549,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                         heightFactor: 0.45,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            if(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["agencyName"] != null){
+                                            if(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"] != null){
                                               DependencyInjector().locator<SafeConnexAgencyDatabase>().revertToAgency();
                                               Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                                             }else{

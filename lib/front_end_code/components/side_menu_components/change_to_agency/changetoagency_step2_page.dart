@@ -398,6 +398,7 @@ class _AgencyStep2State extends State<AgencyStep2> {
                               _agencyFBController.text,
                               _agencyWebsiteController.text
                           );
+                          print(DependencyInjector().locator<SafeConnexAgencyDatabase>().selectedAgencyType);
                           widget.toNextStep();
                         }else {
                           _showNextToast();
