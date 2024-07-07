@@ -25,7 +25,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   bool _checkIfGeocodeExist() {
-    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
+    for (var geocodes in DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData) {
       if (geocodes["geocoded"] != null) {
         return true;
       }
@@ -34,7 +34,7 @@ class _ProfileCardState extends State<ProfileCard> {
   }
 
   String _getGeocodeValue(String userId) {
-    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
+    for (var geocodes in DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData) {
       if (geocodes["userId"] == userId) {
         return geocodes["geocoded"];
       }

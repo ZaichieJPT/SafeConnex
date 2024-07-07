@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
@@ -37,6 +38,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
   Marker? geolocationMarker = Marker(point: LatLng(0, 0), child: Container());
   CircleMarker? circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
   LatLng? tapLocation;
+  String? geocodedStreet;
 
   List<String> places = [
     'At Home',
@@ -66,6 +68,15 @@ class _GeofencingPageState extends State<GeofencingPage> {
   void dispose() {
     placesScrollControl.dispose();
     super.dispose();
+  }
+
+  geocodeLocation(LatLng location) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(location.latitude, location.longitude);
+
+    geocodedStreet = placemarks[0].street!;
+    setState(() {
+
+    });
   }
 
   @override
@@ -403,6 +414,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                   onTap: (_, tapLocation){
                                     this.tapLocation = tapLocation;
                                     _sliderValue = 100;
+                                    geocodeLocation(tapLocation);
                                     addGeolocationMarker(tapLocation, _sliderValue);
                                   },
                                 ),
@@ -595,6 +607,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: width * 0.1),
                                         child: TextFormField(
+                                          readOnly: true,
                                           controller: _locationNameController,
                                           cursorColor: Color.fromARGB(
                                               255, 173, 162, 153),
@@ -605,7 +618,7 @@ class _GeofencingPageState extends State<GeofencingPage> {
                                               color: Color.fromARGB(
                                                   255, 173, 162, 153),
                                             ),
-                                            hintText: 'Location Name',
+                                            hintText: geocodedStreet,
                                             hintStyle: TextStyle(
                                               fontFamily: 'OpunMai',
                                               fontSize: height * 0.022,
@@ -725,15 +738,12 @@ class _GeofencingPageState extends State<GeofencingPage> {
                               'Please enter name for the place', height, width);
                           //get the value of the textfields
                           //add the geofence, label, and location to database
-                        } else if (_locationNameController.text == '') {
-                          showErrorMessage(context,
-                              'Please enter name for the location', height, width);
-                          //geofenceDatabase.addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, "circleName", _locationNameController.text);
                         } else {
                           //get the value of the texfields
+                          _locationNameController.text = geocodedStreet!;
                           DependencyInjector().locator<SafeConnexGeofenceDatabase>().addGeofence(this.tapLocation!.latitude, this.tapLocation!.longitude, _placeNameController.text, _sliderValue, DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, _locationNameController.text);
-                          DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
                           setState(() {
+                            DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
                             _selectedTabIndex = 0;
                             _locationNameController.text = "";
                             _placeNameController.text = "";

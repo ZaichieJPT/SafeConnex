@@ -377,11 +377,11 @@ class _CircleSettingsState extends State<CircleSettings> {
                                       backgroundColor:
                                           const Color.fromARGB(255, 128, 95, 166),
                                       foregroundColor: Colors.white,
-                                      child: SafeConnexProfileStorage
+                                      child: DependencyInjector().locator<SafeConnexProfileStorage>()
                                           .imageUrl !=
                                           null
                                           ? Image.network(
-                                          SafeConnexProfileStorage
+                                          DependencyInjector().locator<SafeConnexProfileStorage>()
                                               .imageUrl!)
                                           : Container(color: Colors.white),
                                     ),

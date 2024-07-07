@@ -629,11 +629,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: SafeConnexProfileStorage
+                                          child: DependencyInjector().locator<SafeConnexProfileStorage>()
                                               .imageUrl !=
                                               null
                                               ? Image.network(
-                                              SafeConnexProfileStorage
+                                              DependencyInjector().locator<SafeConnexProfileStorage>()
                                                   .imageUrl!)
                                               : Container(color: Colors.white),
                                         ),

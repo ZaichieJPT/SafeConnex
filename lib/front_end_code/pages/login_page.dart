@@ -2,6 +2,7 @@
 import "package:safeconnex/api/dependecy_injector/injector.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart";
+import "package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart";
 import "package:safeconnex/front_end_code/components/login_passformfield.dart";
 import "package:safeconnex/front_end_code/components/login_textformfield.dart";
 import 'package:email_validator/email_validator.dart';
@@ -53,26 +54,27 @@ class _LoginPageState extends State<LoginPage> {
     double width = MediaQuery.sizeOf(context).width;
 
     // Fix this the delay is too early make it accurate
-    /*authentication.loginWithToken().whenComplete(() {
-      if (SafeConnexAuthentication.currentUser != null && isTransferred == false) {
-        if(SafeConnexAuthentication.agencyData["role"] != "Agency"){
-          if(SafeConnexCircleDatabase.currentCircleCode == null){
+    DependencyInjector().locator<SafeConnexAuthentication>().loginWithToken().whenComplete(() {
+      if (DependencyInjector().locator<SafeConnexAuthentication>().currentUser != null && isTransferred == false) {
+        if(DependencyInjector().locator<SafeConnexAuthentication>().agencyData["role"] != "Agency"){
+          if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => CirclePage()));
           }
-          else if(SafeConnexCircleDatabase.currentCircleCode != null){
+          else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"
+              ){
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => MainScreen()));
           }
         }
         else{
-          safetyScoringDatabase.getSafetyScore();
+          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
           Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
         }
 
         isTransferred = true;
       }
-    });*/
+    });
 
     return Container(
       decoration: BoxDecoration(

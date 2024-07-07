@@ -16,7 +16,7 @@ class ViewCircleCode extends StatefulWidget {
 class _ViewCircleCodeState extends State<ViewCircleCode> {
   @override
   Widget build(BuildContext context) {
-    SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+    //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 

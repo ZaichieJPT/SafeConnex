@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 import 'package:safeconnex/front_end_code/components/login_textformfield.dart';
@@ -21,7 +22,7 @@ class CreateCirclePage extends StatefulWidget {
 class _CreateCirclePageState extends State<CreateCirclePage> {
   TextEditingController _circleNameController = TextEditingController();
   final _circleKey = GlobalKey<FormState>();
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   SettingsProvider provider = SettingsProvider();
 
   @override
@@ -207,7 +208,7 @@ class _CreateCirclePageState extends State<CreateCirclePage> {
                         onPressed: () {
                           if (_circleKey.currentState!.validate()) {
                             if (_circleNameController.text.length <= 25) {
-                              circleDatabase.createCircle(_circleNameController.text).whenComplete((){
+                              DependencyInjector().locator<SafeConnexCircleDatabase>().createCircle(_circleNameController.text).whenComplete((){
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => CircleResultsPage()));
                               });
                             }

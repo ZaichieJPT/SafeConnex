@@ -25,7 +25,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
   }
 
   bool _checkIfGeocodeExist() {
-    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
+    for (var geocodes in DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData) {
       if (geocodes["geocoded"] != null) {
         return true;
       }
@@ -34,7 +34,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
   }
 
   String _getGeocodeValue(String userId) {
-    for (var geocodes in SafeConnexGeolocation.coordinatesData) {
+    for (var geocodes in DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData) {
       if (geocodes["userId"] == userId) {
         return geocodes["geocoded"];
       }
@@ -306,7 +306,7 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                       ],
                     ),
                     child: _checkIfProfileExist()
-                        ? Image.network(SafeConnexProfileStorage.imageUrl!)
+                        ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!)
                         : null,
                   ),
                 ),

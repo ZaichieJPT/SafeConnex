@@ -16,7 +16,7 @@ class ConfirmJoinCircle extends StatefulWidget {
 }
 
 class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +149,7 @@ class _ConfirmJoinCircleState extends State<ConfirmJoinCircle> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            circleDatabase.joinTheCircle().whenComplete((){
+                            DependencyInjector().locator<SafeConnexCircleDatabase>().joinTheCircle().whenComplete((){
                               Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
                             });
                           },

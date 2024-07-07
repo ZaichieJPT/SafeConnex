@@ -12,7 +12,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 /// SafeConnex Authentication System using the Firebase API
 class SafeConnexAuthentication{
   // Initialize the Firebase Auth Handler
-  final FirebaseAuth _authHandler = FirebaseAuth.instance;
+  final FirebaseAuth authHandler = FirebaseAuth.instance;
 
   // Database Reference for the Users Database
   final DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
@@ -50,7 +50,7 @@ class SafeConnexAuthentication{
   Future<void> signUpWithEmailAccount(String email, String password, String firstName, String lastName, String phoneNumber, String birthdate) async {
     try{
       // Create a user and assign it to the currentUser variable
-      UserCredential currentCredential = await _authHandler.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential currentCredential = await authHandler.createUserWithEmailAndPassword(email: email, password: password);
 
       // Send an email verification to the currentUser
       await currentCredential.user?.sendEmailVerification();
@@ -66,7 +66,7 @@ class SafeConnexAuthentication{
         "phoneNumber": "000000000"
       }).whenComplete((){
         // Logs out the account after the data has been assigned to prevent auto login
-        _authHandler.signOut();
+        authHandler.signOut();
       });
     }
     on FirebaseAuthException catch(exception){
@@ -111,10 +111,10 @@ class SafeConnexAuthentication{
   Future<void> verifyEmailAddress(String email) async {
     try{
       // Create a user and assign it to the currentUser variable
-      await _authHandler.createUserWithEmailAndPassword(email: email, password: "Test_Pass123");
+      await authHandler.createUserWithEmailAndPassword(email: email, password: "Test_Pass123");
 
       // Deletes the account after verifying the email is not tied to a safeconnex account
-      await _authHandler.currentUser!.delete();
+      await authHandler.currentUser!.delete();
 
       // For Verification only remove if the app is in production
       print("Accepted");
@@ -154,7 +154,7 @@ class SafeConnexAuthentication{
 
   Future<void> loginWithEmailAccount(String email, String password) async {
     try{
-      UserCredential currentCredential = await _authHandler.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential currentCredential = await authHandler.signInWithEmailAndPassword(email: email, password: password);
 
       if(currentCredential.user!.emailVerified == true){
         currentUser = currentCredential.user!; //
@@ -213,14 +213,18 @@ class SafeConnexAuthentication{
         idToken: googleAuth?.idToken // this is the universal token used to auto login
     );
 
-    UserCredential currentCredential = await _authHandler.signInWithCredential(credential);
+    UserCredential currentCredential = await authHandler.signInWithCredential(credential);
     currentUser = currentCredential.user!;
 
-    await _dbUserReference.child(currentUser!.uid).set
-      ({
-      "birthday": "01-01-1999",
-      "role": "user"
-    });
+    DataSnapshot credentialSnapshot = await _dbUserReference.child(currentUser!.uid).get();
+
+    if(credentialSnapshot.exists == false){
+      await _dbUserReference.child(currentUser!.uid).set
+        ({
+        "birthday": "01-01-1999",
+        "role": "user"
+      });
+    }
 
     await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
     await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
@@ -241,12 +245,12 @@ class SafeConnexAuthentication{
   }
 
   Future<void> forgotUserPassword(String email) async {
-    await _authHandler.sendPasswordResetEmail(email: email);
+    await authHandler.sendPasswordResetEmail(email: email);
   }
 
   Future<void> loginWithToken() async {
-    if(_authHandler.currentUser != null){
-      currentUser = _authHandler.currentUser!;
+    if(authHandler.currentUser != null){
+      currentUser = authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid); //
       await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
       await SafeConnexNotification().initializeNotification(currentUser!.uid);///
@@ -267,11 +271,11 @@ class SafeConnexAuthentication{
   }
 
   Future<void> deleteUserAccount(String password) async {
-    await _authHandler.currentUser!.reauthenticateWithCredential(EmailAuthProvider.credential(
-        email: _authHandler.currentUser!.email!,
+    await authHandler.currentUser!.reauthenticateWithCredential(EmailAuthProvider.credential(
+        email: authHandler.currentUser!.email!,
         password: password
     )).whenComplete(() async {
-      await _authHandler.currentUser?.delete();
+      await authHandler.currentUser?.delete();
     });
 
     print("Account Deleted");
@@ -280,16 +284,16 @@ class SafeConnexAuthentication{
   // Handler for Sign Out/Log out
   Future<void> signOutAccount() async
   {
-    await _authHandler.signOut();
+    await authHandler.signOut();
     currentUser = null;
   }
 
   Future<void> changePassword (String oldPassword, String newPassword) async {
-    await _authHandler.currentUser!.reauthenticateWithCredential(EmailAuthProvider.credential(
-        email: _authHandler.currentUser!.email!,
+    await authHandler.currentUser!.reauthenticateWithCredential(EmailAuthProvider.credential(
+        email: authHandler.currentUser!.email!,
         password: oldPassword
     )).whenComplete(() async {
-      await _authHandler.currentUser!.updatePassword(newPassword);
+      await authHandler.currentUser!.updatePassword(newPassword);
     });
   }
 }

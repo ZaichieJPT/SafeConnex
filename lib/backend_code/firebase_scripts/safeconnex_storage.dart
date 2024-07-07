@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class SafeConnexProfileStorage{
   final _profileRefs = FirebaseStorage.instance.ref().child("profile_pics");
-  static String? imageUrl;
+  String? imageUrl;
 
   Future<void> getProfilePicture(String userId) async {
     final alternative_pic_male = _profileRefs.child("male_profile.png");

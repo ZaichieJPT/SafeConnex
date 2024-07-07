@@ -39,7 +39,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   List<CircleMarker> circleMarker = [];
   int index = 0;
 
-  SafeConnexGeolocation geolocation = SafeConnexGeolocation();
+  //SafeConnexGeolocation geolocation = SafeConnexGeolocation();
   final MapController _mapController = MapController();
   List<geofence.Geofence> _geofenceList = [];
 
@@ -147,7 +147,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    geolocation.getCoordinates();
+    DependencyInjector().locator<SafeConnexGeolocation>().getCoordinates();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
       _geofenceService.addLocationChangeListener(_onLocationChanged);
@@ -189,6 +189,7 @@ class UserMapProviderState extends State<UserMapProvider> {
     // TODO: implement dispose
     _activityStreamController.close();
     _geofenceStreamController.close();
+    _geofenceService.clearAllListeners();
     super.dispose();
   }
 
@@ -218,7 +219,7 @@ class UserMapProviderState extends State<UserMapProvider> {
         width: 50,
         rotate: true,
         alignment: Alignment.topCenter,
-        point: LatLng(SafeConnexGeolocation.coordinatesData[index]['latitude'], SafeConnexGeolocation.coordinatesData[index]['longitude']),
+        point: LatLng(DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]['latitude'], DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]['longitude']),
         child: Stack(
           children: [
             Positioned(
@@ -233,13 +234,13 @@ class UserMapProviderState extends State<UserMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: _checkIfProfileExist() ? Image.network(SafeConnexProfileStorage.imageUrl!) : Container(color:Colors.white),
+                child: _checkIfProfileExist() ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(color:Colors.white),
               ),
             )
           ],
         )
     ));
-    print("Geocoded: ${SafeConnexGeolocation.coordinatesData[index]["geocoded"]}");
+    print("Geocoded: ${DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]["geocoded"]}");
     setState(() {});
   }
 
@@ -256,7 +257,7 @@ class UserMapProviderState extends State<UserMapProvider> {
     index = 0;
 
     Future.delayed(Duration(milliseconds: 400), (){
-      geolocation.setCoordinates(_location!['latitude'], _location!['longitude'], DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+      DependencyInjector().locator<SafeConnexGeolocation>().setCoordinates(_location!['latitude'], _location!['longitude'], DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
       if(DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched == true){
         circleMarker.clear();
         getGeofenceData();
@@ -267,7 +268,7 @@ class UserMapProviderState extends State<UserMapProvider> {
 
     });
 
-    for(index; index < SafeConnexGeolocation.coordinatesData.length; index++){
+    for(index; index < DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData.length; index++){
       addGeolocationMarker(index);
     }
 

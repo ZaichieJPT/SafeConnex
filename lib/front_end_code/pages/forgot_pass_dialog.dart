@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
@@ -26,7 +27,7 @@ class _ForgotPassDialogState extends State<ForgotPassDialog> {
   bool _obscureText = false;
   double height = 0;
   double width = 0;
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   _getVisibleButton() {
     return InkWell(
@@ -255,7 +256,7 @@ class _ForgotPassDialogState extends State<ForgotPassDialog> {
                                       fullWidth: true,
                                     );
                                     // Delete Function
-                                    authentication.forgotUserPassword(_forgotEmailController.text);
+                                    DependencyInjector().locator<SafeConnexAuthentication>().forgotUserPassword(_forgotEmailController.text);
                                     Navigator.of(context).pop();
                                   }
                                 },

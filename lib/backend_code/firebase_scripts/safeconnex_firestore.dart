@@ -7,9 +7,9 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_datab
 class SafeConnexGeolocation{
   final dbReference = FirebaseFirestore.instance;
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _listener;
-  static List<Map<String, dynamic>> coordinatesData = [];
+  List<Map<String, dynamic>> coordinatesData = [];
   String? geocodedStreet;
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   SafeConnexGeolocation(){
     dbReference.settings = const Settings(
@@ -30,7 +30,7 @@ class SafeConnexGeolocation{
     final snapshot = dbReference.collection("geoCoordinates");
     snapshot.snapshots(includeMetadataChanges: true).listen(
         (event){
-        circleDatabase.getCircleDataForLocation(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!).whenComplete(() async {
+          DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleDataForLocation(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!).whenComplete(() async {
           if(coordinatesData.isEmpty){
             for (var docs in event.docs){
               for (var index in DependencyInjector().locator<SafeConnexCircleDatabase>().locationCircleData){

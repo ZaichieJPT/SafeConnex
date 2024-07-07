@@ -20,7 +20,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseInit.rootFirebase;
+  await FirebaseInit.rootFirebase;
   DependencyInjector().setupDependencyInjector();
   runApp(const MyApp());
 }
@@ -43,14 +43,10 @@ class _MyAppState extends State<MyApp> {
       switch (isFirstTimeOpen) {
         case true:
           preferences.setBool("isFirstTime", false);
-          print('First time!');
           break;
         case false:
-          print("Do Nothing");
         case null:
-          print('initial: ${isFirstTimeOpen}');
           preferences.setBool("isFirstTime", true);
-          print('new: ${isFirstTimeOpen}');
           break;
       }
     });
@@ -68,14 +64,11 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     //setPreferences();
-    print('init state: ${isFirstTimeOpen}');
     precacheImage(
         AssetImage("assets/images/create_circle_background.png"), context);
     precacheImage(AssetImage("assets/images/circle_background.png"), context);
     if (isFirstTimeOpen == null) {
-      print('call preferences');
       setPreferences();
-      print('done with preferences');
       return Material(
         child: Container(
           color: Colors.white,

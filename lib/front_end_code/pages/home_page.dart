@@ -8,6 +8,7 @@ import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
+import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_initialpin_dialog.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_received_template.dart';
@@ -70,7 +71,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+    if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"){
+      DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+    }
     super.initState();
   }
 

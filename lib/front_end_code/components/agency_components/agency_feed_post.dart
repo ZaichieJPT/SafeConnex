@@ -540,7 +540,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                     child: CircleAvatar(
                                       radius: width * 0.073,
                                       backgroundColor: Colors.amber.shade200,
-                                      child: SafeConnexProfileStorage.imageUrl != null ? Image.network(SafeConnexProfileStorage.imageUrl!) : Container(),
+                                      child: DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl != null ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(),
                                     ),
                                   ),
                                 ),
