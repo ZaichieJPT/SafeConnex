@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/components/home_components/error_snackbar.dart';
 
@@ -255,7 +256,7 @@ class _DeleteDialogPassFieldState extends State<DeleteDialogPassField> {
                                       fullWidth: true,
                                     );
                                     // Delete Function
-                                    //authentication.deleteUserAccount("password");
+                                    DependencyInjector().locator<SafeConnexAuthentication>().deleteUserAccount("password");
                                     Navigator.of(context).pop();
                                   }
                                 },

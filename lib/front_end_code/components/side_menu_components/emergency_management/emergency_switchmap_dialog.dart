@@ -20,7 +20,14 @@ class SwitchMapDialog extends StatefulWidget {
 
 class _SwitchMapDialogState extends State<SwitchMapDialog> {
   final TextEditingController feedbackController = TextEditingController();
-  bool _isMapSwitched = false;
+  //bool? _isMapSwitched;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched = true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +78,7 @@ class _SwitchMapDialogState extends State<SwitchMapDialog> {
                     Flexible(
                       flex: 3,
                       child: AnimatedToggleSwitch.size(
-                        current: _isMapSwitched,
+                        current: DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched,
                         values: const [false, true],
                         iconOpacity: 1,
                         indicatorSize: Size.fromWidth(width * 0.2),
@@ -81,11 +88,11 @@ class _SwitchMapDialogState extends State<SwitchMapDialog> {
                         customIconBuilder: (context, local, global) =>
                             FittedBox(
                           child: Text(
-                            local.value
+                            local.value!
                                 ? String.fromCharCode(Icons.check.codePoint)
                                 : String.fromCharCode(Icons.close.codePoint),
                             style: TextStyle(
-                              fontFamily: local.value
+                              fontFamily: local.value!
                                   ? Icons.check.fontFamily
                                   : Icons.close.fontFamily,
                               fontWeight: FontWeight.w900,
@@ -98,15 +105,14 @@ class _SwitchMapDialogState extends State<SwitchMapDialog> {
                           indicatorColor: Colors.white,
                           borderRadius: BorderRadius.circular(width * 0.02),
                           borderColor: Colors.transparent,
-                          backgroundColor: _isMapSwitched
+                          backgroundColor: DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched!
                               ? Color.fromARGB(255, 49, 56, 74)
                               : Color.fromARGB(255, 121, 189, 148),
                         ),
                         onChanged: (value) {
                           setState(() {
-                            _isMapSwitched = value;
                             DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched = value;
-                            print('Switched: ${_isMapSwitched}');
+                            print('Switched: ${DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched}');
                           });
                         },
                       ),

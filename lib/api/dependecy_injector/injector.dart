@@ -7,6 +7,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_feedback_dat
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
@@ -33,5 +34,9 @@ class DependencyInjector{
     locator.registerSingleton<SafeConnexFeedbackDatabase>(SafeConnexFeedbackDatabase());
 
     locator.registerSingleton<SafeConnexGeolocation>(SafeConnexGeolocation());
+
+    locator.registerSingleton<SafeConnexNewsStorage>(SafeConnexNewsStorage());
+
+    locator.registerSingleton<SafeConnexNotification>(SafeConnexNotification());
   }
 }

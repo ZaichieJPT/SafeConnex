@@ -10,7 +10,7 @@ class SafeConnexNewsDatabase{
       .ref("news");
 
   List<Map<String, dynamic>> newsData = [];
-  Future<void> createNews(String agency, String title, String body, String sender, String role, String date) async
+  Future<void> createNews(String agency, String title, String body, String sender, String role, String date, String imagePath) async
   {
     final postData = {
       'agency': agency,
@@ -18,7 +18,8 @@ class SafeConnexNewsDatabase{
       'body': body,
       'sender': sender,
       'role': role,
-      'date': date
+      'date': date,
+      'imagePath': imagePath
     };
 
     final newPostKey = _dbNewsReference.push().key;
@@ -45,6 +46,7 @@ class SafeConnexNewsDatabase{
           "body": post.child("body").value,
           "title": post.child("title").value,
           "date": post.child("date").value,
+          "imagePath": post.child("imagePath").value
         });
       }
 
