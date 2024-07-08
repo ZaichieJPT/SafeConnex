@@ -38,7 +38,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   String memberId = '';
   bool _locationStatus = false;
   bool _isMyRoleTapped = false;
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   final List<Map<String, dynamic>> circleDataList = [
     {
@@ -123,10 +123,10 @@ class _CircleSettingsState extends State<CircleSettings> {
                         padding: EdgeInsets.zero,
                         onPressed: _currentCircleIndex == 0
                             ? () {
-                                setState(() {
-                                  _currentCircleIndex = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1;
-                                });
-                              }
+                          setState(() {
+                            _currentCircleIndex = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1;
+                          });
+                        }
                             : _previousCircle,
                         icon: Text(
                           String.fromCharCode(Icons.arrow_back_ios.codePoint),
@@ -144,7 +144,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                       flex: 6,
                       child: Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: widget.width * 0.02),
+                        EdgeInsets.symmetric(horizontal: widget.width * 0.02),
                         child: Text(
                           currentCircleData['circleName'],
                           textAlign: TextAlign.center,
@@ -165,10 +165,10 @@ class _CircleSettingsState extends State<CircleSettings> {
                         padding: EdgeInsets.zero,
                         onPressed: _currentCircleIndex == DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length - 1
                             ? () {
-                                setState(() {
-                                  _currentCircleIndex = 0;
-                                });
-                              }
+                          setState(() {
+                            _currentCircleIndex = 0;
+                          });
+                        }
                             : _nextCircle,
                         iconSize: widget.height * 0.035,
                         icon: Text(
@@ -210,7 +210,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                           width: widget.width * 0.27,
                           alignment: Alignment.center,
                           padding:
-                              EdgeInsets.symmetric(horizontal: widget.width * 0.01),
+                          EdgeInsets.symmetric(horizontal: widget.width * 0.01),
                           decoration: BoxDecoration(
                             color: _viewEditIndex == 0
                                 ? Color.fromARGB(255, 70, 85, 104)
@@ -257,7 +257,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                           width: widget.width * 0.27,
                           alignment: Alignment.center,
                           padding:
-                              EdgeInsets.symmetric(horizontal: widget.width * 0.01),
+                          EdgeInsets.symmetric(horizontal: widget.width * 0.01),
                           decoration: BoxDecoration(
                             color: _viewEditIndex == 1
                                 ? Color.fromARGB(255, 70, 85, 104)
@@ -375,7 +375,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                                     child: CircleAvatar(
                                       radius: innerWidth * 0.06,
                                       backgroundColor:
-                                          const Color.fromARGB(255, 128, 95, 166),
+                                      const Color.fromARGB(255, 128, 95, 166),
                                       foregroundColor: Colors.white,
                                       child: DependencyInjector().locator<SafeConnexProfileStorage>()
                                           .imageUrl !=
@@ -441,7 +441,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                         reverseAnimation: StyledToastAnimation.fade,
                         fullWidth: true,
                       );
-                      circleDatabase.removeFromCircle(memberId, currentCircleData["circleCode"]);
+                      DependencyInjector().locator<SafeConnexCircleDatabase>().removeFromCircle(memberId, currentCircleData["circleCode"]);
                       setState(() {
                         //circleDatabase.listCircleDataForSettings(SafeConnexAuthentication.currentUser!.uid);
                         _memberIndex = 11;
@@ -516,9 +516,9 @@ class _CircleSettingsState extends State<CircleSettings> {
                         tooltip: 'Edit Role',
                         onPressed: () {
                           setState(() {
-                          _isMyRoleTapped = !_isMyRoleTapped;
-                        });
-                          },
+                            _isMyRoleTapped = !_isMyRoleTapped;
+                          });
+                        },
                         icon: Image.asset(
                           _isMyRoleTapped
                               ? 'assets/images/side_menu/sidemenu_check_icon.png'
@@ -607,23 +607,23 @@ class _CircleSettingsState extends State<CircleSettings> {
                             selectedIconScale: 1.0,
                             customIconBuilder: (context, local, global) =>
                                 FittedBox(
-                              child: Text(
-                                local.value ? 'on' : 'off',
-                                style: TextStyle(
-                                  fontFamily: 'OpunMai',
-                                  fontWeight: FontWeight.w600,
-                                  color: Color.lerp(
-                                    Color.fromARGB(255, 70, 85, 104),
-                                    Colors.white,
-                                    local.animationValue,
+                                  child: Text(
+                                    local.value ? 'on' : 'off',
+                                    style: TextStyle(
+                                      fontFamily: 'OpunMai',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color.lerp(
+                                        Color.fromARGB(255, 70, 85, 104),
+                                        Colors.white,
+                                        local.animationValue,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
                             style: ToggleStyle(
                               indicatorColor: Color.fromARGB(255, 70, 85, 104),
                               borderRadius:
-                                  BorderRadius.circular(widget.width * 0.02),
+                              BorderRadius.circular(widget.width * 0.02),
                               borderColor: Color.fromARGB(255, 70, 85, 104),
                             ),
                             onChanged: (value) {

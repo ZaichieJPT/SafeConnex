@@ -68,7 +68,13 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                 child: InkWell(
                   onTap: () {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
-                      DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!, _postTitleController.text, _postDescriptionController.text, DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!, DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]!, "${DateTime.now().year} ${DateTime.now().month} ${DateTime.now().day}");
+                      DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(
+                          DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!,
+                          _postTitleController.text, _postDescriptionController.text,
+                          DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                          DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]!,
+                          "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}:${DateTime.now().hour}:${DateTime.now().minute}",
+                          DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl!);
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                     }
                   },

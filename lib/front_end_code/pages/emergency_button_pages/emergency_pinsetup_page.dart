@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 
 class SOSPinSetupPage extends StatelessWidget {
   const SOSPinSetupPage({super.key});
@@ -121,6 +123,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit1Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Color.fromARGB(255, 63, 74, 104),
@@ -139,6 +142,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -157,6 +161,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit2Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Color.fromARGB(255, 63, 74, 104),
@@ -175,6 +180,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -193,6 +199,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit3Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Color.fromARGB(255, 63, 74, 104),
@@ -211,6 +218,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -229,6 +237,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                           // controller: digit4Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Color.fromARGB(255, 63, 74, 104),
@@ -247,6 +256,7 @@ class SOSPinSetupPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -293,7 +303,11 @@ class SOSPinSetupPage extends StatelessWidget {
 
               Flexible(
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    print(DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!);
+                    DependencyInjector().locator<SafeConnexAuthentication>().addEmergencyPin(DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin = DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!);
+                    Navigator.pop(context);
+                  },
                   height: height * 0.045,
                   minWidth: width * 0.5,
                   color: Color.fromARGB(255, 178, 64, 64),

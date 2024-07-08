@@ -19,6 +19,8 @@ class SafeConnexNotification{
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("notification_tokens");
 
+  List<String> notificationTokenList = [];
+
   /// initialize Firebase Messaging
   Future<void> initializeNotification(String userId) async {
     // request permission from the user
@@ -61,7 +63,15 @@ class SafeConnexNotification{
     return credentials.accessToken.data; 
   }
 
-  static sendNotification(String deviceToken, String notifTitle, String notifbody, Map<String, dynamic> dataToSend) async {
+  getNotificationTokens() async {
+    DataSnapshot snapshot = await dbNotificationTokenReference.get();
+
+    for(var tokens in snapshot.children){
+      print(tokens);
+    }
+  }
+
+  sendNotification(String deviceToken, String notifTitle, String notifbody, Map<String, dynamic> dataToSend) async {
     final String serverAccessToken = await getAccessToken();
     String endpointFirebaseCloudMessaging = 'https://fcm.googleapis.com/v1/projects/safeconnex-92054/messages:send';
 

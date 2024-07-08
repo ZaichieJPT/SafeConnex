@@ -254,6 +254,7 @@ class _DeleteDialogPassFieldState extends State<DeleteDialogPassField> {
                                       reverseAnimation:
                                           StyledToastAnimation.fade,
                                       fullWidth: true,
+
                                     );
                                     // Delete Function
                                     DependencyInjector().locator<SafeConnexAuthentication>().deleteUserAccount("password");

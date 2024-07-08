@@ -98,10 +98,9 @@ class SafeConnexAgencyDatabase{
           "agencyEmailAddress": agencyData["agencyEmailAddress"],
           "facebookLink": agencyData["facebookLink"],
           "agencyWebsite": agencyData["agencyWebsite"],
-          "agencyRole": agencyData["agencyRole"],
         });
 
-        await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString()).child(agencyName.replaceAll(' ', '').toString()).update({
+        await _dbAgencyReference.child((selectedAgencySplit[0] + selectedAgencySplit[1]).toString()).child(agencyName.replaceAll(' ', '').toString()).child(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid).update({
           "agencyRole": agencyRole
         });
 

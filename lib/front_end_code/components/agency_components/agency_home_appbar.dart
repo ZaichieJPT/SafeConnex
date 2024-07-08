@@ -123,7 +123,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                                       fontSize: width * 0.035,
                                       fontWeight: FontWeight.w700,
                                       color:
-                                          const Color.fromARGB(255, 14, 46, 67),
+                                      const Color.fromARGB(255, 14, 46, 67),
                                       height: 1.3,
                                     ),
                                   ),
@@ -179,8 +179,8 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                         child: FractionallySizedBox(
                           heightFactor: 1,
                           child: Container(
-                              //color: Colors.red,
-                              ),
+                            //color: Colors.red,
+                          ),
                         ),
                       ),
                       //2ND ROW APP BAR
@@ -190,7 +190,7 @@ class _AgencyAppBarState extends State<AgencyAppBar> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             //SAFETY SCORING BUTTON
-                            DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Natural Disaster and Accident Responder" ? Flexible(
+                            DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyType"] == "Natural Disaster and Accident\nResponder" ? Flexible(
                               flex: 1,
                               child: FractionallySizedBox(
                                 widthFactor: 0.9,

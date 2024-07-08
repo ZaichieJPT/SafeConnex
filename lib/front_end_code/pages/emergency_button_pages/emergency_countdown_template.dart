@@ -5,6 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_agencysent_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
@@ -40,6 +45,7 @@ class CountdownTemplate extends StatefulWidget {
 class _CountdownTemplateState extends State<CountdownTemplate> {
   Timer? _timer;
   int timeLeft = 10;
+  String? pinNumber;
 
   @override
   void initState() {
@@ -62,6 +68,16 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
             timeLeft--;
           });
         } else {
+          DependencyInjector().locator<SafeConnexNotification>().getNotificationTokens();
+          for(var person in DependencyInjector().locator<SafeConnexNotification>().notificationTokenList){
+            DependencyInjector().locator<SafeConnexNotification>().sendNotification(
+                person,
+                "${DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName} needs help!",
+                "Please send help!!",
+                {
+                  "location": DependencyInjector().locator<SafeConnexGeolocation>().geocodedStreet,
+                });
+          }
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => widget.SOSType == 'General'
@@ -206,6 +222,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                             ),
                             child: TextFormField(
+                              //controller: digit1Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: widget.fontColor,
@@ -224,6 +241,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -242,6 +260,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                             ),
                             child: TextFormField(
+                             // controller: digit2Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: widget.fontColor,
@@ -260,6 +279,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -278,6 +298,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                             ),
                             child: TextFormField(
+                              //controller: digit3Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: widget.fontColor,
@@ -296,6 +317,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -314,6 +336,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                             ),
                             child: TextFormField(
+                              //controller: digit4Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: widget.fontColor,
@@ -332,6 +355,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -373,7 +397,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                         ),
                         //PIN TEXT
                         Text(
-                          '0000',
+                          DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -392,7 +416,9 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                 Flexible(
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.pop(context);
+                      if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!){
+                        Navigator.pop(context);
+                      }
                     },
                     height: height * 0.045,
                     minWidth: width * 0.5,

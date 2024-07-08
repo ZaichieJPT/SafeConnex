@@ -1,7 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_countdown_template.dart';
+import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_initialpin_dialog.dart';
 
 class EMGMiniButton extends StatefulWidget {
   final bool toggle;
@@ -72,27 +75,31 @@ class _EMGMiniButtonState extends State<EMGMiniButton> {
           ),
           child: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => CountdownTemplate(
-                    pageTitle: widget.countdownPageTitle,
-                    buttonColor: widget.color,
-                    fontColor: Color.fromARGB(255, 62, 73, 101),
-                    PINColor: Color.fromARGB(255, 62, 73, 101),
-                    gradientBG: const [
-                      Color.fromARGB(255, 225, 222, 222),
-                      Color.fromARGB(255, 241, 241, 241),
-                    ],
-                    pageIcon: Icon(
-                      widget.icon,
-                      color: Colors.white,
-                      size: width * 0.15,
+              if(DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin != null){
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CountdownTemplate(
+                      pageTitle: widget.countdownPageTitle,
+                      buttonColor: widget.color,
+                      fontColor: Color.fromARGB(255, 62, 73, 101),
+                      PINColor: Color.fromARGB(255, 62, 73, 101),
+                      gradientBG: const [
+                        Color.fromARGB(255, 225, 222, 222),
+                        Color.fromARGB(255, 241, 241, 241),
+                      ],
+                      pageIcon: Icon(
+                        widget.icon,
+                        color: Colors.white,
+                        size: width * 0.15,
+                      ),
+                      SOSType: widget.SOSType,
+                      colorBG: widget.colorBG,
                     ),
-                    SOSType: widget.SOSType,
-                    colorBG: widget.colorBG,
                   ),
-                ),
-              );
+                );
+              }else{
+                Navigator.push(context, MaterialPageRoute(builder: (context) => InitialPinDialog()));
+              }
             },
             icon: Icon(
               widget.icon,

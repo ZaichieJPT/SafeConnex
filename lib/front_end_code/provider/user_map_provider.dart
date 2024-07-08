@@ -88,9 +88,8 @@ class UserMapProviderState extends State<UserMapProvider> {
     }
   }
 
-  Future<void> getGeofenceData() async {
+  Future<void>  getGeofenceData() async {
     for(var geofenceData in DependencyInjector().locator<SafeConnexGeofenceDatabase>().geofenceData){
-      // there is no place label
       _geofenceList.add(geofence.Geofence(
         id: geofenceData["addressLabel"],
         latitude: geofenceData["latitude"],
@@ -204,8 +203,8 @@ class UserMapProviderState extends State<UserMapProvider> {
 
   addCircleMarker(LatLng markerLocation, double radiusSize){
     circleMarker.add(CircleMarker(
-        color: Colors.blue.shade300.withOpacity(0.2),
-        borderColor: Colors.blue.shade500,
+        color: riskLevelColor.withOpacity(0.2),
+        borderColor: riskLevelBorderColor,
         borderStrokeWidth: 2,
         point: markerLocation,
         radius: radiusSize,
@@ -286,9 +285,7 @@ class UserMapProviderState extends State<UserMapProvider> {
 
               print("Activity: $activityContent");
               print("Geofence: $geofencingContent");
-              if(geofencingContent != ''){
-                //if(geofencingContent[])
-              }
+
               return Scaffold(
                 body: Stack(
                   children: [
@@ -296,10 +293,7 @@ class UserMapProviderState extends State<UserMapProvider> {
                       mapController: _mapController,
                       options: MapOptions(
                         initialCenter: LatLng(16.0265, 120.3363),
-                        initialZoom: 13.2,
-                        onMapReady: (){
-                          print("ready");
-                        }
+                        initialZoom: 13.2
                       ),
                       children: [
                         TileLayer(

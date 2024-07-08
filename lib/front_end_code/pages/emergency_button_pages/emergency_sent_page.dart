@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 
 class SOSSentPage extends StatelessWidget {
@@ -14,6 +16,8 @@ class SOSSentPage extends StatelessWidget {
     double width = MediaQuery.sizeOf(context).width;
 
     bool _visible = MediaQuery.of(context).viewInsets.bottom == 0;
+
+    String? pinNumber;
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -103,6 +107,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit1Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Colors.white,
@@ -121,6 +126,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                pinNumber = pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -139,6 +145,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit2Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Colors.white,
@@ -157,6 +164,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                pinNumber = pinNumber! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -175,6 +183,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit3Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Colors.white,
@@ -193,6 +202,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                pinNumber = pinNumber! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -211,6 +221,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                           ),
                           child: TextFormField(
+                            //controller: digit4Controller,
                             keyboardType: TextInputType.number,
                             textAlign: TextAlign.center,
                             cursorColor: Colors.white,
@@ -229,6 +240,7 @@ class SOSSentPage extends StatelessWidget {
                             ),
                             onChanged: (pin) {
                               if (pin.length == 1) {
+                                pinNumber = pinNumber! + pin;
                                 FocusScope.of(context).nextFocus();
                               }
                             },
@@ -289,7 +301,7 @@ class SOSSentPage extends StatelessWidget {
                       ),
                       //PIN TEXT
                       Text(
-                        '0000',
+                        DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -309,7 +321,9 @@ class SOSSentPage extends StatelessWidget {
               Flexible(
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!){
+                      Navigator.pop(context);
+                    }
                   },
                   height: height * 0.045,
                   minWidth: width * 0.5,

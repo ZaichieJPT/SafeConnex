@@ -6,6 +6,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_datab
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 
@@ -16,7 +17,7 @@ class SafeConnexAuthentication{
 
   // Database Reference for the Users Database
   final DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
-      //Keep the FirebaseInit or not?
+    //Keep the FirebaseInit or not?
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");
@@ -38,6 +39,7 @@ class SafeConnexAuthentication{
   User? currentUser;
   String? signUpException;
   String? loginException;
+  String? emergencyPin;
   Map<String, String> userData = {};
   Map<String, String> authAgencyData = {};
 
@@ -97,6 +99,19 @@ class SafeConnexAuthentication{
       "birthday": birthdate,
       "phoneNumber": phoneNumber
     });
+  }
+
+  Future<void> addEmergencyPin(String pin) async {
+    await _dbUserReference.child(currentUser!.uid).update
+      ({
+      "emergency_pin": pin,
+    });
+  }
+
+  Future<void> getEmergencyPin() async {
+    DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).child("emergency_pin").get();
+
+    emergencyPin = snapshot.value.toString();
   }
 
   Future<void> getUpdatedPhoneAndBirthday(String userId) async {
@@ -160,12 +175,13 @@ class SafeConnexAuthentication{
         currentUser = currentCredential.user!; //
         await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
         await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
-        await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+        await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
         await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
           if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
             DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
             DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
             DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+            DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
           }
         });
         await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
@@ -227,12 +243,13 @@ class SafeConnexAuthentication{
 
     await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
     await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
-    await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+    await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
     await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
       if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
         DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
         DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
         DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+        DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
       }
     });
     await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
@@ -251,12 +268,13 @@ class SafeConnexAuthentication{
       currentUser = authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid); //
       await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
-      await SafeConnexNotification().initializeNotification(currentUser!.uid);///
+      await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
           DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
           DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
           DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
         }
       });
       await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
