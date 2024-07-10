@@ -6,6 +6,7 @@ import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
+import 'package:safeconnex/front_end_code/pages/location_history_page.dart';
 
 class CarouseSliderComponent extends StatefulWidget {
   const CarouseSliderComponent({super.key});
@@ -261,7 +262,9 @@ class _CarouseSliderComponentState extends State<CarouseSliderComponent> {
                             padding:
                             EdgeInsets.symmetric(vertical: height * 0.005),
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => LocationHistory(userId: userData["id"], userName: userData["name"],)));
+                              },
                               child: Text(
                                 'View Location History',
                                 textAlign: TextAlign.left,

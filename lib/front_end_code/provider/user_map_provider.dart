@@ -13,6 +13,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authenticati
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_location_history.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
@@ -46,6 +47,13 @@ class UserMapProviderState extends State<UserMapProvider> {
   List<geofence.Geofence> _safetyScoreList = [];
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
+
+  static Timer _locationHistoryTimer = Timer.periodic(Duration(seconds: 30), (timer){
+    DependencyInjector().locator<SafeConnexLocationHistory>().addDataToLocationHistory(
+        DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
+        DateTime.now(),
+        "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}");
+  });
 
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
@@ -123,6 +131,8 @@ class UserMapProviderState extends State<UserMapProvider> {
       setState(() {
         _location = location.toJson();
       });
+      DependencyInjector().locator<SafeConnexLocationHistory>().getGeocode(LatLng(_location!["latitude"], _location!["longitude"]));
+      DependencyInjector().locator<SafeConnexGeolocation>().setCoordinates(_location!['latitude'], _location!['longitude'], DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     });
 
     print('location: ${location.toJson()}');
@@ -155,9 +165,8 @@ class UserMapProviderState extends State<UserMapProvider> {
       _geofenceService.addStreamErrorListener(_onError);
       _geofenceService.start(_geofenceList).catchError(_onError);
     });
-
-
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -251,12 +260,12 @@ class UserMapProviderState extends State<UserMapProvider> {
     });
   }
 
+  // This is the Build method
   Widget _buildMonitor() {
     geolocationMarkers.clear();
     index = 0;
 
-    Future.delayed(Duration(milliseconds: 400), (){
-      DependencyInjector().locator<SafeConnexGeolocation>().setCoordinates(_location!['latitude'], _location!['longitude'], DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+    Future.delayed(Duration(milliseconds: 550), (){
       if(DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().isMapSwitched == true){
         circleMarker.clear();
         getGeofenceData();
@@ -264,13 +273,22 @@ class UserMapProviderState extends State<UserMapProvider> {
         circleMarker.clear();
         getSafetyScoreData();
       }
-
     });
 
     for(index; index < DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData.length; index++){
       addGeolocationMarker(index);
     }
 
+    //_locationHistoryTimer;
+
+    /*Timer.periodic(Duration(minutes: 1), (timer){
+      print(timer);
+      DependencyInjector().locator<SafeConnexLocationHistory>().addDataToLocationHistory(
+          DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
+          LatLng(_location!["latitude"], _location!["longitude"]),
+          "${DateTime.now().hour}:${DateTime.now().minute}",
+          "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}");
+    });*/
     return StreamBuilder<geofence.Activity>(
         stream: _activityStreamController.stream,
         builder: (context, snapshot) {
@@ -308,7 +326,7 @@ class UserMapProviderState extends State<UserMapProvider> {
                         ),
                         CircleLayer(
                           circles: circleMarker,
-                        )
+                        ),
                       ],
                     ),
                   ],

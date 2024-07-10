@@ -2,6 +2,9 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_contactrequest_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_soscancel_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_sossent_template.dart';
@@ -17,7 +20,8 @@ class AgencyNotificationPage extends StatefulWidget {
 
 class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
   int _currentNotifIndex = -1;
-  final List<Map<String, dynamic>> notifications = [
+  final notifications = DependencyInjector().locator<SafeConnexNotificationDatabase>().notificationData;
+  final List<Map<String, dynamic>> notifications2 = [
     {
       'type': 1,
       'fullname': 'Garry Penoliar',
@@ -48,6 +52,13 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
     },
     {'type': 4, 'fullname': '', 'name': '', 'age': '', 'date': '06/15/2024'},
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    DependencyInjector().locator<SafeConnexNotificationDatabase>().getNotificationsFromDatabase(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

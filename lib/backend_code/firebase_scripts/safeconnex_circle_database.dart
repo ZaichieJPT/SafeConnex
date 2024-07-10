@@ -38,7 +38,7 @@ class SafeConnexCircleDatabase{
   // Circle that you want to join
   Map<String, dynamic> circleToJoin = {};
 
-  List<Map<String, dynamic>> circleUsersData = [];
+  List<Map<String, dynamic>> circleUsersNames = [];
   List<Map<String, dynamic>> circleList = [];
   List<Map<String, dynamic>> circleDataList = [];
   List<Map<String, dynamic>> circleDataValue = [];
@@ -283,9 +283,15 @@ class SafeConnexCircleDatabase{
             "role": user.child("role").value,
             "image": user.child("image").value,
           });
+
+          circleUsersNames.add({
+            "name": user.child("name").value,
+            "id": user.child("id").value,
+          });
         }
       }else{
         circleDataValue.clear();
+        circleUsersNames.clear();
         for(var user in snapshot.child("members").children){
           circleDataValue.add({
             "id": user.child("id").value,
@@ -294,6 +300,10 @@ class SafeConnexCircleDatabase{
             "phoneNumber": user.child("phone").value,
             "role": user.child("role").value,
             "image": user.child("image").value,
+          });
+          circleUsersNames.add({
+            "name": user.child("name").value,
+            "id": user.child("id").value,
           });
         }
       }

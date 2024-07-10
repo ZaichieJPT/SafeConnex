@@ -4,10 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_location_history.dart';
 
 class LocationHistory extends StatefulWidget {
-  const LocationHistory({super.key});
+  const LocationHistory({super.key, required this.userId, required this.userName});
 
+  final String userId;
+  final String userName;
   @override
   State<LocationHistory> createState() => _LocationHistoryState();
 }
@@ -19,7 +25,7 @@ class _LocationHistoryState extends State<LocationHistory> {
   double width = 0;
   int _currentPointIndex = -1;
 
-  final List<String> _circleMembers = [
+  final List<String> _circleMembers2 = [
     'Garry',
     'Alliah',
     'Riri',
@@ -28,7 +34,10 @@ class _LocationHistoryState extends State<LocationHistory> {
     'Imaw',
   ];
 
-  final List<Map<String, String>> _locationHistory = [
+  final List<Map<String, dynamic>> _circleMembers = DependencyInjector().locator<SafeConnexCircleDatabase>().circleUsersNames;
+  final _locationHistory = DependencyInjector().locator<SafeConnexLocationHistory>().locationHistoryData;
+
+  final List<Map<String, String>> _locationHistory2 = [
     {
       'location': 'At Gym',
       'time': '8:05 am',
@@ -102,7 +111,8 @@ class _LocationHistoryState extends State<LocationHistory> {
 
   @override
   void initState() {
-    _currentMemberName = _circleMembers[0];
+    DependencyInjector().locator<SafeConnexLocationHistory>().getDataFromLocationHistory(widget.userId);
+    _currentMemberName = widget.userName;
     super.initState();
   }
 
@@ -199,6 +209,9 @@ class _LocationHistoryState extends State<LocationHistory> {
                   iconSize: width * 0.087,
                   iconColor: Colors.transparent,
                   onSelected: (value) {
+                    DependencyInjector().locator<SafeConnexLocationHistory>().locationHistoryData.clear();
+                    DependencyInjector().locator<SafeConnexLocationHistory>().getDataFromLocationHistory(value);
+
                     setState(() {});
                   },
                   onCanceled: () {
@@ -241,16 +254,16 @@ class _LocationHistoryState extends State<LocationHistory> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                for (String member in _circleMembers)
+                                for (var member in _circleMembers)
                                   PopupMenuItem<String>(
                                     padding: EdgeInsets.symmetric(
                                       vertical: height * 0.007,
                                     ),
                                     height: 0,
-                                    value: member,
+                                    value: member["id"],
                                     onTap: () {
                                       setState(() {
-                                        _currentMemberName = member;
+                                        _currentMemberName = member["name"];
                                       });
                                     },
                                     child: Center(
@@ -265,7 +278,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                                               width * 0.012),
                                         ),
                                         child: Text(
-                                          member,
+                                          member["name"],
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
@@ -311,6 +324,7 @@ class _LocationHistoryState extends State<LocationHistory> {
           ),
           child: InkWell(
             onTap: () {
+              DependencyInjector().locator<SafeConnexLocationHistory>().locationHistoryData.clear();
               Navigator.pop(context);
             },
             highlightColor: Colors.transparent,
@@ -392,7 +406,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                   //color: const Color.fromARGB(112, 33, 149, 243),
                   child: FittedBox(
                     child: Text(
-                      '$_currentMemberName\'s',
+                      _currentMemberName,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: 'OpunMai',
@@ -528,7 +542,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                                             ),
                                             preferBelow: false,
                                             message:
-                                                '${_locationHistory[_currentPointIndex]['location']!}',
+                                            '${_locationHistory[_currentPointIndex]['location']!}',
                                             child: FittedBox(
                                               child: Text(
                                                 '${_locationHistory[_currentPointIndex]['location']!}',

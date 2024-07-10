@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 
 class AgencyStep5 extends StatefulWidget {
   final Function() toNextStep;
@@ -96,6 +98,14 @@ class _AgencyStep3State extends State<AgencyStep5> {
                     DependencyInjector().locator<SafeConnexAgencyDatabase>().joinTheAgency().whenComplete((){
                       DependencyInjector().locator<SafeConnexAuthentication>().getAgencyData();
                       DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
+                      DependencyInjector().locator<SafeConnexNotificationDatabase>().addNotificationToDatabase(
+                          DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
+                          4,
+                          DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                          DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+                          "22",
+                          DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+                      );
                       setState(() {
                         Navigator.of(context).popAndPushNamed("/agencyPage");
                       });
