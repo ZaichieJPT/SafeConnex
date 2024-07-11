@@ -201,15 +201,6 @@ class UserMapProviderState extends State<UserMapProvider> {
     super.dispose();
   }
 
-  bool _checkIfProfileExist(){
-    for(var profile in DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue){
-      if(profile["image"] != null){
-        return true;
-      }
-    }
-    return false;
-  }
-
   addCircleMarker(LatLng markerLocation, double radiusSize){
     circleMarker.add(CircleMarker(
         color: riskLevelColor.withOpacity(0.2),
@@ -242,7 +233,7 @@ class UserMapProviderState extends State<UserMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: _checkIfProfileExist() ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(color:Colors.white),
+                child: DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl != null ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(color:Colors.white),
               ),
             )
           ],
