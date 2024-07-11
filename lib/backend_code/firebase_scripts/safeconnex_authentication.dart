@@ -41,7 +41,7 @@ class SafeConnexAuthentication{
   String? loginException;
   String? emergencyPin;
   Map<String, String> userData = {};
-  Map<String, String> authAgencyData = {};
+  Map<String, dynamic> authAgencyData = {};
 
   //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
   //SafeConnexProfileStorage profileStorage = SafeConnexProfileStorage();
@@ -69,10 +69,10 @@ class SafeConnexAuthentication{
         "role": "user",
         "age": age,
         "phoneNumber": "000000000"
-      }).whenComplete((){
-        // Logs out the account after the data has been assigned to prevent auto login
-        authHandler.signOut();
       });
+      currentUser = null;
+      // Logs out the account after the data has been assigned to prevent auto login
+      await authHandler.signOut();
     }
     on FirebaseAuthException catch(exception){
       switch(exception.code){
@@ -116,8 +116,13 @@ class SafeConnexAuthentication{
 
   Future<void> getEmergencyPin() async {
     DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).child("emergency_pin").get();
+    if(snapshot.exists){
+      emergencyPin = snapshot.value.toString();
+    }
+    else{
+      emergencyPin = null;
+    }
 
-    emergencyPin = snapshot.value.toString();
   }
 
   Future<void> getUpdatedPhoneAndBirthday(String userId) async {
@@ -165,12 +170,11 @@ class SafeConnexAuthentication{
 
   Future<void> getAgencyData() async {
     DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).get();
-    final splitData = snapshot.child("agencyType").value.toString().split(' ');
 
     authAgencyData = {
-      "role": snapshot.child("role").value.toString(),
-      "agencyType": snapshot.child("agencyType").value.toString(),
-      "agencyName": snapshot.child("agencyName").value.toString()
+      "role": snapshot.child("role").value,
+      "agencyType": snapshot.child("agencyType").value,
+      "agencyName": snapshot.child("agencyName").value
     };
   }
 
@@ -272,6 +276,7 @@ class SafeConnexAuthentication{
 
   Future<void> loginWithToken() async {
     if(authHandler.currentUser != null){
+      print("called");
       currentUser = authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid); //
       await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///

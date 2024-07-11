@@ -408,12 +408,12 @@ class _PassCardState extends State<PassCard> {
                     widget.emailController.text,
                     widget.passController.text,
                     widget.firstNameController.text,
-                    widget.firstNameController.text,
+                    widget.lastNameController.text,
                     "00000",
                     widget.dateController.text,
                 );
 
-                if (DependencyInjector().locator<SafeConnexAuthentication>().signUpException == '') {
+                if (DependencyInjector().locator<SafeConnexAuthentication>().signUpException == null) {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => VerifyEmailPage()));
                 } else {

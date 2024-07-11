@@ -412,7 +412,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                         ),
                         //PIN TEXT
                         Text(
-                          DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!,
+                          DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin ?? "",
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
     }
     DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
     DependencyInjector().locator<SafeConnexAuthentication>().getEmergencyPin();
+    DependencyInjector().locator<SafeConnexAuthentication>().getAgencyData();
     super.initState();
   }
 
@@ -279,13 +280,18 @@ class _HomePageState extends State<HomePage> {
                                           timeLeft == 1 ||
                                           timeLeft == 0) {
                                         if(timeLeft == 0){
-                                          DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+                                          if( DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin != null){
+                                            DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
                                               1,
                                               DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                                               DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
                                               DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
                                               DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
-                                          );
+                                            );
+                                          }else if(DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin != null || DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!.length < 4){
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => InitialPinDialog()));
+                                          }
+
                                         }
                                         print('time: ' + timeLeft.toString());
                                       }

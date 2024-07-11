@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:email_validator/email_validator.dart';
+import "package:safeconnex/api/dependecy_injector/injector.dart";
 import "package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart";
 import "package:safeconnex/front_end_code/components/signup_continue_btn.dart";
 import "package:safeconnex/front_end_code/components/signup_textformfield.dart";
@@ -27,7 +28,7 @@ class EmailCard extends StatefulWidget {
 class _EmailCardState extends State<EmailCard> {
   final _emailCardFormKey = GlobalKey<FormState>();
   SettingsProvider provider = SettingsProvider();
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +171,7 @@ class _EmailCardState extends State<EmailCard> {
           btnName: "Continue",
           formKey: _emailCardFormKey,
           continueClicked: () {
-            authentication
+            DependencyInjector().locator<SafeConnexAuthentication>()
                 .verifyEmailAddress(widget.emailController.text)
                 .whenComplete(() {
               if (_emailCardFormKey.currentState!.validate()) {

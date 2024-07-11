@@ -54,27 +54,29 @@ class _LoginPageState extends State<LoginPage> {
     double width = MediaQuery.sizeOf(context).width;
 
     // Fix this the delay is too early make it accurate
-    DependencyInjector().locator<SafeConnexAuthentication>().loginWithToken().whenComplete(() {
-      if (DependencyInjector().locator<SafeConnexAuthentication>().currentUser != null && isTransferred == false) {
-        if(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["role"] != "Agency"){
-          if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => CirclePage()));
+    if(DependencyInjector().locator<SafeConnexAuthentication>().authHandler.currentUser != null){
+      DependencyInjector().locator<SafeConnexAuthentication>().loginWithToken().whenComplete(() {
+        if (DependencyInjector().locator<SafeConnexAuthentication>().currentUser != null && isTransferred == false) {
+          if(DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["role"] != "Agency"){
+            if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => CirclePage()));
+            }
+            else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"
+            ){
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => MainScreen()));
+            }
           }
-          else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"
-              ){
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainScreen()));
+          else{
+            DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
           }
-        }
-        else{
-          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
-        }
 
-        isTransferred = true;
-      }
-    });
+          isTransferred = true;
+        }
+      });
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -303,11 +305,11 @@ class _LoginPageState extends State<LoginPage> {
                                                   .validate()) {
                                                 if (DependencyInjector().locator<SafeConnexAuthentication>().loginException == null || DependencyInjector().locator<SafeConnexAuthentication>().loginException == "") {
                                                   Future.delayed(Duration(milliseconds: 500), (){
-                                                    if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null){
+                                                    if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
                                                       Navigator.push(
                                                           context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                     }
-                                                    else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null){
+                                                    else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
                                                       Navigator.push(
                                                           context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                     }
@@ -352,11 +354,11 @@ class _LoginPageState extends State<LoginPage> {
                                                 DependencyInjector().locator<SafeConnexAuthentication>().loginInWithGoogle().whenComplete((){
                                                   if (DependencyInjector().locator<SafeConnexAuthentication>().loginException == null || DependencyInjector().locator<SafeConnexAuthentication>().loginException == "") {
                                                     Future.delayed(Duration(milliseconds: 500), (){
-                                                      if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null){
+                                                      if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
                                                         Navigator.push(
                                                             context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                       }
-                                                      else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null){
+                                                      else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
                                                         Navigator.push(
                                                             context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                       }

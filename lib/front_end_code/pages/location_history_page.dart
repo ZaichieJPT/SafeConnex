@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_location_history.dart';
 
 class LocationHistory extends StatefulWidget {
@@ -114,6 +116,15 @@ class _LocationHistoryState extends State<LocationHistory> {
     DependencyInjector().locator<SafeConnexLocationHistory>().getDataFromLocationHistory(widget.userId);
     _currentMemberName = widget.userName;
     super.initState();
+  }
+
+  String _getGeocodeValue(String userId) {
+    for (var geocodes in DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData) {
+      if (geocodes["userId"] == userId) {
+        return geocodes["geocoded"];
+      }
+    }
+    return "No Name";
   }
 
   @override
@@ -672,10 +683,10 @@ class _LocationHistoryState extends State<LocationHistory> {
                                   color: Color.fromARGB(255, 82, 80, 76),
                                 ),
                                 preferBelow: false,
-                                message: 'At Home',
+                                message: _getGeocodeValue(widget.userId) ?? "No Name",
                                 child: FittedBox(
                                   child: Text(
-                                    'At Home',
+                                    _getGeocodeValue(widget.userId)  ?? "No Name",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontFamily: 'Merriweather',
@@ -699,7 +710,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                             Flexible(
                               child: FittedBox(
                                 child: Text(
-                                  'Since 1:00 pm, June 16, 2024',
+                                  'Since ${DateFormat("hh:mm aaa").format(DateTime.now())}, ${DateFormat("MMMM dd, yyyy").format(DateTime.now())}',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: 'Merriweather',

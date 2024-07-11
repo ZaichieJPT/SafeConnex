@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/join_circle_confirm.dart';
 import 'package:safeconnex/front_end_code/provider/setting_provider.dart';
@@ -19,7 +21,7 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
   final _joinCircleKey = GlobalKey<FormState>();
   final _joinCircleController = TextEditingController();
   SettingsProvider provider = SettingsProvider();
-  SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
+  //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   @override
   void dispose() {
@@ -232,8 +234,8 @@ class _JoinCirclePageState extends State<JoinCirclePage> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          circleDatabase.getCircleToJoin(_joinCircleController.text).whenComplete((){
-                            circleDatabase.getCircleData(_joinCircleController.text).whenComplete((){
+                          DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleToJoin(_joinCircleController.text).whenComplete((){
+                            DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(_joinCircleController.text).whenComplete((){
                               if(_joinCircleKey.currentState!.validate()){
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => ConfirmJoinCircle()));
                               }

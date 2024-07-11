@@ -157,7 +157,6 @@ class UserMapProviderState extends State<UserMapProvider> {
     // TODO: implement initState
     super.initState();
     DependencyInjector().locator<SafeConnexGeolocation>().getCoordinates();
-    DependencyInjector().locator<SafeConnexLocationHistory>().deleteHistory(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
       _geofenceService.addLocationChangeListener(_onLocationChanged);
