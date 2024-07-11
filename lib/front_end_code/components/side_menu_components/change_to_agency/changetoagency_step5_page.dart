@@ -103,7 +103,7 @@ class _AgencyStep3State extends State<AgencyStep5> {
                           4,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
-                          "22",
+                          DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
                           DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
                       );
                       setState(() {

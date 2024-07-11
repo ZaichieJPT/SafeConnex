@@ -13,6 +13,7 @@ class EMGMiniButton extends StatefulWidget {
   final Color iconColor;
   final IconData icon;
   final String tooltip;
+  final String? agencyType;
 
   //FOR COUNTDOWN TEMPLATE
   final String countdownPageTitle;
@@ -30,6 +31,7 @@ class EMGMiniButton extends StatefulWidget {
     required this.countdownPageTitle,
     required this.SOSType,
     required this.colorBG,
+    this.agencyType,
   });
 
   @override
@@ -94,6 +96,7 @@ class _EMGMiniButtonState extends State<EMGMiniButton> {
                       ),
                       SOSType: widget.SOSType,
                       colorBG: widget.colorBG,
+                      agencyType: widget.agencyType,
                     ),
                   ),
                 );

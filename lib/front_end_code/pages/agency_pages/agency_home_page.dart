@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_home_appbar.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
@@ -18,6 +22,15 @@ class AgencyHomePage extends StatefulWidget {
 }
 
 class _AgencyHomePageState extends State<AgencyHomePage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DependencyInjector().locator<SafeConnexNotificationDatabase>().getNotificationsFromDatabase(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+    DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;

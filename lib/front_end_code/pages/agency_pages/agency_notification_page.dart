@@ -20,7 +20,7 @@ class AgencyNotificationPage extends StatefulWidget {
 
 class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
   int _currentNotifIndex = -1;
-  final notifications = DependencyInjector().locator<SafeConnexNotificationDatabase>().notificationData;
+  final List<Map<String, dynamic>> notifications = DependencyInjector().locator<SafeConnexNotificationDatabase>().notificationData;
   final List<Map<String, dynamic>> notifications2 = [
     {
       'type': 1,
@@ -56,7 +56,6 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
   @override
   void initState() {
     // TODO: implement initState
-    DependencyInjector().locator<SafeConnexNotificationDatabase>().getNotificationsFromDatabase(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     super.initState();
   }
 
@@ -64,7 +63,6 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 66, 79, 88),
@@ -138,7 +136,7 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
         ),
       ),
       body: ListView.builder(
-        itemCount: 5,
+        itemCount: DependencyInjector().locator<SafeConnexNotificationDatabase>().notificationData.length,
         itemBuilder: (contect, index) {
           return InkWell(
             onTap: () {
@@ -168,7 +166,9 @@ class _AgencyNotificationPageState extends State<AgencyNotificationPage> {
         },
       ),
       floatingActionButton: InkWell(
-        onTap: () {},
+        onTap: () {
+          DependencyInjector().locator<SafeConnexNotificationDatabase>().deleteNotificationForUser(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, notifications[_currentNotifIndex]["notifKey"]);
+        },
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
         child: Container(

@@ -114,7 +114,7 @@ class _SignupDateFieldState extends State<SignupDateField> {
             if (datePicked != null) {
               setState(() {
                 widget.controller.text =
-                    DateFormat('yMMMMd').format(datePicked);
+                    DateFormat('yyyy-MM-dd').format(datePicked);
               });
             }
           },

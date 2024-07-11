@@ -60,11 +60,14 @@ class SafeConnexAuthentication{
       // Updates the name of the currentUser
       currentCredential.user?.updateDisplayName("$firstName $lastName");
 
+      String age = (DateTime.now().year - DateTime.parse(birthdate).year).toString();
+
       // Sets the values of the birthday and role in the database
       await _dbUserReference.child(currentCredential.user!.uid).set
         ({
         "birthday": birthdate,
         "role": "user",
+        "age": age,
         "phoneNumber": "000000000"
       }).whenComplete((){
         // Logs out the account after the data has been assigned to prevent auto login
@@ -94,9 +97,12 @@ class SafeConnexAuthentication{
 
   Future<void> updatePhoneNumberAndBirthdate(String phoneNumber, String birthdate) async {
     // Sets the values of the birthday and role in the database
+    String age = (DateTime.now().year - DateTime.parse(birthdate).year).toString();
+
     await _dbUserReference.child(currentUser!.uid).update
       ({
       "birthday": birthdate,
+      "age": age,
       "phoneNumber": phoneNumber
     });
   }
@@ -119,7 +125,8 @@ class SafeConnexAuthentication{
 
     userData = {
       "phoneNumber": snapshot.child("phoneNumber").value.toString(),
-      "birthdate": snapshot.child("birthday").value.toString()
+      "birthdate": snapshot.child("birthday").value.toString(),
+      "age": snapshot.child("age").value.toString()
     };
   }
 

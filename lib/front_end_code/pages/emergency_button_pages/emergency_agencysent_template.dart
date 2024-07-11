@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
 
@@ -33,10 +35,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
     super.dispose();
   }
 
-  TextEditingController digit1Controller = TextEditingController();
-  TextEditingController digit2Controller = TextEditingController();
-  TextEditingController digit3Controller = TextEditingController();
-  TextEditingController digit4Controller = TextEditingController();
+  String? pinNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +182,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                             ),
                             child: TextFormField(
-                              controller: digit1Controller,
+                              //controller: digit1Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: Color.fromARGB(255, 62, 73, 101),
@@ -202,6 +201,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -220,7 +220,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                             ),
                             child: TextFormField(
-                              controller: digit2Controller,
+                              //controller: digit2Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: Color.fromARGB(255, 62, 73, 101),
@@ -239,6 +239,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -257,7 +258,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                             ),
                             child: TextFormField(
-                              controller: digit3Controller,
+                              //controller: digit3Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: Color.fromARGB(255, 62, 73, 101),
@@ -276,6 +277,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -294,7 +296,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                             ),
                             child: TextFormField(
-                              controller: digit4Controller,
+                              //controller: digit4Controller,
                               keyboardType: TextInputType.number,
                               textAlign: TextAlign.center,
                               cursorColor: Color.fromARGB(255, 62, 73, 101),
@@ -313,6 +315,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                               ),
                               onChanged: (pin) {
                                 if (pin.length == 1) {
+                                  pinNumber = pinNumber! + pin;
                                   FocusScope.of(context).nextFocus();
                                 }
                               },
@@ -373,8 +376,15 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                 Flexible(
                   child: MaterialButton(
                     onPressed: () {
-                      String pinNumber = "${digit1Controller.text}${digit2Controller.text}${digit3Controller.text}${digit4Controller.text}";
                       if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin){
+                        DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+                            2,
+                            DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                            DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+                            DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
+                            DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+
+                        );
                         Navigator.pop(context);
                       }
                     },

@@ -72,7 +72,6 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
         _isLikePostTapped.add(false);
       });
     }
-    DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
     super.initState();
   }
 
@@ -463,8 +462,9 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                                 if (value == "Edit post") {
                                                   widget.onEditPostSelected(
                                                     true,
-                                                    'Post Title $index',
-                                                    'Post Desc $index',
+                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["title"],
+                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["body"],
+                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["sender"],
                                                   );
                                                 }
                                               },

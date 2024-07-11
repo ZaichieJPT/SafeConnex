@@ -542,10 +542,10 @@ class _LocationHistoryState extends State<LocationHistory> {
                                             ),
                                             preferBelow: false,
                                             message:
-                                            '${_locationHistory[_currentPointIndex]['location']!}',
+                                            _locationHistory.length > _currentPointIndex ? '${_locationHistory[_currentPointIndex]['location']!}' : "No History",
                                             child: FittedBox(
                                               child: Text(
-                                                '${_locationHistory[_currentPointIndex]['location']!}',
+                                                _locationHistory.length > _currentPointIndex ? '${_locationHistory[_currentPointIndex]['location']!}' : "No History",
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                   fontFamily: 'Merriweather',
@@ -567,7 +567,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                                               _currentTextPosition['alignment'],
                                           child: FittedBox(
                                             child: Text(
-                                              '${_locationHistory[_currentPointIndex]['time']!}\n${_locationHistory[_currentPointIndex]['date']!}',
+                                              _locationHistory.length > _currentPointIndex ? '${_locationHistory[_currentPointIndex]['time']!}\n${_locationHistory[_currentPointIndex]['date']!}' : "No History",
                                               textAlign: _currentTextPosition[
                                                   'textalign'],
                                               style: TextStyle(

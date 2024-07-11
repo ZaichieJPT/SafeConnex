@@ -27,6 +27,10 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
   bool _isEditPostSelected = false;
   String _postTitle = '';
   String _postDescription = '';
+  String _postSender = '';
+  String _postImage = '';
+  String _postRole = '';
+  String _agencyName = '';
 
   final List<TextEditingController> _agencyDataControllers = [];
   final TextEditingController _agencyNameController = TextEditingController();
@@ -51,12 +55,13 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
   }
 
   _onEditPostSelected(
-      bool isSelected, String postTitle, String postDescription) {
+      bool isSelected, String postTitle, String postDescription, String postSender) {
     setState(() {
       _isEditPostSelected = isSelected;
       if (_isEditPostSelected) {
         _postTitle = postTitle;
         _postDescription = postDescription;
+        _postSender = postSender;
         _currentFeedIndex = -1;
       } else {
         _currentFeedIndex = 1;
@@ -93,6 +98,10 @@ class _AgencyFeedPageState extends State<AgencyFeedPage> {
                           ? AgencyEditPost(
                               postTitle: _postTitle,
                               postDescription: _postDescription,
+                              postSender: _postSender,
+                              postImage: _postImage,
+                              postRole: _postRole,
+                              agencyName: _agencyName,
                               onEditPostSelected: _onEditPostSelected,
                             )
                           : Container(),

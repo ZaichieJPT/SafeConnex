@@ -4,8 +4,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
 import 'package:safeconnex/front_end_code/pages/circle_pages/circle_page.dart';
@@ -190,6 +193,7 @@ class _HomePageState extends State<HomePage> {
                       tooltip: 'BFP',
                       countdownPageTitle: 'FIRE HAZARD SOS',
                       SOSType: 'Fire',
+                      agencyType: 'FireIncident',
                       colorBG: Colors.orange.shade400,
                     ),
                     //SAFETY BUTTON
@@ -202,6 +206,7 @@ class _HomePageState extends State<HomePage> {
                       tooltip: 'PNP',
                       countdownPageTitle: 'CRIMINAL DANGER SOS',
                       SOSType: 'Criminal Safety',
+                      agencyType: "CrimeIncident",
                       colorBG: Color.fromARGB(255, 168, 168, 171),
                     ),
                     //MEDICAL/ACCIDENTS BUTTON
@@ -214,6 +219,7 @@ class _HomePageState extends State<HomePage> {
                       tooltip: 'PNP/CDRRMO',
                       countdownPageTitle: 'MEDICAL EMERGENCY SOS',
                       SOSType: 'Medical',
+                      agencyType: 'MedicalEmergency',
                       colorBG: Colors.cyan.shade700,
                     ),
                     //NATURAL EMERGENCY BUTTON
@@ -227,6 +233,7 @@ class _HomePageState extends State<HomePage> {
                       countdownPageTitle:
                       'NATURAL DISASTER AND\n ACCIDENTS SOS',
                       SOSType: 'Disaster/Accident',
+                      agencyType: 'NaturalDisaster',
                       colorBG: Colors.green.shade300,
                     ),
                     //SCALING RED TRAY
@@ -268,6 +275,15 @@ class _HomePageState extends State<HomePage> {
                                           timeLeft == 2 ||
                                           timeLeft == 1 ||
                                           timeLeft == 0) {
+                                        if(timeLeft == 0){
+                                          DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+                                              1,
+                                              DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                                              DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+                                              DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
+                                              DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+                                          );
+                                        }
                                         print('time: ' + timeLeft.toString());
                                       }
                                     } else {

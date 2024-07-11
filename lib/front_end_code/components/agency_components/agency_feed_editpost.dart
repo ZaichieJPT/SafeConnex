@@ -3,17 +3,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
 class AgencyEditPost extends StatefulWidget {
   final String postTitle;
   final String postDescription;
   final Function onEditPostSelected;
+  final String postSender;
+  final String postRole;
+  final String postImage;
+  final String agencyName;
 
   const AgencyEditPost({
     super.key,
     required this.postTitle,
     required this.postDescription,
     required this.onEditPostSelected,
+    required this.postSender,
+    required this.postRole,
+    required this.postImage,
+    required this.agencyName
   });
 
   @override
@@ -29,6 +41,14 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
     _postTitleController.text = widget.postTitle;
     _postDescriptionController.text = widget.postDescription;
     super.initState();
+  }
+
+  Future<void> _onFileUploadTapped() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    DependencyInjector().locator<SafeConnexNewsStorage>().uploadNewsPic(
+        _postTitleController.text, image!.path);
+    if (image == null) return;
   }
 
   @override
@@ -67,7 +87,8 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
                 padding: EdgeInsets.only(right: width * 0.02),
                 child: InkWell(
                   onTap: () {
-                    widget.onEditPostSelected(false, '', '');
+                    widget.onEditPostSelected(false, '', '',);
+                    // Put something here
                   },
                   child: Image.asset(
                     'assets/images/agency_app/agency_createpost_icon.png',
@@ -118,7 +139,7 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
                                     width: width,
                                     //color: Colors.grey,
                                     child: Text(
-                                      'Garry Penoliar',
+                                      widget.postSender,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -138,7 +159,7 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
                                     width: width,
                                     //color: Colors.green,
                                     child: Text(
-                                      'Admin Staff at PNP',
+                                      "${widget.postRole} at ${widget.agencyName}",
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
@@ -242,7 +263,9 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
                             ),
                             Expanded(
                               child: MaterialButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  _onFileUploadTapped();
+                                },
                                 color: Color.fromARGB(255, 119, 194, 152),
                                 shape: RoundedRectangleBorder(
                                   borderRadius:

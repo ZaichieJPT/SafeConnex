@@ -447,7 +447,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                                     setState(() {
                                                       _birthdateController
                                                           .text = DateFormat(
-                                                          'yMMMMd')
+                                                          'yyyy-MM-dd')
                                                           .format(
                                                           datePicked);
                                                       _birthDate =

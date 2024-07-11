@@ -5,11 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_agencysent_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
@@ -21,6 +23,7 @@ class CountdownTemplate extends StatefulWidget {
   final Color buttonColor;
   final Color fontColor;
   final Color PINColor;
+  final String? agencyType;
 
   //SOS SENT PAGE
   final Icon? pageIcon;
@@ -36,6 +39,7 @@ class CountdownTemplate extends StatefulWidget {
     required this.SOSType,
     this.gradientBG,
     this.colorBG,
+    this.agencyType,
   });
 
   @override
@@ -68,6 +72,14 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
             timeLeft--;
           });
         } else {
+          DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+              1,
+              DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+              DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+              DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
+              DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+              widget.agencyType
+          );
           DependencyInjector().locator<SafeConnexNotification>().getNotificationTokens();
           for(var person in DependencyInjector().locator<SafeConnexNotification>().notificationTokenList){
             DependencyInjector().locator<SafeConnexNotification>().sendNotification(
@@ -81,7 +93,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
           Navigator.of(context).push(
             MaterialPageRoute(
               builder: (context) => widget.SOSType == 'General'
-                  ? SOSSentPage()
+                  ? SOSSentPage(agencyType: widget.agencyType)
                   : SOSSentTemplate(
                       pageTitle: widget.pageTitle,
                       buttonColor: widget.buttonColor,

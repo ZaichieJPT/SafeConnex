@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 
 class SOSSentPage extends StatelessWidget {
-  const SOSSentPage({super.key});
+  const SOSSentPage({super.key, this.agencyType});
+  final String? agencyType;
 
   @override
   Widget build(BuildContext context) {
@@ -317,11 +320,18 @@ class SOSSentPage extends StatelessWidget {
               ),
 
               //ENTER BUTTON
-
               Flexible(
                 child: MaterialButton(
                   onPressed: () {
-                    if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!){
+                    if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin){
+                      DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+                        2,
+                        DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                        DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+                        DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
+                        DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+                        agencyType
+                      );
                       Navigator.pop(context);
                     }
                   },

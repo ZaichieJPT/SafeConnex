@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
@@ -21,12 +22,12 @@ class AgencyCreatePost extends StatefulWidget {
 class _AgencyCreatePostState extends State<AgencyCreatePost> {
   final _postTitleController = TextEditingController();
   final _postDescriptionController = TextEditingController();
-  SafeConnexNewsStorage newsStorage = SafeConnexNewsStorage();
+  //SafeConnexNewsStorage newsStorage = SafeConnexNewsStorage();
 
   Future<void> _onFileUploadTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    newsStorage.uploadNewsPic(
+    DependencyInjector().locator<SafeConnexNewsStorage>().uploadNewsPic(
         _postTitleController.text, image!.path);
     if (image == null) return;
   }
@@ -69,12 +70,13 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                   onTap: () {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
                       DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(
-                          DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyName"]!,
                           _postTitleController.text, _postDescriptionController.text,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
-                          DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,
                           "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}:${DateTime.now().hour}:${DateTime.now().minute}",
-                          DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl!);
+                          DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl ?? ""
+                      );
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
                     }
                   },

@@ -10,7 +10,7 @@ class SafeConnexNewsDatabase{
       .ref("news");
 
   List<Map<String, dynamic>> newsData = [];
-  Future<void> createNews(String agency, String title, String body, String sender, String role, String date, String imagePath) async
+  Future<void> createNews(String agency, String title, String body, String sender, String role, String date, [String? imagePath]) async
   {
     final postData = {
       'agency': agency,
@@ -32,23 +32,57 @@ class SafeConnexNewsDatabase{
     print("Database Update Done");
   }
 
+  Future<void> editNews(String postKey, String title, String body, String date, [String? imagePath]) async {
+    final postData = {
+      'title': title,
+      'body': body,
+      'date': date,
+      'imagePath': imagePath
+    };
+
+    await _dbNewsReference.update(postData);
+  }
+
+  Future<void> deleteNews(String postKey) async {
+    await _dbNewsReference.child(postKey).remove();
+  }
+
   Future<void> listenOnTheNews() async
   {
     _dbNewsReference.onValue.listen((DatabaseEvent event) {
       final news = event.snapshot;
       //print(news);
-      for(var post in news.children){
-        //print(post.value);
-        newsData.add({
-          "role": post.child("role").value,
-          "agency": post.child("agency").value,
-          "sender": post.child("sender").value,
-          "body": post.child("body").value,
-          "title": post.child("title").value,
-          "date": post.child("date").value,
-          "imagePath": post.child("imagePath").value
-        });
+      if(newsData.isEmpty){
+        for(var post in news.children){
+          //print(post.value);
+          newsData.add({
+            "postKey": post.key.toString(),
+            "role": post.child("role").value,
+            "agency": post.child("agency").value,
+            "sender": post.child("sender").value,
+            "body": post.child("body").value,
+            "title": post.child("title").value,
+            "date": post.child("date").value,
+            "imagePath": post.child("imagePath").value
+          });
+        }
+      }else{
+        newsData.clear();
+        for(var post in news.children){
+          //print(post.value);
+          newsData.add({
+            "postKey": post.key.toString(),
+            "role": post.child("role").value,
+            "agency": post.child("agency").value,
+            "sender": post.child("sender").value,
+            "body": post.child("body").value,
+            "title": post.child("title").value,
+            "date": post.child("date").value,
+            "imagePath": post.child("imagePath").value
+          });
+        }
       }
+
 
       print(newsData);
     });
