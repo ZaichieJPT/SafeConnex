@@ -10,6 +10,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_location_his
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
@@ -44,5 +45,7 @@ class DependencyInjector{
     locator.registerSingleton<SafeConnexLocationHistory>(SafeConnexLocationHistory());
 
     locator.registerSingleton<SafeConnexNotificationDatabase>(SafeConnexNotificationDatabase());
+
+    locator.registerSingleton<SafeConnexReportsDatabase>(SafeConnexReportsDatabase());
   }
 }

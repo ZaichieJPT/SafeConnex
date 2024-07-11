@@ -10,6 +10,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authenticati
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
 
@@ -18,12 +19,14 @@ class SOSSentTemplate extends StatefulWidget {
   final Color? colorBG;
   final Color buttonColor;
   final Icon pageIcon;
+  final String agencyType;
 
   const SOSSentTemplate({
     super.key,
     required this.pageTitle,
     required this.buttonColor,
     required this.pageIcon,
+    required this.agencyType,
     this.colorBG,
   });
 
@@ -385,8 +388,9 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                             DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
                             DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
                             DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
-
+                            widget.agencyType
                         );
+                        DependencyInjector().locator<SafeConnexReportsDatabase>().setCancelledSOSReports();
                         DependencyInjector().locator<SafeConnexNotification>().getNotificationTokens();
                         for(var person in DependencyInjector().locator<SafeConnexNotification>().notificationTokenList){
                           DependencyInjector().locator<SafeConnexNotification>().sendNotification(

@@ -13,7 +13,7 @@ class SafeConnexSafetyScoringDatabase{
   List<Map<String, dynamic>> safetyScoreData = [];
   Map<String, dynamic> safetyScoreToUpdate = {};
   String? geocodedStreet;
-  bool? isMapSwitched;
+  bool? isMapSwitched = true;
 
   Future<void> getGeocode(LatLng location) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(location.latitude, location.longitude);

@@ -6,6 +6,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_datab
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/agency_home_appbar.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
@@ -31,6 +32,7 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
     DependencyInjector().locator<SafeConnexNotificationDatabase>().getNotificationsFromDatabase(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
     DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
+    DependencyInjector().locator<SafeConnexReportsDatabase>().getReportCounts();
   }
 
   @override

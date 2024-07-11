@@ -12,6 +12,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_datab
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_agencysent_template.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
@@ -80,6 +81,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
               DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
               widget.agencyType
           );
+          DependencyInjector().locator<SafeConnexReportsDatabase>().setSOSReports();
           DependencyInjector().locator<SafeConnexNotification>().getNotificationTokens();
           for(var person in DependencyInjector().locator<SafeConnexNotification>().notificationTokenList){
             DependencyInjector().locator<SafeConnexNotification>().sendNotification(
@@ -98,6 +100,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                       pageTitle: widget.pageTitle,
                       buttonColor: widget.buttonColor,
                       pageIcon: widget.pageIcon!,
+                      agencyType: widget.agencyType!,
                       colorBG: widget.colorBG,
                     ),
             ),

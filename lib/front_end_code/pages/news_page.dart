@@ -9,6 +9,7 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authenticati
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_bottom_nav_bar.dart';
 
@@ -1097,6 +1098,8 @@ class _NewsPageState extends State<NewsPage> {
                                                                       DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
                                                                       DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyType"]!
                                                                     );
+
+                                                                    DependencyInjector().locator<SafeConnexReportsDatabase>().setContactInfoRequest();
                                                                   },
                                                                   child: Text(
                                                                     'More Contact Info Request',

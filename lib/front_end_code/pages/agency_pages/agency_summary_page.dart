@@ -5,6 +5,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_reports_database.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_contactrequest_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_soscancel_template.dart';
 import 'package:safeconnex/front_end_code/components/agency_components/notiftype_sossent_template.dart';
@@ -260,7 +262,7 @@ class _AgencySummaryPageState extends State<AgencySummaryPage> {
                                   x: 0,
                                   barRods: [
                                     BarChartRodData(
-                                      toY: 25,
+                                      toY: double.parse(DependencyInjector().locator<SafeConnexReportsDatabase>().sosCount!.toString()),
                                       width: width * 0.2,
                                       borderRadius: BorderRadius.zero,
                                       color: const Color.fromARGB(
@@ -272,7 +274,7 @@ class _AgencySummaryPageState extends State<AgencySummaryPage> {
                                   x: 1,
                                   barRods: [
                                     BarChartRodData(
-                                      toY: 16,
+                                      toY: double.parse(DependencyInjector().locator<SafeConnexReportsDatabase>().canceledSOSCount!.toString()),
                                       width: width * 0.2,
                                       borderRadius: BorderRadius.zero,
                                       color: const Color.fromARGB(
@@ -284,7 +286,7 @@ class _AgencySummaryPageState extends State<AgencySummaryPage> {
                                   x: 2,
                                   barRods: [
                                     BarChartRodData(
-                                      toY: 33,
+                                      toY: double.parse(DependencyInjector().locator<SafeConnexReportsDatabase>().contactInfoCount!.toString()),
                                       width: width * 0.2,
                                       borderRadius: BorderRadius.zero,
                                       color: const Color.fromARGB(
