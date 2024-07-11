@@ -156,6 +156,7 @@ class SafeConnexAgencyDatabase{
     if(agencySnapshot.exists){
       if(agencyData.isEmpty){
         agencyData = {
+          "agencyType": (selectedAgencySplit[0] + selectedAgencySplit[1]).toString(),
           "agencyName": agencySnapshot.key.toString(),
           "agencyLocation": agencySnapshot.child("agencyLocation").value.toString(),
           "agencyPhoneNumber": agencySnapshot.child("agencyPhoneNumber").value.toString(),
@@ -168,6 +169,7 @@ class SafeConnexAgencyDatabase{
       }else if(agencyData.isNotEmpty){
         agencyData.clear();
         agencyData = {
+          "agencyType": (selectedAgencySplit[0] + selectedAgencySplit[1]).toString(),
           "agencyName": agencySnapshot.key.toString(),
           "agencyLocation": agencySnapshot.child("agencyLocation").value.toString(),
           "agencyPhoneNumber": agencySnapshot.child("agencyPhoneNumber").value.toString(),

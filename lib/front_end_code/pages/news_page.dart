@@ -3,9 +3,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_bottom_nav_bar.dart';
 
@@ -49,7 +52,7 @@ class _NewsPageState extends State<NewsPage> {
         _isMoreClicked.add(false);
         _isDeletePostConfirmed.add(false);
         _isLikePostTapped.add(false);
-        _isContactComplete.add(false);
+        //_isContactComplete.add(false);
       });
     }
     super.initState();
@@ -332,6 +335,42 @@ class _NewsPageState extends State<NewsPage> {
                           controller: _postScrollController,
                           itemCount: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData.length,
                           itemBuilder: (BuildContext context, int index) {
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyLocation"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyPhone"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyTelephone"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyEmail"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyFacebook"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
+                            if(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyWebsite"] == ""){
+                              _isContactComplete.add(false);
+                            }else{
+                              _isContactComplete.add(true);
+                            }
+
                             return Padding(
                               padding: EdgeInsets.symmetric(
                                 horizontal: width * 0.09,
@@ -508,7 +547,7 @@ class _NewsPageState extends State<NewsPage> {
                                                                   left: width *
                                                                       0.03),
                                                               child: Text(
-                                                                "Philippine National Police",
+                                                                DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agency"]!,
                                                                 textAlign:
                                                                 TextAlign
                                                                     .left,
@@ -589,10 +628,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                             0.025),
                                                                       ),
                                                                       message:
-                                                                      'Perez Blvd., Dagupan City',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyLocation"] ?? "",
                                                                       child:
                                                                       Text(
-                                                                        'Perez Blvd., Dagupan City',
+                                                                        DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyLocation"] ?? "",
                                                                         textAlign:
                                                                         TextAlign.left,
                                                                         overflow:
@@ -673,10 +712,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                           0.025),
                                                                     ),
                                                                     message:
-                                                                    '09990989877',
+                                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyPhone"] ?? "",
                                                                     child:
                                                                     SelectableText(
-                                                                      '02-9087-900',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyPhone"] ?? "",
                                                                       textAlign:
                                                                       TextAlign
                                                                           .left,
@@ -755,10 +794,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                           0.025),
                                                                     ),
                                                                     message:
-                                                                    '02-9087-900',
+                                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyTelephone"] ?? "",
                                                                     child:
                                                                     SelectableText(
-                                                                      '02-9087-900',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyTelephone"] ?? "",
                                                                       textAlign:
                                                                       TextAlign
                                                                           .left,
@@ -837,10 +876,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                           0.025),
                                                                     ),
                                                                     message:
-                                                                    'pnp@gmail.com',
+                                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyEmail"] ?? "",
                                                                     child:
                                                                     SelectableText(
-                                                                      'pnp@gmail.com',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyEmail"] ?? "",
                                                                       textAlign:
                                                                       TextAlign
                                                                           .left,
@@ -919,10 +958,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                           0.025),
                                                                     ),
                                                                     message:
-                                                                    'www.facebook.com/pnpdagupan',
+                                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyFacebook"] ?? "",
                                                                     child:
                                                                     SelectableText(
-                                                                      'www.facebook.com/pnpdagupan',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyFacebook"] ?? "",
                                                                       textAlign:
                                                                       TextAlign
                                                                           .left,
@@ -1001,10 +1040,10 @@ class _NewsPageState extends State<NewsPage> {
                                                                           0.025),
                                                                     ),
                                                                     message:
-                                                                    'www.pnp.com',
+                                                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyWebsite"] ?? "",
                                                                     child:
                                                                     SelectableText(
-                                                                      'www.pnp.com',
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyWebsite"] ?? "",
                                                                       textAlign:
                                                                       TextAlign
                                                                           .left,
@@ -1047,26 +1086,39 @@ class _NewsPageState extends State<NewsPage> {
                                                                       width *
                                                                           0.01),
                                                                 ),
-                                                                child: Text(
-                                                                  'More Contact Info Request',
-                                                                  textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                                  style:
-                                                                  TextStyle(
-                                                                    fontFamily:
-                                                                    'OpunMai',
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                    fontSize:
-                                                                    11,
-                                                                    color: Color
-                                                                        .fromARGB(
-                                                                        255,
-                                                                        14,
-                                                                        46,
-                                                                        67),
+                                                                child: InkWell(
+                                                                  onTap: (){
+                                                                    print("Sent");
+                                                                    DependencyInjector().locator<SafeConnexNotificationDatabase>().sendNotificationToAgency(
+                                                                      3,
+                                                                      DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
+                                                                      DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!.trimRight(),
+                                                                      DependencyInjector().locator<SafeConnexAuthentication>().userData["age"]!,
+                                                                      DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
+                                                                      DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agencyType"]!
+                                                                    );
+                                                                  },
+                                                                  child: Text(
+                                                                    'More Contact Info Request',
+                                                                    textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                    style:
+                                                                    TextStyle(
+                                                                      fontFamily:
+                                                                      'OpunMai',
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                      fontSize:
+                                                                      11,
+                                                                      color: Color
+                                                                          .fromARGB(
+                                                                          255,
+                                                                          14,
+                                                                          46,
+                                                                          67),
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),

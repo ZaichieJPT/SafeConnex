@@ -21,10 +21,21 @@ class SafeConnexLocationHistory{
     geocodedStreet = placemarks[0].street;
   }
 
+  Future<void> deleteHistory(String userId) async {
+    DataSnapshot historySnapshot = await _dbLocationHistoryReference.child(userId).get();
+
+    String startingChild = (historySnapshot.children.first.key).toString();
+
+    if(historySnapshot.children.length > 10){
+      await _dbLocationHistoryReference.child(userId).child(startingChild).remove();
+    }
+  }
+
   Future<void> addDataToLocationHistory(String userId, DateTime time, String date) async {
     DataSnapshot historySnapshot = await _dbLocationHistoryReference.child(userId).get();
 
     String numberOfChild = (historySnapshot.children.length).toString();
+
 
     await _dbLocationHistoryReference.child(userId).child(numberOfChild).set({
       "location": geocodedStreet,

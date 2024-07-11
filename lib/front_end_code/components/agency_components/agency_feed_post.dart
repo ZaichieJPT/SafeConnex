@@ -37,6 +37,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
           return AgencyDeletePost(
             onDeleteTapped: _onDeleteConfirmed,
             postIndex: _currentPostIndex,
+            postKey: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[_currentPostIndex]["postKey"],
           );
         },
       );

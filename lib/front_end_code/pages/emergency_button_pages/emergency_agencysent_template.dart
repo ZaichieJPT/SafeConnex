@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_firestore.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/emergency_button_components/emergency_ripple_animation.dart';
 import 'package:safeconnex/front_end_code/pages/emergency_button_pages/emergency_sent_page.dart';
@@ -385,6 +387,17 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                             DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
 
                         );
+                        DependencyInjector().locator<SafeConnexNotification>().getNotificationTokens();
+                        for(var person in DependencyInjector().locator<SafeConnexNotification>().notificationTokenList){
+                          DependencyInjector().locator<SafeConnexNotification>().sendNotification(
+                              person,
+                              "${DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName} needs help!",
+                              "Please send help!!",
+                              {
+                                "location": DependencyInjector().locator<SafeConnexGeolocation>().geocodedStreet,
+                              });
+                        }
+
                         Navigator.pop(context);
                       }
                     },

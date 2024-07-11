@@ -48,7 +48,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
 
-  static Timer _locationHistoryTimer = Timer.periodic(Duration(seconds: 30), (timer){
+  static Timer _locationHistoryTimer = Timer.periodic(Duration(minutes: 10), (timer){
     DependencyInjector().locator<SafeConnexLocationHistory>().addDataToLocationHistory(
         DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
         DateTime.now(),
@@ -157,6 +157,7 @@ class UserMapProviderState extends State<UserMapProvider> {
     // TODO: implement initState
     super.initState();
     DependencyInjector().locator<SafeConnexGeolocation>().getCoordinates();
+    DependencyInjector().locator<SafeConnexLocationHistory>().deleteHistory(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _geofenceService.addGeofenceStatusChangeListener(_onGeofenceStatusChanged);
       _geofenceService.addLocationChangeListener(_onLocationChanged);
@@ -279,7 +280,7 @@ class UserMapProviderState extends State<UserMapProvider> {
       addGeolocationMarker(index);
     }
 
-    //_locationHistoryTimer;
+    _locationHistoryTimer;
 
     /*Timer.periodic(Duration(minutes: 1), (timer){
       print(timer);

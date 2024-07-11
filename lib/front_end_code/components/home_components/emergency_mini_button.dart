@@ -101,7 +101,9 @@ class _EMGMiniButtonState extends State<EMGMiniButton> {
                   ),
                 );
               }else{
-                Navigator.push(context, MaterialPageRoute(builder: (context) => InitialPinDialog()));
+                if(DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin == null || DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!.length < 4){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => InitialPinDialog()));
+                }
               }
             },
             icon: Icon(

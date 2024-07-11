@@ -4,15 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 
 class AgencyDeletePost extends StatefulWidget {
   final Function onDeleteTapped;
   int postIndex;
+  String postKey;
 
   AgencyDeletePost({
     super.key,
     required this.onDeleteTapped,
     required this.postIndex,
+    required this.postKey,
   });
 
   @override
@@ -163,6 +167,7 @@ class _AgencyDeletePostState extends State<AgencyDeletePost> {
                                 widget.onDeleteTapped(
                                     isDeleteConfirmed, widget.postIndex);
                               });
+                              DependencyInjector().locator<SafeConnexNewsDatabase>().deleteNews(widget.postKey);
                               Navigator.of(context).pop();
                             },
                             style: ButtonStyle(

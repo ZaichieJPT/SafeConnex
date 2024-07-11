@@ -71,6 +71,13 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
                       DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyName"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyType"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyLocation"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyPhoneNumber"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyTelephoneNumber"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyEmailAddress"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["facebookLink"]!,
+                          DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyWebsite"]!,
                           _postTitleController.text, _postDescriptionController.text,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,

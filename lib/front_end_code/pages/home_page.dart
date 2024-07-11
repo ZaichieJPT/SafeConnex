@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
 import 'package:safeconnex/front_end_code/components/home_components/emergency_mini_button.dart';
 import 'package:safeconnex/front_end_code/components/home_components/home_app_bar.dart';
@@ -77,6 +78,8 @@ class _HomePageState extends State<HomePage> {
     if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"){
       DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleData(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
     }
+    DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
+    DependencyInjector().locator<SafeConnexAuthentication>().getEmergencyPin();
     super.initState();
   }
 

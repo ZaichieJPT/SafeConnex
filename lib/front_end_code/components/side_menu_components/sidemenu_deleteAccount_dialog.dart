@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
+import 'package:safeconnex/front_end_code/components/side_menu_components/sidemenu_deleteAccount_passdialog.dart';
 
 class DeleteAccountDialog extends StatefulWidget {
   final double height;
@@ -21,7 +22,7 @@ class DeleteAccountDialog extends StatefulWidget {
 
 class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
   final TextEditingController feedbackController = TextEditingController();
-  SafeConnexAuthentication authentication = SafeConnexAuthentication();
+  //SafeConnexAuthentication authentication = SafeConnexAuthentication();
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +162,7 @@ class _DeleteAccountDialogState extends State<DeleteAccountDialog> {
                               heightFactor: 0.7,
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Navigator.pop(context, true);
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => DeleteDialogPassField(height: widget.height, width: widget.width,)));
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(

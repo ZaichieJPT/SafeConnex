@@ -10,10 +10,19 @@ class SafeConnexNewsDatabase{
       .ref("news");
 
   List<Map<String, dynamic>> newsData = [];
-  Future<void> createNews(String agency, String title, String body, String sender, String role, String date, [String? imagePath]) async
+  Future<void> createNews(String agency, String agencyType, String agencyLocation,
+  String agencyPhone, String agencyTelephone, String agencyEmail, String agencyFacebook,
+      String agencyWebsite, String title, String body, String sender, String role, String date, [String? imagePath]) async
   {
     final postData = {
       'agency': agency,
+      'agencyType': agencyType,
+      "agencyLocation": agencyLocation,
+      "agencyPhone": agencyPhone,
+      "agencyTelephone": agencyTelephone,
+      "agencyEmail": agencyEmail,
+      "agencyFacebook": agencyFacebook,
+      "agencyWebsite": agencyWebsite,
       'title': title,
       'body': body,
       'sender': sender,
@@ -57,6 +66,13 @@ class SafeConnexNewsDatabase{
           //print(post.value);
           newsData.add({
             "postKey": post.key.toString(),
+            "agencyType": post.child("agencyType").value,
+            "agencyLocation": post.child("agencyLocation").value,
+            "agencyPhone": post.child("agencyPhone").value,
+            "agencyTelephone": post.child("agencyTelephone").value,
+            "agencyEmail": post.child("agencyEmail").value,
+            "agencyFacebook": post.child("agencyFacebook").value,
+            "agencyWebsite": post.child("agencyWebsite").value,
             "role": post.child("role").value,
             "agency": post.child("agency").value,
             "sender": post.child("sender").value,
@@ -70,8 +86,16 @@ class SafeConnexNewsDatabase{
         newsData.clear();
         for(var post in news.children){
           //print(post.value);
+          //print(post.value);
           newsData.add({
             "postKey": post.key.toString(),
+            "agencyType": post.child("agencyType").value,
+            "agencyLocation": post.child("agencyLocation").value,
+            "agencyPhone": post.child("agencyPhone").value,
+            "agencyTelephone": post.child("agencyTelephone").value,
+            "agencyEmail": post.child("agencyEmail").value,
+            "agencyFacebook": post.child("agencyFacebook").value,
+            "agencyWebsite": post.child("agencyWebsite").value,
             "role": post.child("role").value,
             "agency": post.child("agency").value,
             "sender": post.child("sender").value,

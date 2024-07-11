@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_notification_database.dart';
@@ -29,6 +30,7 @@ class _AgencyHomePageState extends State<AgencyHomePage> {
     super.initState();
     DependencyInjector().locator<SafeConnexNotificationDatabase>().getNotificationsFromDatabase(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
     DependencyInjector().locator<SafeConnexNewsDatabase>().listenOnTheNews();
+    DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
   }
 
   @override
