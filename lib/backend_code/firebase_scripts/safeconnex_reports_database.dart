@@ -8,6 +8,11 @@ class SafeConnexReportsDatabase{
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("reports");
 
+  DatabaseReference _dbNotificationReference = FirebaseDatabase.instanceFor(
+      app: FirebaseInit.firebaseApp,
+      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
+      .ref("notification_data");
+
   int? sosCount = 0;
   int? canceledSOSCount = 0;
   int? contactInfoCount = 0;
@@ -64,6 +69,16 @@ class SafeConnexReportsDatabase{
       await _dbReportsReference.child("Contact_Info_Request").set({
         "count": 1,
       });
+    }
+  }
+
+  Future<void> getSortedNotification() async {
+    DataSnapshot notificationData = await _dbNotificationReference.get();
+
+    for(var users in notificationData.children){
+      for(var notifications in users.children){
+        print(notifications);
+      }
     }
   }
 }

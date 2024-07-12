@@ -201,7 +201,7 @@ class _AgencyFeedProfileState extends State<AgencyFeedProfile> {
                                           )
                                         : Text(
                                             _agencyNameController.text.isEmpty
-                                                ? DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]!
+                                                ? DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyName"]!
                                                 : _agencyNameController.text,
                                             overflow: TextOverflow.ellipsis,
                                             style: TextStyle(

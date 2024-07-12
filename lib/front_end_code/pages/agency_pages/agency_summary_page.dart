@@ -73,6 +73,13 @@ class _AgencySummaryPageState extends State<AgencySummaryPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    DependencyInjector().locator<SafeConnexReportsDatabase>().getSortedNotification();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;

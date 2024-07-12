@@ -401,8 +401,7 @@ class _SOSSentTemplateState extends State<SOSSentTemplate> {
                                 "location": DependencyInjector().locator<SafeConnexGeolocation>().geocodedStreet,
                               });
                         }
-
-                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, "/home");
                       }
                     },
                     height: height * 0.045,

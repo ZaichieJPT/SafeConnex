@@ -402,7 +402,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                                 width: width,
                                                 //color: Colors.cyan,
                                                 child: Text(
-                                                  DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["role"],
+                                                  "${DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["role"]} at ${DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["agency"]}",
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   textAlign: TextAlign.left,

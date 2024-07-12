@@ -231,43 +231,69 @@ class SafeConnexAuthentication{
   }
 
   Future<void> loginInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    try{
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken // this is the universal token used to auto login
-    );
+      final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken // this is the universal token used to auto login
+      );
 
-    UserCredential currentCredential = await authHandler.signInWithCredential(credential);
-    currentUser = currentCredential.user!;
+      UserCredential currentCredential = await authHandler.signInWithCredential(credential);
+      currentUser = currentCredential.user!;
 
-    DataSnapshot credentialSnapshot = await _dbUserReference.child(currentUser!.uid).get();
+      DataSnapshot credentialSnapshot = await _dbUserReference.child(currentUser!.uid).get();
 
-    if(credentialSnapshot.exists == false){
-      await _dbUserReference.child(currentUser!.uid).set
-        ({
-        "birthday": "01-01-1999",
-        "role": "user"
-      });
-    }
-
-    await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
-    await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
-    await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
-    await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
-      if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
-        DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
-        DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
-        DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
-        DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
+      if(credentialSnapshot.exists == false){
+        await _dbUserReference.child(currentUser!.uid).set
+          ({
+          "birthday": "01-01-1999",
+          "role": "user"
+        });
       }
-    });
-    await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
-    await getAgencyData();
-    if(authAgencyData["role"] == "Agency"){
-      DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
+
+      await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
+      await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+      await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
+        if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
+          DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
+          DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
+          DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
+        }
+      });
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
+      await getAgencyData();
+      if(authAgencyData["role"] == "Agency"){
+        DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
+      }
     }
+    // Catch the error thrown by the function
+    on FirebaseAuthException catch(exception){
+      switch (exception.code) {
+        case "account-exists-with-different-credential":
+          loginException = "Account already in use";
+          print(loginException);
+        case "user-disabled":
+          loginException = "User has been banned";
+          print(loginException);
+        case "operation-not-allowed":
+          loginException = "Email has been banned";
+          print(loginException);
+        case "wrong-password":
+          loginException = "Email and Password do not match";
+          print(loginException);
+        case "invalid-credential":
+          loginException = "Credential not Valid";
+          print(loginException);
+        case "":
+          loginException = "";
+          print(loginException);
+      }
+    }
+
   }
 
   Future<void> forgotUserPassword(String email) async {
@@ -313,6 +339,9 @@ class SafeConnexAuthentication{
   {
     await authHandler.signOut();
     currentUser = null;
+    DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.clear();
+    DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue.clear();
+    DependencyInjector().locator<SafeConnexCircleDatabase>().circleUsersNames.clear();
   }
 
   Future<void> changePassword (String oldPassword, String newPassword) async {

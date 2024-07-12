@@ -156,7 +156,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                                     width: width,
                                     //color: Colors.green,
                                     child: Text(
-                                      '${DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyRole"]} at ${DependencyInjector().locator<SafeConnexAuthentication>().authAgencyData["agencyName"]}',
+                                      '${DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]} at ${DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyName"]}',
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
