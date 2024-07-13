@@ -305,25 +305,25 @@ class _HomePageState extends State<HomePage> {
                                       //   },
                                       // );
 
-                                      showDialog(
+                                      /*showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return EmergencyReceivedDialog();
                                         },
-                                      );
+                                      );*/
 
-                                      // Navigator.of(context).push(
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => CountdownTemplate(
-                                      //       pageTitle: 'EMERGENCY SOS',
-                                      //       buttonColor: Colors.red.shade400,
-                                      //       fontColor: Colors.red.shade900,
-                                      //       PINColor: Colors.yellow,
-                                      //       colorBG: Colors.white,
-                                      //       SOSType: 'General',
-                                      //     ),
-                                      //   ),
-                                      // );
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => CountdownTemplate(
+                                            pageTitle: 'EMERGENCY SOS',
+                                            buttonColor: Colors.red.shade400,
+                                            fontColor: Colors.red.shade900,
+                                            PINColor: Colors.yellow,
+                                            colorBG: Colors.white,
+                                            SOSType: 'General',
+                                          ),
+                                        ),
+                                      );
                                       buttonScale_2 = 0;
                                     }
                                   },

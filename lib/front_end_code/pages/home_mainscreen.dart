@@ -68,7 +68,6 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {});
   }
 
   @override

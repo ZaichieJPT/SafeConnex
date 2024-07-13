@@ -41,6 +41,7 @@ class _LocationHistoryState extends State<LocationHistory> {
 
   final List<Map<String, String>> _locationHistory2 = [
     {
+
       'location': 'At Gym',
       'time': '8:05 am',
       'date': 'June 12, 2024',

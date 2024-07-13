@@ -66,10 +66,4 @@ class SafeConnexLocationHistory{
       }
     }
   }
-
-  disposableFunction(){
-    Future.delayed(Duration(seconds: 30), (){
-      print("disposable");
-    });
-  }
 }

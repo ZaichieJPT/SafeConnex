@@ -332,7 +332,7 @@ class SOSSentPage extends StatelessWidget {
                         DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
                         agencyType
                       );
-                      Navigator.pop(context);
+                      Navigator.popAndPushNamed(context, "/home");
                     }
                   },
                   height: height * 0.045,

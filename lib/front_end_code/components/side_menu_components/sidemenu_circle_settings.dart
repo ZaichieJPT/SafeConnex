@@ -73,6 +73,12 @@ class _CircleSettingsState extends State<CircleSettings> {
     }
   }
 
+  void updateState(){
+    setState(() {
+
+    });
+  }
+
   @override
   void initState() {
     _roleController.text = 'Circle Creator';
@@ -88,7 +94,6 @@ class _CircleSettingsState extends State<CircleSettings> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SingleChildScrollView(
-        reverse: true,
         child: Container(
           height: widget.height,
           decoration: BoxDecoration(
@@ -346,6 +351,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                                 // Call a code that updates the current clicked ID
                                 memberId = currentCircleData['userIds'][index];
                                 print(memberId);
+                                print(memberName);
                               }
                             });
                           },
@@ -418,7 +424,7 @@ class _CircleSettingsState extends State<CircleSettings> {
               //REMOVE MEMBER BUTTON
               Flexible(
                 flex: 2,
-                child: DependencyInjector().locator<SafeConnexCircleDatabase>().currentRole == "Circle Creator" ? ElevatedButton(
+                child: DependencyInjector().locator<SafeConnexCircleDatabase>().currentRole == "Circle Creator" && memberId != DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid ? ElevatedButton(
                   onPressed: () {
                     //TOAST THAT WILL DISPLAY THAT THE MEMBER HAS BEEN REMOVED
                     if (memberName != '') {
@@ -651,6 +657,7 @@ class _CircleSettingsState extends State<CircleSettings> {
                           width: widget.width,
                           circleName: currentCircleData['circleName'],
                           circleCode: currentCircleData['circleCode'],
+                          callback: updateState,
                         );
                       },
                     );

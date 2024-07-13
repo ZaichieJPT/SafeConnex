@@ -48,7 +48,7 @@ class UserMapProviderState extends State<UserMapProvider> {
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
 
-  static Timer _locationHistoryTimer = Timer.periodic(Duration(minutes: 10), (timer){
+  static Timer _locationHistoryTimer = Timer.periodic(Duration(minutes: 15), (timer){
     DependencyInjector().locator<SafeConnexLocationHistory>().addDataToLocationHistory(
         DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
         DateTime.now(),

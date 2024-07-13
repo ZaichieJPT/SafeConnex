@@ -175,7 +175,7 @@ class SafeConnexCircleDatabase{
             memberNames.clear();
             for (int index = 0; index < circleData.child("members").children.length; index++){
               memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
-              userIds.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
+              userIds.add(circleData.child("members").children.elementAt(index).child("id").value.toString());
             }
             circleDataList.add({
               "circleName": circleData.child("circle_name").value,

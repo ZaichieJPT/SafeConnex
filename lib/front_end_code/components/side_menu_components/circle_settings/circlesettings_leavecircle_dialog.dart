@@ -13,6 +13,7 @@ class LeaveDialog extends StatefulWidget {
   final double width;
   final String? circleName;
   final String? circleCode;
+  final Function? callback;
 
   const LeaveDialog({
     super.key,
@@ -20,6 +21,7 @@ class LeaveDialog extends StatefulWidget {
     required this.width,
     this.circleName,
     this.circleCode,
+    this.callback
   });
 
   @override
@@ -191,6 +193,12 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                   setState(() {
                                     DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
                                     DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+                                    widget.callback;
+                                    if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isEmpty){
+                                      Navigator.popAndPushNamed(context, "/create_circle");
+                                    }else if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isNotEmpty){
+                                      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0]["circleCode"];
+                                    }
 
                                     Navigator.of(context).pop();
                                   });

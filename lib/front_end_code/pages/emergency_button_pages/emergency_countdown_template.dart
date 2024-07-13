@@ -432,7 +432,7 @@ class _CountdownTemplateState extends State<CountdownTemplate> {
                   child: MaterialButton(
                     onPressed: () {
                       if(pinNumber == DependencyInjector().locator<SafeConnexAuthentication>().emergencyPin!){
-                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, "/home");
                       }
                     },
                     height: height * 0.045,
