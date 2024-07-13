@@ -190,18 +190,22 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                     fullWidth: true,
                                   );
                                   // Circle leave Function
-                                  setState(() {
-                                    DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
-                                    DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
-                                    widget.callback;
-                                    if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isEmpty){
-                                      Navigator.popAndPushNamed(context, "/create_circle");
-                                    }else if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isNotEmpty){
-                                      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0]["circleCode"];
-                                    }
+                                  DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
+                                  widget.callback;
+                                  DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+                                  Navigator.of(context).pop();
+                                  //setState(() {
+                                  //
+                                  //
+                                  //  widget.callback;
+                                  //  if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isEmpty){
+                                  //    Navigator.popAndPushNamed(context, "/create_circle");
+                                  //  }else if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.isNotEmpty){
+                                  //    DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0]["circleCode"];
+                                  //  }
 
-                                    Navigator.of(context).pop();
-                                  });
+                                    //
+                                  //});
                                 },
                                 style: ButtonStyle(
                                   overlayColor: MaterialStateProperty.all(

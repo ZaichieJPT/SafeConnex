@@ -38,6 +38,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   String memberId = '';
   bool _locationStatus = false;
   bool _isMyRoleTapped = false;
+  Map<String, dynamic> currentCircleData = {};
   //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
   final List<Map<String, dynamic>> circleDataList = [
@@ -75,7 +76,13 @@ class _CircleSettingsState extends State<CircleSettings> {
 
   void updateState(){
     setState(() {
+      DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+      currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0];
+      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
 
+      if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length >= 1){
+        _previousCircle();
+      }
     });
   }
 
@@ -88,8 +95,12 @@ class _CircleSettingsState extends State<CircleSettings> {
   @override
   Widget build(BuildContext context) {
     //final currentCircleData = circleDataList[_currentCircleIndex];
-    final currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
-    DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
+
+    //currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
+    //DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
+    updateState();
+    print(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+    print(currentCircleData.toString());
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
