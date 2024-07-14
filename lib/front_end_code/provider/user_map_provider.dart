@@ -233,7 +233,7 @@ class UserMapProviderState extends State<UserMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl != null ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(color:Colors.white),
+                child: DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]['image'] != null ? Image.network(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue[index]["image"]) : Container(color:Colors.white),
               ),
             )
           ],

@@ -26,6 +26,8 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
 
+  LatLng? tapLocation;
+
   final _geofenceService = geofence.GeofenceService.instance.setup(
       interval: 5000,
       accuracy: 2000,
@@ -61,7 +63,7 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
           riskLevelBorderColor = Colors.red.shade500;
           break;
       }
-      Future.delayed(Duration(milliseconds: 2500), (){
+      Future.delayed(Duration(milliseconds: 400), (){
         addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
       });
     }
@@ -176,8 +178,8 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
                       options: MapOptions(
                           initialCenter: LatLng(16.0265, 120.3363),
                           initialZoom: 13.2,
-                          onMapReady: (){
-                            print("ready");
+                          onTap: (_, tapLocation){
+                            this.tapLocation = tapLocation;
                           }
                       ),
                       children: [

@@ -35,15 +35,21 @@ class SafeConnexGeolocation{
             for (var docs in event.docs){
               for (var index in DependencyInjector().locator<SafeConnexCircleDatabase>().locationCircleData){
                 if(index["id"] == docs.id){
-                  List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
-                  coordinatesData.add(
-                      {
-                        "userId": docs.id,
-                        "latitude": docs.data()["latitude"],
-                        "longitude": docs.data()["longitude"],
-                        "geocoded": placemarks[0].street
-                      }
-                  );
+                  for(var values in DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataValue){
+                    if(values["id"] == index["id"]){
+                      List<Placemark> placemarks = await placemarkFromCoordinates(docs.data()["latitude"], docs.data()["longitude"]);
+                      coordinatesData.add(
+                          {
+                            "userId": docs.id,
+                            "latitude": docs.data()["latitude"],
+                            "longitude": docs.data()["longitude"],
+                            "geocoded": placemarks[0].street,
+                            "image": values["image"]
+                          }
+                      );
+                    }
+
+                  }
                 }
               }
             }

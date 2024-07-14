@@ -13,7 +13,8 @@ class LeaveDialog extends StatefulWidget {
   final double width;
   final String? circleName;
   final String? circleCode;
-  final Function? callback;
+  final Function? circleListCallback;
+  final Function? circleSettingsCallback;
 
   const LeaveDialog({
     super.key,
@@ -21,7 +22,8 @@ class LeaveDialog extends StatefulWidget {
     required this.width,
     this.circleName,
     this.circleCode,
-    this.callback
+    this.circleSettingsCallback,
+    this.circleListCallback,
   });
 
   @override
@@ -191,8 +193,10 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                   );
                                   // Circle leave Function
                                   DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
-                                  widget.callback;
-                                  DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+                                  widget.circleListCallback!();
+                                  widget.circleSettingsCallback!();
+                                  print(widget.circleCode!);
+
                                   Navigator.of(context).pop();
                                   //setState(() {
                                   //

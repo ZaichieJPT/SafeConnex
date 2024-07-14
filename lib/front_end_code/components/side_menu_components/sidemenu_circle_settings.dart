@@ -18,11 +18,13 @@ import 'package:safeconnex/front_end_code/pages/circle_pages/circle_viewcode_pag
 class CircleSettings extends StatefulWidget {
   final double height;
   final double width;
+  final Function? circleListCallback;
 
   const CircleSettings({
     super.key,
     required this.height,
     required this.width,
+    this.circleListCallback,
   });
 
   @override
@@ -38,6 +40,8 @@ class _CircleSettingsState extends State<CircleSettings> {
   String memberId = '';
   bool _locationStatus = false;
   bool _isMyRoleTapped = false;
+
+  bool isLeaving = false;
   Map<String, dynamic> currentCircleData = {};
   //SafeConnexCircleDatabase circleDatabase = SafeConnexCircleDatabase();
 
@@ -75,14 +79,22 @@ class _CircleSettingsState extends State<CircleSettings> {
   }
 
   void updateState(){
+    print("called");
     setState(() {
+      isLeaving = true;
+      //DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.clear();
+      currentCircleData.clear();
       DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
-      currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0];
-      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
 
-      if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length >= 1){
-        _previousCircle();
+      if(_currentCircleIndex > 0){
+        _currentCircleIndex = 0;
+        currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[0];
       }
+      else if(_currentCircleIndex == 0 || DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.length > 1){
+        _currentCircleIndex = 1;
+        currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[1];
+      }
+      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
     });
   }
 
@@ -96,9 +108,12 @@ class _CircleSettingsState extends State<CircleSettings> {
   Widget build(BuildContext context) {
     //final currentCircleData = circleDataList[_currentCircleIndex];
 
-    //currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
-    //DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
-    updateState();
+    if(isLeaving == false){
+      currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
+      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
+      isLeaving = false;
+      print("left");
+    }
     print(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
     print(currentCircleData.toString());
 
@@ -664,11 +679,13 @@ class _CircleSettingsState extends State<CircleSettings> {
                       context: context,
                       builder: (BuildContext context) {
                         return LeaveDialog(
+                          key: widget.key,
                           height: widget.height,
                           width: widget.width,
                           circleName: currentCircleData['circleName'],
                           circleCode: currentCircleData['circleCode'],
-                          callback: updateState,
+                          circleSettingsCallback: updateState,
+                          circleListCallback: widget.circleListCallback,
                         );
                       },
                     );

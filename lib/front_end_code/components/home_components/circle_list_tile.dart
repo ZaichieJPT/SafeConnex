@@ -12,10 +12,10 @@ class CircleListTile extends StatefulWidget {
   });
 
   @override
-  State<CircleListTile> createState() => _CircleListTileState();
+  State<CircleListTile> createState() => CircleListTileState();
 }
 
-class _CircleListTileState extends State<CircleListTile> {
+class CircleListTileState extends State<CircleListTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(

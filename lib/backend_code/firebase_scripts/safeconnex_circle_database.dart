@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_storage.dart';
 
 /// SafeConnex Database System using the Firebase API
 class SafeConnexCircleDatabase{
@@ -66,8 +67,8 @@ class SafeConnexCircleDatabase{
       "name": DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName,
       "role": 'Circle Creator',
       "email": DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.email,
-      "phone": "1",
-      //"image": FirebaseProfileStorage.imageUrl
+      "phone": DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"],
+      "image": DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl
     });
 
     // Adds a list of the Circles to the User database
@@ -91,8 +92,8 @@ class SafeConnexCircleDatabase{
       "circle_name": circleToJoin["circle_name"],
       "circle_code": circleToJoin["circle_code"],
       "email": DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.email,
-      "phone": "",
-      //"image": FirebaseProfileStorage.imageUrl
+      "phone": DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"],
+      "image": DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl
     });
 
     // Adds the circle to the Users Circle lists
@@ -217,29 +218,29 @@ class SafeConnexCircleDatabase{
   Future<void> getCircleList(String userId) async {
     DataSnapshot snapshot = await _dbUserReference.child(userId).child("circle_list").get();
 
-    if(snapshot.children.isNotEmpty){
-      if(circleList.isEmpty){
-        for(var circles in snapshot.children){
-          circleList.add({
-            "circle_code": circles.key.toString(),
-            "circle_name": circles.child("circleName").value.toString()
-          });
-        }
+    if(circleList.isEmpty){
+      print("Empty Called");
+      for(var circles in snapshot.children){
+        circleList.add({
+          "circle_code": circles.key.toString(),
+          "circle_name": circles.child("circleName").value.toString()
+        });
       }
-      else{
-        circleList.clear();
-        for(var circles in snapshot.children){
-          circleList.add({
-            "circle_code": circles.key,
-            "circle_name": circles.child("circleName").value
-          });
-        }
-      }
-      currentCircleCode = circleList[0]["circle_code"].toString();
-      print(currentCircleCode);
-    }else{
-      currentCircleCode = "No Circle";
     }
+    else{
+      print("With Content Called");
+      circleList.clear();
+      print("Empty Circle List: $circleList");
+      for(var circles in snapshot.children){
+        circleList.add({
+          "circle_code": circles.key,
+          "circle_name": circles.child("circleName").value
+        });
+      }
+    }
+    print("Circle List $circleList");
+    currentCircleCode = circleList[0]["circle_code"].toString();
+    print(currentCircleCode);
   }
 
   Future<void> getCircleDataForLocation(String circleCode) async {
@@ -339,9 +340,11 @@ class SafeConnexCircleDatabase{
         await _dbCircleReference.child(circleCode).remove();
         await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
       }
+    }else{
+      print("Circle Removed");
+      await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
+      await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
     }
-    await _dbCircleReference.child(circleCode).child("members").child(userId).remove();
-    await _dbUserReference.child(userId).child("circle_list").child(circleCode).remove();
   }
 
   Future<void> removeFromCircle(String userId, String circleCode) async {

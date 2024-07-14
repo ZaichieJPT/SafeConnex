@@ -10,12 +10,14 @@ class HomeSideMenu extends StatefulWidget {
   final double height;
   final double width;
   final double topPadding;
+  final Function? circleListCallback;
 
   const HomeSideMenu({
     super.key,
     required this.height,
     required this.width,
     required this.topPadding,
+    this.circleListCallback
   });
 
   @override
@@ -158,6 +160,7 @@ class _HomeSideMenuState extends State<HomeSideMenu> {
                   ? CircleSettings(
                 height: widget.height,
                 width: widget.width,
+                circleListCallback: widget.circleListCallback,
               )
                   : EmergencyManagement(
                 height: widget.height,

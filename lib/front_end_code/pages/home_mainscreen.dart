@@ -33,6 +33,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedMenuIndex = 0;
   bool _isOverlayDisplayed = true;
 
+  GlobalKey<HomePageState> homePageKey = GlobalKey<HomePageState>(); // key to the homepage
+
   _onTabTapped(int index) {
     setState(() {
       _selectedTabIndex = index;
@@ -70,6 +72,10 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
+  void updateHomePage(){
+    homePageKey.currentState!.updateAppBarState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.sizeOf(context).height;
@@ -83,12 +89,14 @@ class _MainScreenState extends State<MainScreen> {
         height: height,
         width: width,
         topPadding: topPadding,
+        circleListCallback: updateHomePage,
       ),
       body: _selectedTabIndex == 0 || _selectedTabIndex == 1
           ? Stack(
         alignment: Alignment.center,
         children: [
           HomePage(
+            key: homePageKey,
             height: height,
             width: width,
           ),

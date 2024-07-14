@@ -28,10 +28,10 @@ class HomePage extends StatefulWidget {
   });
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePage> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   Timer? _timer;
   final ScrollController _scrollController = ScrollController();
   bool _toggle = false;
@@ -44,6 +44,8 @@ class _HomePageState extends State<HomePage> {
   Alignment alignment4 = Alignment(0.0, 1.0);
 
   final MapController mapController = MapController();
+
+  GlobalKey<HomeAppBarState> homeAppBarKey = GlobalKey<HomeAppBarState>();
 
   toggleButtons() {
     setState(() {
@@ -84,6 +86,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  void updateAppBarState(){
+    homeAppBarKey.currentState!.updateState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -93,6 +99,7 @@ class _HomePageState extends State<HomePage> {
 
         //APP BAR
         HomeAppBar(
+          key: homeAppBarKey,
           height: widget.height,
           width: widget.width,
           scrollController: _scrollController,
