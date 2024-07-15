@@ -12,7 +12,7 @@ class SafeConnexNewsDatabase{
   List<Map<String, dynamic>> newsData = [];
   Future<void> createNews(String agency, String agencyType, String agencyLocation,
   String agencyPhone, String agencyTelephone, String agencyEmail, String agencyFacebook,
-      String agencyWebsite, String title, String body, String sender, String role, String date, [String? imagePath]) async
+      String agencyWebsite, String title, String body, String sender, String role, DateTime date, [String? imagePath]) async
   {
     final postData = {
       'agency': agency,
@@ -58,12 +58,13 @@ class SafeConnexNewsDatabase{
 
   Future<void> listenOnTheNews() async
   {
-    _dbNewsReference.onValue.listen((DatabaseEvent event) {
+    _dbNewsReference.orderByChild("date").onValue.listen((DatabaseEvent event) {
       final news = event.snapshot;
       //print(news);
       if(newsData.isEmpty){
         for(var post in news.children){
           //print(post.value);
+          
           newsData.add({
             "postKey": post.key.toString(),
             "agencyType": post.child("agencyType").value,

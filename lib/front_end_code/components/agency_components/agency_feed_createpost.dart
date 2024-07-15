@@ -69,6 +69,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                 child: InkWell(
                   onTap: () {
                     if(_postDescriptionController.text.isNotEmpty && _postTitleController.text.isNotEmpty){
+                      print("news Created");
                       DependencyInjector().locator<SafeConnexNewsDatabase>().createNews(
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyName"]!,
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyType"]!,
@@ -81,7 +82,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                           _postTitleController.text, _postDescriptionController.text,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,
-                          "${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}:${DateTime.now().hour}:${DateTime.now().minute}",
+                          DateTime.now(),
                           DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl ?? ""
                       );
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));
