@@ -89,6 +89,7 @@ class _AgencyEditPostState extends State<AgencyEditPost> {
                   onTap: () {
                     widget.onEditPostSelected(false, '', '',);
                     // Put something here
+
                   },
                   child: Image.asset(
                     'assets/images/agency_app/agency_createpost_icon.png',

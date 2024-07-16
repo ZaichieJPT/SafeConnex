@@ -48,7 +48,8 @@ class UserMapProviderState extends State<UserMapProvider> {
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
 
-  static Timer _locationHistoryTimer = Timer.periodic(Duration(minutes: 15), (timer){
+  //Used to be static
+  final Timer _locationHistoryTimer = Timer.periodic(Duration(minutes: 15), (timer){
     DependencyInjector().locator<SafeConnexLocationHistory>().addDataToLocationHistory(
         DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid,
         DateTime.now(),
@@ -142,6 +143,7 @@ class UserMapProviderState extends State<UserMapProvider> {
     print('isLocationServicesEnabled: $status');
   }
 
+
   void _onError(error){
     final errorCode = geofence.getErrorCodesFromError(error);
     if (errorCode == null){
@@ -233,7 +235,7 @@ class UserMapProviderState extends State<UserMapProvider> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                 ),
-                child: DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl != null ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(color:Colors.white),
+                child: DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]["image"] != null ? Image.network(DependencyInjector().locator<SafeConnexGeolocation>().coordinatesData[index]["image"]!) : Container(color:Colors.white),
               ),
             )
           ],

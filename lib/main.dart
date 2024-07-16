@@ -18,6 +18,8 @@ import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'front_end_code/pages/loading_screen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseInit.rootFirebase;
@@ -93,7 +95,7 @@ class _MyAppState extends State<MyApp> {
         "/create_circle": (context) => CirclePage(),
         "/join_circle": (context) => JoinCirclePage(),
         "/changePassword": (context) => PasswordChange(),
-        "/temp": (context) => UserMapProvider(),
+        "/loading_screen": (context) => CircularLoadingScreen(),
         "/temp2": (context) => GeofencingPage(),
         "/temp3": (context) => CarouseSliderComponent(),
       },

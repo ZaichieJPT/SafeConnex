@@ -4,7 +4,7 @@ import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 
 class SafeConnexNewsDatabase{
-  DatabaseReference _dbNewsReference = FirebaseDatabase.instanceFor(
+  final DatabaseReference _dbNewsReference = FirebaseDatabase.instanceFor(
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("news");
@@ -12,7 +12,7 @@ class SafeConnexNewsDatabase{
   List<Map<String, dynamic>> newsData = [];
   Future<void> createNews(String agency, String agencyType, String agencyLocation,
   String agencyPhone, String agencyTelephone, String agencyEmail, String agencyFacebook,
-      String agencyWebsite, String title, String body, String sender, String role, DateTime date, [String? imagePath]) async
+      String agencyWebsite, String title, String body, String sender, String role, String date, [String? imagePath]) async
   {
     final postData = {
       'agency': agency,
@@ -37,8 +37,6 @@ class SafeConnexNewsDatabase{
     updates['/$newPostKey'] = postData;
 
     await _dbNewsReference.update(updates);
-
-    print("Database Update Done");
   }
 
   Future<void> editNews(String postKey, String title, String body, String date, [String? imagePath]) async {
@@ -50,6 +48,8 @@ class SafeConnexNewsDatabase{
     };
 
     await _dbNewsReference.update(postData);
+
+    print("News Edit Success");
   }
 
   Future<void> deleteNews(String postKey) async {

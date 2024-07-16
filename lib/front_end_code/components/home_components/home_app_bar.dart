@@ -73,8 +73,6 @@ class HomeAppBarState extends State<HomeAppBar> {
 
     setState(() {
       DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
-      circleCount = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.length;
-      print("Circle Count $circleCount");
     });
 
     ExpansionTileController _expansionController = ExpansionTileController();
@@ -319,7 +317,7 @@ class HomeAppBarState extends State<HomeAppBar> {
                                         controller: widget.scrollController,
                                         shrinkWrap: true,
                                         physics: const ClampingScrollPhysics(),
-                                        itemCount: circleCount,
+                                        itemCount: DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.length,
                                         itemBuilder: (context, index) {
                                           return CircleListTile(
                                             title: DependencyInjector().locator<SafeConnexCircleDatabase>()

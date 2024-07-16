@@ -248,8 +248,11 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               });
                                               //_isProfileEditable = !_isProfileEditable;
                                             } else {
+                                              DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
+                                              DependencyInjector().locator<SafeConnexAuthentication>().updateUserProfile(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!);
                                               _birthDate = DependencyInjector().locator<SafeConnexAuthentication>().userData["birthdate"].toString();
                                               _phoneNumber = DependencyInjector().locator<SafeConnexAuthentication>().userData["phoneNumber"].toString();
+                                              DependencyInjector().locator<SafeConnexAuthentication>().getUserProfile();
                                               _isProfileEditable =
                                               !_isProfileEditable;
                                             }
@@ -629,12 +632,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                                               255, 112, 144, 142),
                                           foregroundColor: Colors.white,
                                           radius: innerHeight * 0.155,
-                                          child: DependencyInjector().locator<SafeConnexProfileStorage>()
-                                              .imageUrl !=
+                                          child: DependencyInjector().locator<SafeConnexAuthentication>().userProfileLink !=
                                               null
-                                              ? Image.network(
-                                              DependencyInjector().locator<SafeConnexProfileStorage>()
-                                                  .imageUrl!)
+                                              ? Image.network(DependencyInjector().locator<SafeConnexAuthentication>().userProfileLink!)
                                               : Container(color: Colors.white),
                                         ),
                                       ),

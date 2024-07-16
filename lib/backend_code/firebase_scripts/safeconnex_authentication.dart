@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
@@ -22,24 +23,11 @@ class SafeConnexAuthentication{
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");
 
-  // Database Reference for the Agency Database
-  final DatabaseReference _dbAgencyReference = FirebaseDatabase.instanceFor(
-    //Keep the FirebaseInit or not?
-      app: FirebaseInit.firebaseApp,
-      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
-      .ref("agency");
-
-  // Database Reference for the Circle Database
-  final DatabaseReference _dbCircleReference = FirebaseDatabase.instanceFor(
-    //Keep the FirebaseInit or not?
-      app: FirebaseInit.firebaseApp,
-      databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
-      .ref("circle");
-
   User? currentUser;
   String? signUpException;
   String? loginException;
   String? emergencyPin;
+  String? userProfileLink;
   Map<String, String> userData = {};
   Map<String, dynamic> authAgencyData = {};
 
@@ -62,13 +50,18 @@ class SafeConnexAuthentication{
 
       String age = (DateTime.now().year - DateTime.parse(birthdate).year).toString();
 
+      final _profileRefs = FirebaseStorage.instance.ref().child("profile_pics");
+      final alternative_pic_male = _profileRefs.child("male_profile.png");
+      final networkImageAlternate = await alternative_pic_male.getDownloadURL();
+
       // Sets the values of the birthday and role in the database
       await _dbUserReference.child(currentCredential.user!.uid).set
         ({
         "birthday": birthdate,
         "role": "user",
         "age": age,
-        "phoneNumber": "000000000"
+        "phoneNumber": "000000000",
+        "profilePic": networkImageAlternate
       });
       currentUser = null;
       // Logs out the account after the data has been assigned to prevent auto login
@@ -168,6 +161,18 @@ class SafeConnexAuthentication{
     }
   }
 
+  Future<void> getUserProfile() async {
+    DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).get();
+
+    userProfileLink = snapshot.child("profilePic").value.toString();
+  }
+
+  Future<void> updateUserProfile(String profileLink) async {
+    await _dbUserReference.child(currentUser!.uid).update({
+      "profilePic": profileLink
+    });
+  }
+
   Future<void> getAgencyData() async {
     DataSnapshot snapshot = await _dbUserReference.child(currentUser!.uid).get();
 
@@ -184,8 +189,8 @@ class SafeConnexAuthentication{
 
       if(currentCredential.user!.emailVerified == true){
         currentUser = currentCredential.user!; //
-        await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
-        await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+        await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
+        await getUserProfile();
         await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
         await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
           if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
@@ -245,16 +250,22 @@ class SafeConnexAuthentication{
 
       DataSnapshot credentialSnapshot = await _dbUserReference.child(currentUser!.uid).get();
 
+      final _profileRefs = FirebaseStorage.instance.ref().child("profile_pics");
+      final alternative_pic_male = _profileRefs.child("male_profile.png");
+      final networkImageAlternate = await alternative_pic_male.getDownloadURL();
+
       if(credentialSnapshot.exists == false){
         await _dbUserReference.child(currentUser!.uid).set
           ({
           "birthday": "01-01-1999",
-          "role": "user"
+          "role": "user",
+          "profilePic": networkImageAlternate
         });
+      }else{
+        await getUserProfile();
       }
 
       await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
-      await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
@@ -304,8 +315,8 @@ class SafeConnexAuthentication{
     if(authHandler.currentUser != null){
       print("called");
       currentUser = authHandler.currentUser!;
-      await getUpdatedPhoneAndBirthday(currentUser!.uid); //
-      await DependencyInjector().locator<SafeConnexProfileStorage>().getProfilePicture(currentUser!.uid); ///
+      await getUpdatedPhoneAndBirthday(currentUser!.uid);
+      await getUserProfile();
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {

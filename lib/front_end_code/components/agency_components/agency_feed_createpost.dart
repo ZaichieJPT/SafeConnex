@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
@@ -82,7 +83,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                           _postTitleController.text, _postDescriptionController.text,
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,
-                          DateTime.now(),
+                          DateTime.now().toString(),
                           DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl ?? ""
                       );
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));

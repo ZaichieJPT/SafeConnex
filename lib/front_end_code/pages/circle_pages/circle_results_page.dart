@@ -106,7 +106,7 @@ class _CircleResultsPageState extends State<CircleResultsPage> {
                                   ),
                                   onPressed: () {
                                     DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                    Navigator.popAndPushNamed(context, "/home");
                                     //PageNavigator(context, MainScreen());
                                   },
                                 ),

@@ -193,11 +193,14 @@ class _LeaveDialogState extends State<LeaveDialog> {
                                   );
                                   // Circle leave Function
                                   DependencyInjector().locator<SafeConnexCircleDatabase>().leaveCircle(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid, widget.circleCode!);
-                                  widget.circleListCallback!();
-                                  widget.circleSettingsCallback!();
-                                  print(widget.circleCode!);
+                                  //widget.circleListCallback!();
+                                  //widget.circleSettingsCallback!();
+                                  //print(widget.circleCode!);
 
-                                  Navigator.of(context).pop();
+                                  Future.delayed(Duration(milliseconds: 500), (){
+                                    Navigator.of(context).pushNamedAndRemoveUntil("/loading_screen", (Route<dynamic> route) => false);
+                                  });
+
                                   //setState(() {
                                   //
                                   //

@@ -183,7 +183,7 @@ class _LogoutDialogState extends State<LogoutDialog> {
                                   // Logout Function
                                   Future.delayed(Duration(seconds: 1), (){
                                     DependencyInjector().locator<SafeConnexAuthentication>().signOutAccount();
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+                                    Navigator.pushNamedAndRemoveUntil(context, "/login", (Route<dynamic> route) => false);
                                   });
                                 },
                                 style: ButtonStyle(

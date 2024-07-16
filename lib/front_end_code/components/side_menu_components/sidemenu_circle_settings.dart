@@ -101,6 +101,7 @@ class _CircleSettingsState extends State<CircleSettings> {
   @override
   void initState() {
     _roleController.text = 'Circle Creator';
+    currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
     super.initState();
   }
 
@@ -108,14 +109,8 @@ class _CircleSettingsState extends State<CircleSettings> {
   Widget build(BuildContext context) {
     //final currentCircleData = circleDataList[_currentCircleIndex];
 
-    if(isLeaving == false){
-      currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
-      DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
-      isLeaving = false;
-      print("left");
-    }
-    print(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
-    print(currentCircleData.toString());
+    currentCircleData = DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList[_currentCircleIndex];
+    DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = currentCircleData["circleCode"];
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -409,12 +404,9 @@ class _CircleSettingsState extends State<CircleSettings> {
                                       backgroundColor:
                                       const Color.fromARGB(255, 128, 95, 166),
                                       foregroundColor: Colors.white,
-                                      child: DependencyInjector().locator<SafeConnexProfileStorage>()
-                                          .imageUrl !=
+                                      child: currentCircleData["images"][index] !=
                                           null
-                                          ? Image.network(
-                                          DependencyInjector().locator<SafeConnexProfileStorage>()
-                                              .imageUrl!)
+                                          ? Image.network(currentCircleData["images"][index])
                                           : Container(color: Colors.white),
                                     ),
                                   ),

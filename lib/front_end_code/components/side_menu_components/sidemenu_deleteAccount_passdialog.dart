@@ -258,7 +258,7 @@ class _DeleteDialogPassFieldState extends State<DeleteDialogPassField> {
                                     );
                                     // Delete Function
                                     DependencyInjector().locator<SafeConnexAuthentication>().deleteUserAccount("password");
-                                    Navigator.of(context).pop();
+                                    Navigator.pushNamedAndRemoveUntil(context, "/login", (Route<dynamic> route) => false);
                                   }
                                 },
                                 style: ButtonStyle(
