@@ -84,6 +84,7 @@ class _AgencyCreatePostState extends State<AgencyCreatePost> {
                           DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.displayName!,
                           DependencyInjector().locator<SafeConnexAgencyDatabase>().agencyData["agencyRole"]!,
                           DateTime.now().toString(),
+                          DependencyInjector().locator<SafeConnexAuthentication>().userProfileLink!,
                           DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl ?? ""
                       );
                       Navigator.push(context, MaterialPageRoute(builder: (context) => AgencyMainScreen()));

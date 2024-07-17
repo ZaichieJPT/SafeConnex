@@ -3,6 +3,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_news_database.dart';
@@ -327,6 +328,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                     controller: _postScrollController,
                     itemCount: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData.length,
                     itemBuilder: (BuildContext context, int index) {
+                      print("Image Path: ${DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["imagePath"]!}");
                       return Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: width * 0.075,
@@ -541,7 +543,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                     child: CircleAvatar(
                                       radius: width * 0.073,
                                       backgroundColor: Colors.amber.shade200,
-                                      child: DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl != null ? Image.network(DependencyInjector().locator<SafeConnexProfileStorage>().imageUrl!) : Container(),
+                                      child: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["profileLink"] != null ? Image.network(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["profileLink"]!) : Container(),
                                     ),
                                   ),
                                 ),
@@ -599,8 +601,8 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                               width: width * 0.85,
                               //color: const Color.fromARGB(255, 217, 217, 217),
                               color: const Color.fromARGB(255, 217, 217, 217),
-                              child: DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl != null ? Image.network(
-                                DependencyInjector().locator<SafeConnexNewsStorage>().imageUrl!,
+                              child: DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["imagePath"].toString() != "" ? Image.network(
+                                DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["imagePath"]!,
                                 fit: BoxFit.contain,
                               ) : Container(),
                             ),
@@ -630,7 +632,7 @@ class _AgencyFeedPostState extends State<AgencyFeedPost> {
                                 children: [
                                   //POST TIME ELAPSED
                                   Text(
-                                    DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["date"].toString().replaceAll(" ", "-"),
+                                    DateFormat("yyyy-MM-dd hh:mm aa").format(DateTime.parse(DependencyInjector().locator<SafeConnexNewsDatabase>().newsData[index]["date"])),
                                     textAlign: TextAlign.left,
                                     overflow: TextOverflow.clip,
                                     style: TextStyle(

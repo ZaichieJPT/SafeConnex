@@ -36,10 +36,27 @@ class SafeConnexReportsDatabase{
     DataSnapshot sosSnapshot = await _dbReportsReference.child("SOS_Reports").get();
     DataSnapshot cancelSosSnapshot = await _dbReportsReference.child("Canceled_SOS_Reports").get();
     DataSnapshot contactInfoSnapshot = await _dbReportsReference.child("Contact_Info_Request").get();
+    if(sosSnapshot.child("count").value != null){
+      sosCount = int.parse(sosSnapshot.child("count").value.toString());
+    }
+    else{
+      sosCount = 0;
+    }
 
-    sosCount = int.parse(sosSnapshot.child("count").value.toString());
+    if(cancelSosSnapshot.child("count").value != null){
     canceledSOSCount = int.parse(cancelSosSnapshot.child("count").value.toString());
-    contactInfoCount = int.parse(contactInfoSnapshot.child("count").value.toString());
+    }
+    else{
+      canceledSOSCount = 0;
+    }
+
+    if(contactInfoSnapshot.child("count").value != null){
+      contactInfoCount = int.parse(contactInfoSnapshot.child("count").value.toString());
+    }
+    else{
+      contactInfoCount = 0;
+    }
+
   }
 
   Future<void> setCancelledSOSReports() async {

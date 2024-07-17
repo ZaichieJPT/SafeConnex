@@ -12,7 +12,7 @@ class SafeConnexNewsDatabase{
   List<Map<String, dynamic>> newsData = [];
   Future<void> createNews(String agency, String agencyType, String agencyLocation,
   String agencyPhone, String agencyTelephone, String agencyEmail, String agencyFacebook,
-      String agencyWebsite, String title, String body, String sender, String role, String date, [String? imagePath]) async
+      String agencyWebsite, String title, String body, String sender, String role, String date, String profileLink, [String? imagePath]) async
   {
     final postData = {
       'agency': agency,
@@ -28,6 +28,7 @@ class SafeConnexNewsDatabase{
       'sender': sender,
       'role': role,
       'date': date,
+      'profileLink': profileLink,
       'imagePath': imagePath
     };
 
@@ -58,7 +59,7 @@ class SafeConnexNewsDatabase{
 
   Future<void> listenOnTheNews() async
   {
-    _dbNewsReference.orderByChild("date").onValue.listen((DatabaseEvent event) {
+    _dbNewsReference.onValue.listen((DatabaseEvent event) {
       final news = event.snapshot;
       //print(news);
       if(newsData.isEmpty){
@@ -80,6 +81,7 @@ class SafeConnexNewsDatabase{
             "body": post.child("body").value,
             "title": post.child("title").value,
             "date": post.child("date").value,
+            "profileLink": post.child("profileLink").value,
             "imagePath": post.child("imagePath").value
           });
         }
@@ -103,13 +105,16 @@ class SafeConnexNewsDatabase{
             "body": post.child("body").value,
             "title": post.child("title").value,
             "date": post.child("date").value,
+            "profileLink": post.child("profileLink").value,
             "imagePath": post.child("imagePath").value
           });
         }
       }
 
-
-      print(newsData);
+      //Sort here
+      newsData.sort((a, b) => DateTime.parse(a["date"]).compareTo(DateTime.parse(b["date"])));
+      newsData = newsData.reversed.toList();
+      print("Reversed ${newsData}");
     });
   }
 }
