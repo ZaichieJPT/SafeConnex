@@ -194,12 +194,12 @@ class SafeConnexAuthentication{
         await getUserProfile();
         await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
         await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);
-        await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
         await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
           if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
             DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
             DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
             DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+            DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
             DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
           }
         });
@@ -270,12 +270,12 @@ class SafeConnexAuthentication{
       await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
       await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
-      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
           DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
           DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
           DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+          DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
           DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
         }
       });
@@ -321,13 +321,13 @@ class SafeConnexAuthentication{
       await getUpdatedPhoneAndBirthday(currentUser!.uid);
       await getUserProfile();
       await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
-      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
           DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
           DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleRole(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!, currentUser!.uid);
           DependencyInjector().locator<SafeConnexGeofenceDatabase>().getGeofence(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode!);
+          DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
           DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
         }
       });
