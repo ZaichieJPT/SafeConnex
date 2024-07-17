@@ -4,12 +4,12 @@ import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 
 class SafeConnexAgencyDatabase{
-  DatabaseReference _dbAgencyReference = FirebaseDatabase.instanceFor(
+  final DatabaseReference _dbAgencyReference = FirebaseDatabase.instanceFor(
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("agency");
 
-  DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
+  final DatabaseReference _dbUserReference = FirebaseDatabase.instanceFor(
       app: FirebaseInit.firebaseApp,
       databaseURL: "https://safeconnex-92054-default-rtdb.asia-southeast1.firebasedatabase.app/")
       .ref("users");

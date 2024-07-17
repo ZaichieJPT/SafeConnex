@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agencies.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_database.dart';
@@ -191,7 +192,9 @@ class SafeConnexAuthentication{
         currentUser = currentCredential.user!; //
         await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
         await getUserProfile();
-        await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
+        await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
+        await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);
+        await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
         await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
           if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
             DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
@@ -200,7 +203,6 @@ class SafeConnexAuthentication{
             DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
           }
         });
-        await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
         await getAgencyData();
         if(authAgencyData["role"] == "Agency"){
           DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
@@ -265,8 +267,10 @@ class SafeConnexAuthentication{
         await getUserProfile();
       }
 
-      await getUpdatedPhoneAndBirthday(currentCredential.user!.uid); //
+      await getUpdatedPhoneAndBirthday(currentCredential.user!.uid);
+      await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
           DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode = DependencyInjector().locator<SafeConnexCircleDatabase>().circleList[0]["circle_code"].toString();
@@ -275,7 +279,6 @@ class SafeConnexAuthentication{
           DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
         }
       });
-      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await getAgencyData();
       if(authAgencyData["role"] == "Agency"){
         DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();
@@ -317,6 +320,8 @@ class SafeConnexAuthentication{
       currentUser = authHandler.currentUser!;
       await getUpdatedPhoneAndBirthday(currentUser!.uid);
       await getUserProfile();
+      await DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
+      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await DependencyInjector().locator<SafeConnexNotification>().initializeNotification(currentUser!.uid);///
       await DependencyInjector().locator<SafeConnexCircleDatabase>().getCircleList(currentUser!.uid).whenComplete(() {
         if(DependencyInjector().locator<SafeConnexCircleDatabase>().circleList.isNotEmpty) {
@@ -326,7 +331,6 @@ class SafeConnexAuthentication{
           DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().getSafetyScore();
         }
       });
-      await DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(currentUser!.uid);
       await getAgencyData();
       if(authAgencyData["role"] == "Agency"){
         DependencyInjector().locator<SafeConnexAgencyDatabase>().getMyAgencyData();

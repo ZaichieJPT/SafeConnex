@@ -193,8 +193,10 @@ class SafeConnexCircleDatabase{
     }
     else{
       circleDataList.clear();
+      // Creates an empty memberNames variables to be used later
       List<String> memberNames = [];
       List<String> userIds = [];
+      List<String> images = [];
       // Gets the circle list from the User Database
       for(var circleList in userSnapshot.children){
         // Gets the circles in the Circle Database
@@ -205,12 +207,14 @@ class SafeConnexCircleDatabase{
             for (int index = 0; index < circleData.child("members").children.length; index++){
               memberNames.add(circleData.child("members").children.elementAt(index).child("name").value.toString());
               userIds.add(circleData.child("members").children.elementAt(index).child("id").value.toString());
+              images.add(circleData.child("members").children.elementAt(index).child("image").value.toString());
             }
             circleDataList.add({
               "circleName": circleData.child("circle_name").value,
               "circleCode": circleData.key.toString(),
               "userIds": userIds.toList(),
-              "names": memberNames.toList()
+              "names": memberNames.toList(),
+              "images": images.toList(),
             });
           }
         }

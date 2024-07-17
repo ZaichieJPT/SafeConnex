@@ -5,6 +5,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agencies.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/emergency_contacts_options.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/safetyagency_contacts_template.dart';
 
@@ -50,7 +52,12 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
   List<bool> isSelectedMedicalAgency = [];
   List<bool> isSelectedNaturalAgency = [];
 
-  final List<Map<String, dynamic>> fireAgencyContacts = [
+  final List<Map<String, dynamic>> fireAgencyContacts = DependencyInjector().locator<SafeConnexAgencies>().fireAgencyContacts;
+  final List<Map<String, dynamic>> crimeAgencyContacts = DependencyInjector().locator<SafeConnexAgencies>().crimeAgencyContacts;
+  final List<Map<String, dynamic>> medicalAgencyContacts = DependencyInjector().locator<SafeConnexAgencies>().medicalAgencyContacts;
+  final List<Map<String, dynamic>> naturalAgencyContacts = DependencyInjector().locator<SafeConnexAgencies>().naturalAgencyContacts;
+
+  /*final List<Map<String, dynamic>> fireAgencyContacts = [
     {
       'agencyName': 'Bureau of Fire Protection',
       'location': 'Brgy. Herrero-Perez, Dagupan City, Pangasinan',
@@ -131,7 +138,7 @@ class _SafetyAgenciesState extends State<SafetyAgencies> {
       'fb': 'https://www.facebook.com/mayombopnp/',
       'website': 'www.mayombopnp.com',
     },
-  ];
+  ];*/
   //FIRE EMERGENCY CONTACTS
   //USED TO PASS THE DATA FROM THE TEXTFORMFIELDS TO THE MAIN SAFETY AGENCY PAGE (THIS PAGE)
   _passFireContactData(

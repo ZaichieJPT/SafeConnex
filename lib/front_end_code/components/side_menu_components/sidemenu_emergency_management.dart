@@ -3,6 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:safeconnex/api/dependecy_injector/injector.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agencies.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/emergency_contacts_page.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/emergency_mgmt_option.dart';
 import 'package:safeconnex/front_end_code/components/side_menu_components/emergency_management/emergency_safety_agencies.dart';
@@ -28,6 +30,7 @@ class _EmergencyManagementState extends State<EmergencyManagement> {
   int _currentEmergencyOptionIndex = 4;
 
   _onOptionSelected(int index) {
+    DependencyInjector().locator<SafeConnexAgencies>().getAgenciesData();
     setState(() {
       _currentEmergencyOptionIndex = index;
       _currentEmergencyOptionIndex == 0

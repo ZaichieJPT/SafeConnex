@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
+import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agencies.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_agency_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_authentication.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
@@ -47,5 +48,7 @@ class DependencyInjector{
     locator.registerSingleton<SafeConnexNotificationDatabase>(SafeConnexNotificationDatabase());
 
     locator.registerSingleton<SafeConnexReportsDatabase>(SafeConnexReportsDatabase());
+
+    locator.registerSingleton<SafeConnexAgencies>(SafeConnexAgencies());
   }
 }

@@ -107,6 +107,7 @@ class _AgencyStep3State extends State<AgencyStep5> {
                           DateFormat('yyyy/MMMM/dd hh:mm aaa').format(DateTime.now()),
                       );
                       setState(() {
+
                         Navigator.of(context).popAndPushNamed("/agencyPage");
                       });
                     });

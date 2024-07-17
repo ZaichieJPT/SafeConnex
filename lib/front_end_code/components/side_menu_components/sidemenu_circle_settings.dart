@@ -83,7 +83,6 @@ class _CircleSettingsState extends State<CircleSettings> {
     setState(() {
       isLeaving = true;
       //DependencyInjector().locator<SafeConnexCircleDatabase>().circleDataList.clear();
-      currentCircleData.clear();
       DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
 
       if(_currentCircleIndex > 0){

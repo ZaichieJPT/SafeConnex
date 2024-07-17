@@ -64,6 +64,7 @@ class _LoginPageState extends State<LoginPage> {
             }
             else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != "No Circle"
             ){
+              DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => MainScreen()));
             }
@@ -310,6 +311,7 @@ class _LoginPageState extends State<LoginPage> {
                                                           context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                     }
                                                     else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
+                                                      DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
                                                       Navigator.push(
                                                           context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                     }
@@ -359,6 +361,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             context, MaterialPageRoute(builder: (context) => CirclePage()));
                                                       }
                                                       else if(DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode != null || DependencyInjector().locator<SafeConnexCircleDatabase>().currentCircleCode == "No Circle"){
+                                                        DependencyInjector().locator<SafeConnexCircleDatabase>().listCircleDataForSettings(DependencyInjector().locator<SafeConnexAuthentication>().currentUser!.uid);
                                                         Navigator.push(
                                                             context, MaterialPageRoute(builder: (context) => MainScreen()));
                                                       }
