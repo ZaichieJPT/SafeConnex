@@ -36,8 +36,6 @@ class SafeConnexLocationHistory{
   Future<void> addDataToLocationHistory(String userId, DateTime time, String date) async {
     DataSnapshot historySnapshot = await _dbLocationHistoryReference.child(userId).get();
 
-
-
     if(historySnapshot.exists){
       String numberOfChild = (int.parse(historySnapshot.children.last.key!) + 1).toString();
 
