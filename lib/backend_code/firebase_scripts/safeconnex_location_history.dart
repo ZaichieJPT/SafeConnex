@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/firebase_init.dart';
@@ -25,7 +26,8 @@ class SafeConnexLocationHistory{
     DataSnapshot historySnapshot = await _dbLocationHistoryReference.child(userId).get();
 
     String startingChild = (historySnapshot.children.first.key).toString();
-
+    print("test ${startingChild}");
+    print("test ${historySnapshot.children.length}");
     if(historySnapshot.children.length > 10){
       await _dbLocationHistoryReference.child(userId).child(startingChild).remove();
     }
@@ -34,14 +36,33 @@ class SafeConnexLocationHistory{
   Future<void> addDataToLocationHistory(String userId, DateTime time, String date) async {
     DataSnapshot historySnapshot = await _dbLocationHistoryReference.child(userId).get();
 
-    String numberOfChild = (historySnapshot.children.length).toString();
 
 
-    await _dbLocationHistoryReference.child(userId).child(numberOfChild).set({
-      "location": geocodedStreet,
-      "time": DateFormat.jm().format(time),
-      "date": date,
-    });
+    if(historySnapshot.exists){
+      String numberOfChild = (int.parse(historySnapshot.children.last.key!) + 1).toString();
+
+      if(historySnapshot.child(historySnapshot.children.last.key!).child("location").value == geocodedStreet){
+        await _dbLocationHistoryReference.child(userId).child(historySnapshot.children.last.key!).update({
+          "time": DateFormat.jm().format(time),
+          "date": date,
+        });
+      }else{
+        await _dbLocationHistoryReference.child(userId).child(numberOfChild).set({
+          "location": geocodedStreet,
+          "time": DateFormat.jm().format(time),
+          "date": date,
+        });
+      }
+
+      deleteHistory(userId);
+    }else{
+      await _dbLocationHistoryReference.child(userId).child("0").set({
+        "location": geocodedStreet,
+        "time": DateFormat.jm().format(time),
+        "date": date,
+      });
+    }
+
   }
 
   Future<void> getDataFromLocationHistory(String userId) async {
