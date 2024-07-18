@@ -71,6 +71,8 @@ dependencies:
   fl_chart: ^0.68.0
   flutter_riverpod: ^2.5.1
   flutter_camera: ^1.0.0
+  flutter_map_polywidget: ^1.0.1
+  popover: ^0.3.0+1
 
 dev_dependencies:
   flutter_test:

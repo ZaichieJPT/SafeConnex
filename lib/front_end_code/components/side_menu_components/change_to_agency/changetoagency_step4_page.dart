@@ -22,12 +22,12 @@ class AgencyStep4 extends StatefulWidget {
 
 class _AgencyStep4State extends State<AgencyStep4> {
 
-  /*Future<void> _onSelfieIDTapped() async {
+  Future<void> _onSelfieIDTapped() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     DependencyInjector().locator<SafeConnexAgencyDatabase>().selfieLink = image!.path;
     if (image == null) return;
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,20 +64,25 @@ class _AgencyStep4State extends State<AgencyStep4> {
                 //PICTURE VIEW AREA
                 Flexible(
                   flex: 6,
-                  child: Container(
-                    width: width,
-                    height: height,
-                    decoration: BoxDecoration(
-                      gradient: RadialGradient(
-                        colors: const [
-                          Colors.white,
-                          Colors.grey,
-                        ],
-                        radius: 1,
-                      ),
-                      border: Border.all(
-                        color: Colors.blueAccent,
-                        width: 5,
+                  child: InkWell(
+                    onTap: (){
+                      _onSelfieIDTapped();
+                    },
+                    child: Container(
+                      width: width,
+                      height: height,
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          colors: const [
+                            Colors.white,
+                            Colors.grey,
+                          ],
+                          radius: 1,
+                        ),
+                        border: Border.all(
+                          color: Colors.blueAccent,
+                          width: 5,
+                        ),
                       ),
                     ),
                   ),

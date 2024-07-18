@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter_map_polywidget/flutter_map_polywidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:geofence_service/geofence_service.dart' as geofence;
 import 'package:latlong2/latlong.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:popover/popover.dart';
 import 'package:safeconnex/api/dependecy_injector/injector.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_circle_database.dart';
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency%20_floodscore_page.dart';
+import 'package:safeconnex/front_end_code/pages/agency_pages/agency_popup.dart';
 
 class AgencyMapProvider extends StatefulWidget {
   const AgencyMapProvider({super.key});
@@ -22,6 +26,7 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
   final _geofenceStreamController = StreamController<geofence.Geofence>();
 
   List<CircleMarker> circleMarker = [];
+  List<PolyWidget> polyMarker = [];
   List<geofence.Geofence> _safetyScoreList = [];
   Color riskLevelColor = Colors.green.shade200;
   Color riskLevelBorderColor = Colors.green.shade500;
@@ -62,10 +67,13 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
           riskLevelColor = Colors.red;
           riskLevelBorderColor = Colors.red.shade500;
           break;
+        case "None":
+          riskLevelColor = Colors.green;
+          riskLevelBorderColor = Colors.green.shade500;
+          break;
       }
-      Future.delayed(Duration(milliseconds: 400), (){
-        addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
-      });
+      addCircleMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()));
+      addPolyMarker(LatLng(double.parse(safetyScoreData["latitude"].toString()), double.parse(safetyScoreData["longitude"].toString())), double.parse(safetyScoreData["radiusSize"].toString()), safetyScoreData["locationName"], safetyScoreData["riskInfo"], safetyScoreData["riskLevel"], safetyScoreData["radiusId"].toString());
     }
   }
 
@@ -78,6 +86,29 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
         radius: radiusSize,
         useRadiusInMeter: true
     ));
+  }
+
+  addPolyMarker(LatLng markerLocation, double radiusSize, String locationName, String riskInfo, String riskLevel, String safetyScoreId){
+    double height = MediaQuery.sizeOf(context).height;
+    double width = MediaQuery.sizeOf(context).width;
+
+    polyMarker.add(PolyWidget(
+        center: markerLocation,
+        widthInMeters: radiusSize.toInt(),
+        heightInMeters:radiusSize.toInt(),
+        child: SafetyScorePopup(
+          width: width,
+          height: height,
+          locationName: locationName,
+          riskInfo: riskInfo,
+          riskLevel: riskLevel,
+          longitude: markerLocation.longitude,
+          latitude: markerLocation.latitude,
+          radiusSize: radiusSize,
+          safetyScoreId: safetyScoreId,
+        )
+    ));
+    print("Poly Widget Active");
   }
 
   @override
@@ -150,10 +181,8 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
     //geolocationMarkers.clear();
     //_mapController = MapController();
     //index = 0;
-    Future.delayed(Duration(milliseconds: 400), (){
-      circleMarker.clear();
-      getSafetyScoreData();
-    });
+    circleMarker.clear();
+    getSafetyScoreData();
 
     /*for(index; index < FlutterFireCoordinates.coordinatesData.length; index++){
       addGeolocationMarker(index);
@@ -169,7 +198,7 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
             stream: _geofenceStreamController.stream,
             builder: (context, snapshot) {
               final geofencingUpdatedDateTime = DateTime.now();
-              final geofencingContent = snapshot.data?.toJson().toString() ?? '';
+              final geofencingContent = snapshot.data?.toJson() != null ? snapshot.data!.toJson() : {};
 
               return Scaffold(
                 body: Stack(
@@ -178,9 +207,6 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
                       options: MapOptions(
                           initialCenter: LatLng(16.0265, 120.3363),
                           initialZoom: 13.2,
-                          onTap: (_, tapLocation){
-                            this.tapLocation = tapLocation;
-                          }
                       ),
                       children: [
                         TileLayer(
@@ -190,9 +216,12 @@ class _AgencyMapProviderState extends State<AgencyMapProvider> {
                             store: MemCacheStore(),
                           ),
                         ),
+                        PolyWidgetLayer(
+                            polyWidgets: polyMarker
+                        ),
                         CircleLayer(
-                          circles: circleMarker,
-                        )
+                          circles: circleMarker
+                        ),
                       ],
                     ),
                   ],

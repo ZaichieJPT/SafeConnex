@@ -43,6 +43,23 @@ class SafeConnexSafetyScoringDatabase{
     print("Data Added on SafetyScore Collection");
   }
 
+  Future<void> editSafetyScore(String safetyScoreId, double latitude, double longitude, double radiusSize, String riskLevel, String riskInfo) async {
+    List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
+
+    final safetyScore = <String, dynamic> {
+      "latitude": latitude,
+      "longitude": longitude,
+      "radiusId": safetyScoreId,
+      "radiusSize": radiusSize,
+      "locationName": placemarks[0].street,
+      "riskInfo" : riskInfo,
+      "riskLevel": riskLevel
+    };
+
+    _dbSafetyScoreReference.child(safetyScoreId).update(safetyScore);
+    print("Data Added on SafetyScore Collection");
+  }
+
   deleteSafetyScore(){
     _dbSafetyScoreReference.child(safetyScoreToUpdate['radiusId']).remove();
     print("Database Removed");

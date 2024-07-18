@@ -14,7 +14,16 @@ import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_geofence_dat
 import 'package:safeconnex/backend_code/firebase_scripts/safeconnex_scoring_database.dart';
 
 class AgencyFloodScore extends StatefulWidget {
-  const AgencyFloodScore({super.key});
+  const AgencyFloodScore({super.key, this.locationName, this.radiusSize,
+  this.latitude, this.longitude, this.riskInfo, this.riskLevel, this.safetyScoreId});
+
+  final double? latitude;
+  final double? longitude;
+  final String? safetyScoreId;
+  final double? radiusSize;
+  final String? locationName;
+  final String? riskInfo;
+  final String? riskLevel;
 
   @override
   State<AgencyFloodScore> createState() => _AgencyFloodScoreState();
@@ -27,11 +36,11 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
   double _sliderValue = 100.0;
   int _currentRiskIndex = -1;
   int _currentScoringIndex = 0;
-  String? riskInfo = 'Flood Risk';
-  String? riskLevel;
+  String? riskInfo = 'None';
+  String? riskLevel = 'None';
 
-  Color markerColor = Colors.blue;
-  Color borderColor = Colors.blue.shade500;
+  Color markerColor = Colors.green;
+  Color borderColor = Colors.green.shade500;
 
   Marker? geolocationMarker = Marker(point: LatLng(0, 0), child: Container());
   CircleMarker? circleMarker = CircleMarker(point: LatLng(0, 0), radius: 0);
@@ -51,6 +60,83 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
     setState(() {
       _currentScoringIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.safetyScoreId != null || widget.longitude != null || widget.latitude != null){
+      riskLevel = widget.riskLevel;
+      riskInfo = widget.riskInfo;
+      tapLocation = LatLng(widget.latitude!, widget.longitude!);
+      _sliderValue = widget.radiusSize!;
+
+      if(widget.riskInfo == "Flood Prone"){
+        _currentScoringIndex = 0;
+      }else if(widget.riskInfo == "Accident Prone"){
+        _currentScoringIndex = 0;
+      }
+      print(widget.riskLevel);
+      switch(widget.riskLevel){
+        case "Low":
+          markerColor = Colors.yellow;
+          borderColor = Colors.yellow.shade500;
+          _currentRiskIndex = 0;
+          break;
+        case "Moderate":
+          markerColor = Colors.orange;
+          borderColor = Colors.orange.shade500;
+          _currentRiskIndex = 1;
+          break;
+        case "High":
+          markerColor = Colors.red;
+          borderColor = Colors.red.shade500;
+          _currentRiskIndex = 2;
+          break;
+        case "None":
+          markerColor = Colors.green;
+          borderColor = Colors.green.shade500;
+          _currentRiskIndex = -1;
+          break;
+      }
+
+      geolocationMarker = Marker(
+          height: 50,
+          width: 50,
+          rotate: true,
+          alignment: Alignment.topCenter,
+          point: LatLng(widget.latitude!, widget.longitude!),
+          child: Stack(
+            children: [
+              Positioned(
+                  child: Icon(Icons.location_pin, size: 55)
+              ),
+              Positioned(
+                top: 10,
+                left: 16,
+                child: Container(
+                  width: 23,
+                  height: 23,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.green
+                  ),
+                ),
+              ),
+            ],
+          )
+      );
+      circleMarker = CircleMarker(
+          color: markerColor.withOpacity(0.5),
+          borderColor: borderColor,
+          borderStrokeWidth: 2,
+          point: LatLng(widget.latitude!, widget.longitude!),
+          radius: widget.radiusSize!,
+          useRadiusInMeter: true
+      );
+
+    }
   }
 
   @override
@@ -283,7 +369,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: (){
-                                      riskInfo = "Flood Risk";
+                                      riskInfo = "Flood Prone";
                                       _onScoringTypeTapped(0);
                                     },
                                     child: Container(
@@ -324,7 +410,7 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                 Expanded(
                                   child: InkWell(
                                     onTap: () {
-                                      riskInfo = "Accident Risk";
+                                      riskInfo = "Accident Prone";
                                       _onScoringTypeTapped(1);
                                     },
                                     child: Container(
@@ -622,7 +708,10 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                                           bottom: 5,
                                         ),
                                         child: Text(
-                                          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet != null ? DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet! : "No Location Data",
+                                          widget.locationName != null || widget.locationName != ""
+                                              ?  widget.locationName! : DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet != null
+                                              ? DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().geocodedStreet!
+                                              : "No Location Data",
                                           style: TextStyle(
                                             fontFamily: 'OpunMai',
                                             fontSize: height * 0.022,
@@ -683,8 +772,14 @@ class _AgencyFloodScoreState extends State<AgencyFloodScore> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
-                        DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().addSafetyScore(tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
-                        Navigator.pop(context);
+                        if(widget.safetyScoreId != null){
+                          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().editSafetyScore(widget.safetyScoreId!, tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
+                          Navigator.pop(context);
+                        }else if (widget.safetyScoreId == null){
+                          DependencyInjector().locator<SafeConnexSafetyScoringDatabase>().addSafetyScore(tapLocation!.latitude, tapLocation!.longitude, _sliderValue, riskLevel!, riskInfo!);
+                          Navigator.pop(context);
+                        }
+
                       });
                     },
                     elevation: 2,
